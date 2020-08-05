@@ -93,11 +93,9 @@ export const categories = {
 export const sub_categories = {
   schema: yup.object({
     name: yup.string().required(),
-    category_index: yup.string().required(),
   }),
   initialValues: {
     name: "",
-    category_index: 0,
   },
 };
 

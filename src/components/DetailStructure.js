@@ -37,13 +37,15 @@ export default class DetailStructure extends Component {
           <Card.Footer>
             {this.props.status === "succeeded" && (
               <>
-                <Button
-                  className="btn btn-theme float-right"
-                  variant="primary"
-                  onClick={(slot) => this.switchModal("modal_edit")}
-                >
-                  Edit {capitalize(this.props.name)}
-                </Button>
+                {this.props.updateObject != null && (
+                  <Button
+                    className="btn btn-theme float-right"
+                    variant="primary"
+                    onClick={(slot) => this.switchModal("modal_edit")}
+                  >
+                    Edit {capitalize(this.props.name)}
+                  </Button>
+                )}
                 {canDelete(this.props.object) && (
                   <Button
                     className="btn btn-theme float-right"
@@ -60,17 +62,18 @@ export default class DetailStructure extends Component {
             )}
           </Card.Footer>
         </Card>
-        {this.props.status === "succeeded" && (
-          <EditObject
-            show={this.state.modal_edit}
-            switchModal={this.switchModal}
-            formHelpers={this.props.formHelpers}
-            form={this.props.form}
-            object={this.props.object}
-            name={this.props.name}
-            updateObject={this.props.updateObject}
-          />
-        )}
+        {this.props.status === "succeeded" &&
+          this.props.updateObject != null && (
+            <EditObject
+              show={this.state.modal_edit}
+              switchModal={this.switchModal}
+              formHelpers={this.props.formHelpers}
+              form={this.props.form}
+              object={this.props.object}
+              name={this.props.name}
+              updateObject={this.props.updateObject}
+            />
+          )}
       </>
     );
   }

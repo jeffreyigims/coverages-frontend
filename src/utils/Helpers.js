@@ -18,7 +18,7 @@ export function canDelete(object) {
       return object.attributes.coverages.length === 0 ? true : false;
     case "category":
       return object.attributes.sub_categories.length === 0 ? true : false;
-    case "sub_categories":
+    case "sub_category":
       return object.attributes.coverages.length === 0 ? true : false;
     case "group":
       return object.attributes.club_groups.length === 0 ? true : false;

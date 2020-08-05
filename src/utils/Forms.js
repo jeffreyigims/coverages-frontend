@@ -207,6 +207,43 @@ export function categoryForm(values, handleChange, setFieldValue, errors) {
   );
 }
 
+export function subCategoryForm(
+  values,
+  handleChange,
+  setFieldValue,
+  errors,
+  category
+) {
+  return (
+    <>
+      <Row>
+        <Form.Group as={Col}>
+          <Form.Label>Category:</Form.Label>
+          <Form.Control
+            type="text"
+            name="category"
+            value={category.attributes.name}
+            disabled
+          />
+        </Form.Group>
+        <Form.Group as={Col}>
+          <Form.Label>Name:</Form.Label>
+          <Form.Control
+            type="text"
+            name="name"
+            value={values.name}
+            onChange={handleChange}
+            isInvalid={!!errors.name}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.name}
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Row>
+    </>
+  );
+}
+
 export function carrierForm(
   values,
   handleChange,

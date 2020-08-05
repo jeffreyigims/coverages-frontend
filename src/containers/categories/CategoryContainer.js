@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import DetailStructure from "../../components/DetailStructure";
+import CategoryDetails from "./CategoryDetails";
 import PropTypes from "prop-types";
-import { Button } from "react-bootstrap";
-import GeneralTable from "../../components/GeneralTable";
 import { categories as formHelpers } from "../../utils/Schemas";
 import { categoryForm as form } from "../../utils/Forms";
+import { sub_categories as formHelpersSub } from "../../utils/Schemas";
+import { subCategoryForm as formSub } from "../../utils/Forms";
 import {
   fetchCategory,
   updateCategory,
   deleteCategory,
+  postSubCategory,
 } from "../../actions/Actions";
 
 class CategoryContainer extends Component {
@@ -22,47 +23,35 @@ class CategoryContainer extends Component {
     this.props.dispatch(fetchCategory(id));
   }
 
-  showDetails = (object) => {
-    let showObjects = (objects) => {
-      return objects.map((object, index) => {
-        return (
-          <tr key={index}>
-            <td width="200" align="left">
-              <Button
-                variant="link"
-                href={"/sub_categories/" + object.data.attributes.id}
-                style={{ color: "black" }}
-              >
-                {object.data.attributes.name}
-              </Button>
-            </td>
-            <td width="200" align="left">
-              {object.data.attributes.associated_coverages}
-            </td>
-          </tr>
-        );
-      });
+  postSubCategory = (values) => {
+    console.log(values)
+    const new_object = {
+      name: values.name,
+      category_id: this.props.selected.attributes.id,
     };
-
-    return (
-      <GeneralTable
-        objects={object.attributes.sub_categories}
-        showObjects={showObjects}
-        tableHeaders={["Name", "Coverages"]}
-      />
-    );
+    this.props.dispatch(postSubCategory(new_object));
   };
 
   render() {
     return (
       <>
-        <DetailStructure
+        <CategoryDetails
           object={this.props.selected}
           status={this.props.status}
           name={this.state.name}
           formHelpers={formHelpers}
           form={form}
-          showDetails={this.showDetails}
+          formHelpersSub={formHelpersSub}
+          formSub={(values, handleChange, setFieldValue, errors) =>
+            formSub(
+              values,
+              handleChange,
+              setFieldValue,
+              errors,
+              this.props.selected
+            )
+          }
+          postSub={(values) => this.postSubCategory(values)}
           updateObject={(id, values) => {
             this.props.dispatch(updateCategory({ id: id, values: values }));
           }}
@@ -86,7 +75,6 @@ CategoryContainer.propTypes = {
 
 function mapStateToProps(state) {
   const { selected, status, error } = state.categories;
-  const { sports } = state.sports;
   const { link, redirect } = state.redirections;
   return { selected, status, error, link, redirect };
 }

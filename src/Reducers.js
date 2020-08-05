@@ -9,6 +9,7 @@ import {
   deleteCarrier,
   deleteCompany,
   deleteUser,
+  deleteSubCategory,
 } from "./actions/Actions";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -103,6 +104,10 @@ const redirectionSlice = createSlice({
       state.redirect = true;
     },
     [deleteCategory.fulfilled]: (state, action) => {
+      state.link = "/categories";
+      state.redirect = true;
+    },
+    [deleteSubCategory.fulfilled]: (state, action) => {
       state.link = "/categories";
       state.redirect = true;
     },
@@ -223,7 +228,7 @@ function createPaginatedTableReducer(name = "") {
         });
       case `${name}/post_${name}/fulfilled`:
         return Object.assign({}, state, {
-          [name]: state[name].concat(action.payload.data),
+          [name]: [action.payload.data].concat(state[name]),
           status: "succeeded",
         });
       case `${name}/get_${name}/rejected`:
@@ -269,6 +274,7 @@ const reducer = combineReducers({
   carriers: createTableReducer("carriers"),
   users: createTableReducer("users"),
   categories: createTableReducer("categories"),
+  sub_categories: createTableReducer("sub_categories"),
   coverages: createPaginatedTableReducer("coverages"),
   alerts: alerts,
   redirections: redirectionSlice.reducer,

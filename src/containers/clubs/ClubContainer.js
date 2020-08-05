@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import DetailStructure from "../../components/DetailStructure";
+import ClubDetails from "./ClubDetails";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import PaginatedTable from "../../components/PaginatedTable";
@@ -85,7 +85,7 @@ class ClubContainer extends Component {
   render() {
     return (
       <>
-        <DetailStructure
+        <ClubDetails
           object={this.props.selected}
           status={this.props.status}
           name={this.state.name}

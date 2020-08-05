@@ -19,6 +19,7 @@ import {
 class CoveragesContainer extends Component {
   state = {
     tableHeaders: [
+      "League",
       "Club",
       "Group",
       "Category",
@@ -26,6 +27,7 @@ class CoveragesContainer extends Component {
       "Entered By",
       "Date Created",
       "Last Updated",
+      "Verified",
       "View",
     ],
     name: "coverage",
@@ -44,6 +46,15 @@ class CoveragesContainer extends Component {
     return objects.map((object, index) => {
       return (
         <tr key={index}>
+          <td width="200" align="left">
+            <Button
+              variant="link"
+              href={"/leagues/" + object.attributes.league.id}
+              style={{ color: "black" }}
+            >
+              {object.attributes.league.name}
+            </Button>
+          </td>
           <td width="200" align="left">
             <Button
               variant="link"
@@ -85,14 +96,13 @@ class CoveragesContainer extends Component {
             </Button>
           </td>
           <td width="200" align="left">
-            <Moment format="MMMM Do YYYY">
-              {object.attributes.created_at}
-            </Moment>
+            <Moment format="MM/DD/YYYY">{object.attributes.created_at}</Moment>
           </td>
           <td width="200" align="left">
-            <Moment format="MMMM Do YYYY">
-              {object.attributes.updated_at}
-            </Moment>
+            <Moment format="MM/DD/YYYY">{object.attributes.updated_at}</Moment>
+          </td>
+          <td width="200" align="left">
+            {object.attributes.verified ? "true" : "false"}
           </td>
           <td width="100" align="center">
             <Button
@@ -121,8 +131,12 @@ class CoveragesContainer extends Component {
       has_coverage_line: values.has_coverage_line,
       verified: values.verified,
     };
-    let carriers = values.carriers.map((carrier_index) => this.props.carriers[carrier_index].attributes.id)
-    let brokers = values.brokers.map((broker_index) => this.props.brokers[broker_index].attributes.id)
+    let carriers = values.carriers.map(
+      (carrier_index) => this.props.carriers[carrier_index].attributes.id
+    );
+    let brokers = values.brokers.map(
+      (broker_index) => this.props.brokers[broker_index].attributes.id
+    );
     this.props.dispatch(
       postCoverageAssociations(new_object, carriers, brokers)
     );

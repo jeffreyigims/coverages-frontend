@@ -84,8 +84,13 @@ function createDelete(name = "") {
 
 export const fetchCoverages = createAsyncThunk(
   "coverages/fetch_coverages",
-  async (parameters) => {
-    const response = await runAjax("/coverages.json", "GET", parameters);
+  async (parameters, { rejectWithValue }) => {
+    const response = await runAjax(
+      "/coverages.json",
+      "GET",
+      parameters,
+      rejectWithValue
+    );
     return response;
   }
 );
@@ -143,6 +148,10 @@ export const postUser = createPost("users", "user");
 export const fetchUser = createGet("users");
 export const updateUser = createUpdate("users", "user");
 export const deleteUser = createDelete("users");
+
+export const postSubCategory = createPost("sub_categories", "sub_category");
+export const fetchSubCategory = createGet("sub_categories");
+export const deleteSubCategory = createDelete("sub_categories");
 
 // export const fetchCoverages = createFetch("coverages");
 export const postCoverage = createPost("coverages", "coverage");

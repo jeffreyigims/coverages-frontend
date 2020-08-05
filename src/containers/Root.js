@@ -56,7 +56,7 @@ export default class Root extends React.Component {
             <Route path="/coverages" exact component={CoveragesContainer} />
             <Route path="/coverages/:id" exact component={CoverageContainer} />
             <Route path="/brokers/:id" exact component={BrokerContainer} />
-            {/* <Route path="/sub_categories/:id" exact component={SubCategoryContainer} /> */}
+            <Route path="/sub_categories/:id" exact component={SubCategoryContainer} />
             <Route path="/coverage_wizard" exact component={CoverageWizardContainer} />
           </Router>
         </Provider>
