@@ -8,6 +8,7 @@ import {
   deleteCategory,
   deleteCarrier,
   deleteCompany,
+  deleteBroker,
   deleteUser,
   deleteSubCategory,
 } from "./actions/Actions";
@@ -117,6 +118,11 @@ const redirectionSlice = createSlice({
     },
     [deleteCompany.fulfilled]: (state, action) => {
       state.link = "/companies";
+      state.redirect = true;
+    },
+    [deleteBroker.fulfilled]: (state, action) => {
+      const id = action.payload.data.attributes.company.id;
+      state.link = "/companies/".concat(id);
       state.redirect = true;
     },
     [deleteUser.fulfilled]: (state, action) => {
@@ -263,17 +269,93 @@ function createPaginatedTableReducer(name = "") {
   };
 }
 
+function createSpecialTableReducer(name = "", target = "") {
+  let initialState = {
+    [name]: [],
+    status: "idle",
+    errors: null,
+    selected: null,
+    secondary: [],
+  };
+  return function reducer(state = initialState, action) {
+    switch (action.type) {
+      case `${name}/fetch_${name}/pending`:
+        return Object.assign({}, state, {
+          status: "loading",
+        });
+      case `${name}/fetch_${name}/rejected`:
+        return Object.assign({}, state, {
+          status: "failed",
+          errors: action.payload,
+        });
+      case `${name}/fetch_${name}/fulfilled`:
+        return Object.assign({}, state, {
+          [name]: action.payload.data,
+          status: "succeeded",
+        });
+      case `${name}/post_${name}/rejected`:
+        return Object.assign({}, state, {
+          [name]: state[name],
+          errors: action.payload,
+        });
+      case `${name}/post_${name}/fulfilled`:
+        return Object.assign({}, state, {
+          [name]: state[name].concat(action.payload.data),
+          status: "succeeded",
+        });
+      case `${name}/get_${name}/pending`:
+        return Object.assign({}, state, {
+          status: "loading",
+        });
+      case `${name}/get_${name}/rejected`:
+        return Object.assign({}, state, {
+          status: "failed",
+        });
+      case `${name}/get_${name}/fulfilled`:
+        return Object.assign({}, state, {
+          selected: action.payload.data,
+          status: "succeeded",
+          secondary: action.payload.data.attributes[target],
+        });
+      case `${name}/update_${name}/rejected`:
+        return Object.assign({}, state, {
+          status: "failed",
+        });
+      case `${name}/update_${name}/fulfilled`:
+        return Object.assign({}, state, {
+          selected: action.payload.data,
+          status: "succeeded",
+        });
+      case `${name}/delete_${name}/rejected`:
+        return Object.assign({}, state, {
+          selected: state.selected,
+        });
+      // case `${name}/delete_${name}/fulfilled`:
+      //   return Object.assign({}, state, {
+      //     status: "succeeded",
+      //   });
+      case `${target}/post_${target}/fulfilled`:
+        return Object.assign({}, state, {
+          selected: state.selected,
+          secondary: state.secondary.concat(action.payload),
+        });
+      default:
+        return state;
+    }
+  };
+}
+
 const reducer = combineReducers({
   sports: createTableReducer("sports"),
   leagues: createTableReducer("leagues"),
   clubs: createTableReducer("clubs"),
   groups: createTableReducer("groups"),
   club_groups: createTableReducer("club_groups"),
-  companies: createTableReducer("companies"),
+  companies: createSpecialTableReducer("companies", "brokers"),
   brokers: createTableReducer("brokers"),
   carriers: createTableReducer("carriers"),
   users: createTableReducer("users"),
-  categories: createTableReducer("categories"),
+  categories: createSpecialTableReducer("categories", "sub_categories"),
   sub_categories: createTableReducer("sub_categories"),
   coverages: createPaginatedTableReducer("coverages"),
   alerts: alerts,

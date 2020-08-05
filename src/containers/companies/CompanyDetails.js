@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import EditObject from "../../components/EditObject";
-import AddSubCategory from "../sub_categories/AddSubCategory";
+import AddBroker from "../brokers/AddBroker";
 import { Card, Button, Row, Spinner } from "react-bootstrap";
 import { capitalize, canDelete } from "../../utils/Helpers";
 import { Redirect } from "react-router-dom";
 import GeneralTable from "../../components/GeneralTable";
 
-export default class CategoryDetails extends Component {
+export default class CompanyDetails extends Component {
   state = {
     modal_edit: false,
-    modal_sub: false,
+    modal_broker: false,
   };
 
   switchModal = (name) => {
@@ -27,7 +27,7 @@ export default class CategoryDetails extends Component {
             <td width="200" align="left">
               <Button
                 variant="link"
-                href={"/sub_categories/" + object.data.attributes.id}
+                href={"/brokers/" + object.data.attributes.id}
                 style={{ color: "black" }}
               >
                 {object.data.attributes.name}
@@ -45,7 +45,7 @@ export default class CategoryDetails extends Component {
       <GeneralTable
         objects={this.props.secondary}
         showObjects={showObjects}
-        tableHeaders={["Name", "Coverages"]}
+        tableHeaders={["Name", "Associated"]}
         status={this.props.status}
       />
     );
@@ -81,10 +81,10 @@ export default class CategoryDetails extends Component {
                 <Button
                   className="btn btn-theme float-right"
                   variant="primary"
-                  onClick={(slot) => this.switchModal("modal_sub")}
+                  onClick={(slot) => this.switchModal("modal_broker")}
                   style={{ marginRight: "10px" }}
                 >
-                  Add Sub
+                  Add Broker
                 </Button>
                 {canDelete(this.props.object) && (
                   <Button
@@ -113,11 +113,11 @@ export default class CategoryDetails extends Component {
               name={this.props.name}
               updateObject={this.props.updateObject}
             />
-            <AddSubCategory
-              show={this.state.modal_sub}
+            <AddBroker
+              show={this.state.modal_broker}
               switchModal={this.switchModal}
-              formHelpers={this.props.formHelpersSub}
-              form={this.props.formSub}
+              formHelpers={this.props.formHelpersBroker}
+              form={this.props.formBroker}
               object={this.props.object}
               name={this.props.name}
               postSub={this.props.postSub}
@@ -129,4 +129,4 @@ export default class CategoryDetails extends Component {
   }
 }
 
-CategoryDetails.propTypes = {};
+CompanyDetails.propTypes = {};

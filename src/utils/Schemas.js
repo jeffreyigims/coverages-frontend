@@ -64,11 +64,9 @@ export const companies = {
 export const brokers = {
   schema: yup.object({
     name: yup.string().required(),
-    company: yup.string().required(),
   }),
   initialValues: {
     name: "",
-    company: 0,
   },
 };
 

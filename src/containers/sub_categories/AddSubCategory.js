@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 import { Formik } from "formik";
 
-class AddSub extends React.Component {
+export default class AddSubCategory extends React.Component {
   handleClose = (name) => {
     this.props.switchModal(name);
   };
@@ -51,4 +51,3 @@ class AddSub extends React.Component {
   }
 }
 
-export default AddSub;

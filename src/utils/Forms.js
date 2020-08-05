@@ -185,6 +185,43 @@ export function companyForm(values, handleChange, setFieldValue, errors) {
   );
 }
 
+export function brokerForm(
+  values,
+  handleChange,
+  setFieldValue,
+  errors,
+  company
+) {
+  return (
+    <>
+      <Row>
+        <Form.Group as={Col}>
+          <Form.Label>Company:</Form.Label>
+          <Form.Control
+            type="text"
+            name="company"
+            value={company.name}
+            disabled
+          />
+        </Form.Group>
+        <Form.Group as={Col}>
+          <Form.Label>Name:</Form.Label>
+          <Form.Control
+            type="text"
+            name="name"
+            value={values.name}
+            onChange={handleChange}
+            isInvalid={!!errors.name}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.name}
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Row>
+    </>
+  );
+}
+
 export function categoryForm(values, handleChange, setFieldValue, errors) {
   return (
     <>
@@ -336,38 +373,6 @@ export function userForm(values, handleChange, setFieldValue, errors, leagues) {
           />
           <Form.Control.Feedback type="invalid">
             {errors.username}
-          </Form.Control.Feedback>
-        </Form.Group>
-      </Row>
-    </>
-  );
-}
-
-export function brokerForm(values, handleChange, setFieldValue, errors) {
-  return (
-    <>
-      {" "}
-      <Row>
-        <Form.Group as={Col}>
-          <Form.Label>Company:</Form.Label>
-          <Form.Control
-            type="text"
-            name="company"
-            value={values.company.name}
-            disabled
-          />
-        </Form.Group>
-        <Form.Group as={Col}>
-          <Form.Label>Name:</Form.Label>
-          <Form.Control
-            type="text"
-            name="name"
-            value={values.name}
-            onChange={handleChange}
-            isInvalid={!!errors.name}
-          />
-          <Form.Control.Feedback type="invalid">
-            {errors.name}
           </Form.Control.Feedback>
         </Form.Group>
       </Row>

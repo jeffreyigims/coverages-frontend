@@ -24,7 +24,6 @@ class CategoryContainer extends Component {
   }
 
   postSubCategory = (values) => {
-    console.log(values)
     const new_object = {
       name: values.name,
       category_id: this.props.selected.attributes.id,
@@ -37,6 +36,7 @@ class CategoryContainer extends Component {
       <>
         <CategoryDetails
           object={this.props.selected}
+          secondary={this.props.secondary}
           status={this.props.status}
           name={this.state.name}
           formHelpers={formHelpers}
@@ -74,9 +74,9 @@ CategoryContainer.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { selected, status, error } = state.categories;
+  const { selected, status, error, secondary } = state.categories;
   const { link, redirect } = state.redirections;
-  return { selected, status, error, link, redirect };
+  return { selected, status, error, link, redirect, secondary };
 }
 
 export default connect(mapStateToProps)(CategoryContainer);

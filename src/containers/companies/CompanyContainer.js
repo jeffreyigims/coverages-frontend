@@ -1,68 +1,59 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import DetailStructure from "../../components/DetailStructure";
+import CompanyDetails from "./CompanyDetails";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import GeneralTable from "../../components/GeneralTable";
 import { companies as formHelpers } from "../../utils/Schemas";
 import { companyForm as form } from "../../utils/Forms";
+import { brokers as formHelpersBroker } from "../../utils/Schemas";
+import { brokerForm as formBroker } from "../../utils/Forms";
 import {
   fetchCompany,
   updateCompany,
   deleteCompany,
+  postBroker,
 } from "../../actions/Actions";
 
 class CompanyContainer extends Component {
   state = {
     name: "company",
+    id: this.props.match.params.id,
   };
 
   componentDidMount() {
-    let id = this.props.match.params.id;
-    this.props.dispatch(fetchCompany(id));
+    this.props.dispatch(fetchCompany(this.state.id));
   }
 
-  showDetails = (object) => {
-    let showObjects = (objects) => {
-      return objects.map((object, index) => {
-        return (
-          <tr key={index}>
-            <td width="200" align="left">
-              <Button
-                variant="link"
-                href={"/brokers/" + object.data.attributes.id}
-                style={{ color: "black" }}
-              >
-                {object.data.attributes.name}
-              </Button>
-            </td>
-            <td width="200" align="left">
-              {object.data.attributes.associated_coverages}
-            </td>
-          </tr>
-        );
-      });
+  postSubBroker = (values) => {
+    const new_object = {
+      name: values.name,
+      company_id: this.props.selected.attributes.id,
     };
-
-    return (
-      <GeneralTable
-        objects={object.attributes.brokers}
-        showObjects={showObjects}
-        tableHeaders={["Name", "Associated"]}
-      />
-    );
+    this.props.dispatch(postBroker(new_object));
   };
 
   render() {
     return (
       <>
-        <DetailStructure
+        <CompanyDetails
           object={this.props.selected}
+          secondary={this.props.secondary}
           status={this.props.status}
           name={this.state.name}
           formHelpers={formHelpers}
           form={form}
-          showDetails={this.showDetails}
+          formHelpersBroker={formHelpersBroker}
+          formBroker={(values, handleChange, setFieldValue, errors) =>
+            formBroker(
+              values,
+              handleChange,
+              setFieldValue,
+              errors,
+              this.props.selected.attributes
+            )
+          }
+          postSub={(values) => this.postSubBroker(values)}
           updateObject={(id, values) => {
             this.props.dispatch(updateCompany({ id: id, values: values }));
           }}
@@ -85,9 +76,9 @@ CompanyContainer.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { selected, status, error } = state.companies;
+  const { selected, status, error, secondary } = state.companies;
   const { link, redirect } = state.redirections;
-  return { selected, status, error, link, redirect };
+  return { selected, status, error, link, redirect, secondary };
 }
 
 export default connect(mapStateToProps)(CompanyContainer);
