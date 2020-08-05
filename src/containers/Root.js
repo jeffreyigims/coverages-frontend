@@ -21,6 +21,7 @@ import CoveragesContainer from "./coverages/CoveragesContainer";
 import CoverageContainer from "./coverages/CoverageContainer";
 import BrokerContainer from "./brokers/BrokerContainer";
 import SubCategoryContainer from "./sub_categories/SubCategoryContainer";
+import CoverageWizardContainer from "./coverage_wizard/CoverageWizardContainer";
 import AlertsContainer from "./AlertsContainer";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Navbar, Row, Col, Container } from "react-bootstrap";
@@ -56,6 +57,7 @@ export default class Root extends React.Component {
             <Route path="/coverages/:id" exact component={CoverageContainer} />
             <Route path="/brokers/:id" exact component={BrokerContainer} />
             {/* <Route path="/sub_categories/:id" exact component={SubCategoryContainer} /> */}
+            <Route path="/coverage_wizard" exact component={CoverageWizardContainer} />
           </Router>
         </Provider>
       </>

@@ -21,7 +21,7 @@ export const objectOptionsID = (objects) => {
   });
 };
 
-const objectGroupOptions = (objects) => {
+export const objectGroupOptions = (objects) => {
   return objects.map((object, index) => {
     return (
       <option key={index} value={index}>
@@ -31,7 +31,7 @@ const objectGroupOptions = (objects) => {
   });
 };
 
-const objectDataOptions = (objects) => {
+export const objectDataOptions = (objects) => {
   return objects.map((object, index) => {
     return (
       <option key={index} value={index}>

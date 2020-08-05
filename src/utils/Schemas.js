@@ -128,6 +128,35 @@ export const coverages = {
   },
 };
 
+export const coverage_wizard = {
+  schema: yup.object({
+    // club_index: yup.string().required(),
+    // group_index: yup.string().required(),
+    // category_index: yup.string().required(),
+    // sub_category_index: yup.string().required(),
+    // notes: yup.string(),
+    // start_date: yup.date(),
+    // end_date: yup.date(),
+    // has_coverage_line: yup.boolean().required(),
+    // verified: yup.boolean().required(),
+  }),
+  initialValues: {
+    sport_index: 0,
+    league_index: 0,
+    club_index: 0,
+    group_index: 0,
+    category_index: 0,
+    sub_category_index: 0,
+    carriers: [],
+    brokers: [],
+    notes: "",
+    start_date: new Date(),
+    end_date: null,
+    has_coverage_line: false,
+    verified: false,
+  },
+};
+
 export const users = {
   schema: yup.object({
     first_name: yup.string().required(),
