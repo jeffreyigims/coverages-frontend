@@ -29,6 +29,7 @@ import {
 class CoverageWizardContainer extends Component {
   state = {
     coverages: [],
+    basic: 4,
   };
 
   componentDidMount() {
