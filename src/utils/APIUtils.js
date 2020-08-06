@@ -6,8 +6,8 @@
 //   return response;
 // }
 
-// const base = "https://coverages-backend.herokuapp.com";
-const base = "http://localhost:3000";
+const base = "https://coverages-backend.herokuapp.com";
+// const base = "http://localhost:3000";
 
 export function runAjax(link, method = "GET", data = {}, rejectWithValue = {}) {
   var promiseObject = new Promise(async function (resolve, reject) {
