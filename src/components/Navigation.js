@@ -9,7 +9,7 @@ export default class Navigation extends React.Component {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link href="/coverage_wizard">Add Coverages</Nav.Link>
+            <Nav.Link href="/add_coverages">Add Coverages</Nav.Link>
             <Nav.Link href="/">Metrics</Nav.Link>
             <NavDropdown title="Database" id="collasible-nav-dropdown">
               <NavDropdown.Item href="/coverages">Coverages</NavDropdown.Item>

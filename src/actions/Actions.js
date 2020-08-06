@@ -151,6 +151,7 @@ export const deleteUser = createDelete("users");
 
 export const postSubCategory = createPost("sub_categories", "sub_category");
 export const fetchSubCategory = createGet("sub_categories");
+export const updateSubCategory = createUpdate("sub_categories", "sub_category");
 export const deleteSubCategory = createDelete("sub_categories");
 
 export const postClubGroup = createPost("club_groups", "club_group");

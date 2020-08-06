@@ -6,11 +6,10 @@ import PropTypes from "prop-types";
 import { Button, Form, Col, Row, Card, Spinner } from "react-bootstrap";
 import { Formik } from "formik";
 import { TrashFill } from "react-bootstrap-icons";
-// import DatePicker from "react-datepicker";
-// import "react-datepicker/dist/react-datepicker.css";
+import { DatePickerInput } from "rc-datepicker";
+import "rc-datepicker/lib/style.css";
 import Moment from "react-moment";
 import {
-  objectOptionsID,
   objectOptions,
   objectDataOptions,
   objectGroupOptions,
@@ -18,7 +17,6 @@ import {
 import { coverage_wizard as formHelpers } from "../../utils/Schemas";
 import {
   fetchSports,
-  fetchLeagues,
   fetchClubs,
   fetchCategories,
   fetchCarriers,
@@ -29,7 +27,6 @@ import {
 class CoverageWizardContainer extends Component {
   state = {
     coverages: [],
-    basic: 4,
   };
 
   componentDidMount() {
@@ -92,6 +89,7 @@ class CoverageWizardContainer extends Component {
       this.props.dispatch(
         postCoverageAssociations(new_object, carriers, brokers)
       );
+      return coverage;
     });
     this.setState({
       coverages: [],
@@ -156,7 +154,7 @@ class CoverageWizardContainer extends Component {
               onClick={() => {
                 this.setState({
                   coverages: this.state.coverages.filter(
-                    (coverage, i) => i != index
+                    (coverage, i) => i !== index
                   ),
                 });
               }}
@@ -349,20 +347,30 @@ class CoverageWizardContainer extends Component {
                     <Row>
                       <Form.Group as={Col}>
                         <Form.Label>{"Start Date:"}</Form.Label>
-                        {/* <DatePicker
-                        name="start_date"
-                        selected={values.start_date}
-                        onChange={(val) => setFieldValue("start_date", val)}
-                      /> */}
+                        <DatePickerInput
+                          name="start_date"
+                          value={values.start_date}
+                          onChange={(val) =>
+                            setFieldValue(
+                              "start_date",
+                              val === "Invalid date" ? null : val
+                            )
+                          }
+                        />
                       </Form.Group>
 
                       <Form.Group as={Col}>
                         <Form.Label>{"Ending Date:"}</Form.Label>
-                        {/* <DatePicker
-                        name="end_date"
-                        selected={values.end_date}
-                        onChange={(val) => setFieldValue("end_date", val)}
-                      /> */}
+                        <DatePickerInput
+                          name="end_date"
+                          value={values.end_date}
+                          onChange={(val) =>
+                            setFieldValue(
+                              "end_date",
+                              val === "Invalid date" ? null : val
+                            )
+                          }
+                        />
                       </Form.Group>
                     </Row>
                     <Row>
@@ -445,7 +453,10 @@ class CoverageWizardContainer extends Component {
   }
 }
 
-CoverageWizardContainer.propTypes = {};
+CoverageWizardContainer.propTypes = {
+  carriers: PropTypes.object.isRequired,
+  brokers: PropTypes.object.isRequired,
+};
 
 function mapStateToProps(state) {
   const { sports } = state.sports;

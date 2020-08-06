@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Row, Col } from "react-bootstrap";
-// import "react-datepicker/dist/react-datepicker.css";
-// import DatePicker from "react-datepicker";
+import { DatePickerInput } from "rc-datepicker";
+import "rc-datepicker/lib/style.css";
 
 export const objectOptions = (objects) => {
   return objects.map((object, index) => {
@@ -513,20 +513,20 @@ export function coverageForm(
       <Row>
         <Form.Group as={Col}>
           <Form.Label>{"Start Date:"}</Form.Label>
-          {/* <DatePicker
+          <DatePickerInput
             name="start_date"
-            selected={values.start_date}
+            value={values.start_date}
             onChange={(val) => setFieldValue("start_date", val)}
-          /> */}
+          />
         </Form.Group>
 
         <Form.Group as={Col}>
           <Form.Label>{"Ending Date:"}</Form.Label>
-          {/* <DatePicker
+          <DatePickerInput
             name="end_date"
-            selected={values.end_date}
+            value={values.end_date}
             onChange={(val) => setFieldValue("end_date", val)}
-          /> */}
+          />
         </Form.Group>
       </Row>
 

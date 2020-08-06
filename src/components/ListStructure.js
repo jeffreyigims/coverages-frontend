@@ -1,7 +1,7 @@
 import React from "react";
 import PaginatedTable from "../components/PaginatedTable";
 import NewObject from "../components/NewObject";
-import { Card, Button, Spinner, Row } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import { capitalize } from "../utils/Helpers";
 import "../App.css";
 

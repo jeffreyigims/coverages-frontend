@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import CompanyDetails from "./CompanyDetails";
 import PropTypes from "prop-types";
-import { Button } from "react-bootstrap";
-import GeneralTable from "../../components/GeneralTable";
 import { companies as formHelpers } from "../../utils/Schemas";
 import { companyForm as form } from "../../utils/Forms";
 import { brokers as formHelpersBroker } from "../../utils/Schemas";

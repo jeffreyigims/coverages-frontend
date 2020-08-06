@@ -2,15 +2,23 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Form, Col, Row, Card, Spinner, Button } from "react-bootstrap";
 import { Formik } from "formik";
-// import DatePicker from "react-datepicker";
+import { DatePickerInput } from "rc-datepicker";
+import "rc-datepicker/lib/style.css";
 import { objectOptionsID } from "../../utils/Forms";
+import * as moment from "moment";
 
 export default class CoverageDetails extends React.Component {
   initialValues = (coverage) => {
     var values = {};
     values["notes"] = coverage.notes;
-    values["start_date"] = Date.parse(coverage.start_date) || new Date();
-    values["end_date"] = Date.parse(coverage.end_date) || new Date();
+    values["start_date"] =
+      coverage.start_date == null
+        ? null
+        : moment(coverage.start_date).format("MM/DD/YYYY");
+    values["end_date"] =
+      coverage.end_date == null
+        ? null
+        : moment(coverage.end_date).format("MM/DD/YYYY");
     values["has_coverage_line"] = coverage.has_coverage_line;
     values["verified"] = coverage.verified;
     values["carriers"] = coverage.coverage_carriers.map(
@@ -148,20 +156,34 @@ export default class CoverageDetails extends React.Component {
                     <Row>
                       <Form.Group as={Col}>
                         <Form.Label>{"Start Date:"}</Form.Label>
-                        {/* <DatePicker
+                        <DatePickerInput
                           name="start_date"
-                          selected={values.start_date}
-                          onChange={(val) => setFieldValue("start_date", val)}
-                        /> */}
+                          value={values.start_date}
+                          onChange={(val) =>
+                            setFieldValue(
+                              "start_date",
+                              val === "Invalid date"
+                                ? null
+                                : moment(val).format("MM/DD/YYYY")
+                            )
+                          }
+                        />
                       </Form.Group>
 
                       <Form.Group as={Col}>
                         <Form.Label>{"Ending Date:"}</Form.Label>
-                        {/* <DatePicker
+                        <DatePickerInput
                           name="end_date"
-                          selected={values.end_date}
-                          onChange={(val) => setFieldValue("end_date", val)}
-                        /> */}
+                          value={values.end_date}
+                          onChange={(val) =>
+                            setFieldValue(
+                              "end_date",
+                              val === "Invalid date"
+                                ? null
+                                : moment(val).format("MM/DD/YYYY")
+                            )
+                          }
+                        />
                       </Form.Group>
                     </Row>
                     <Row>
@@ -187,7 +209,7 @@ export default class CoverageDetails extends React.Component {
                         />
                       </Form.Group>
                     </Row>
-                    {dirty == true ? (
+                    {dirty === true ? (
                       <Button
                         type="submit"
                         className="btn btn-theme float-right"
@@ -211,4 +233,7 @@ export default class CoverageDetails extends React.Component {
   }
 }
 
-CoverageDetails.propTypes = {};
+CoverageDetails.propTypes = {
+  status: PropTypes.string.isRequired,
+  submit: PropTypes.func.isRequired,
+};

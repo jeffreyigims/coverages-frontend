@@ -11,7 +11,7 @@ export function canDelete(object) {
     case "league":
       return object.attributes.clubs.length === 0 ? true : false;
     case "club":
-      return object.attributes.club_groups.length === 0 ? true : false;
+      return object.attributes.coverages_count === 0 ? true : false;
     case "company":
       return object.attributes.brokers.length === 0 ? true : false;
     case "broker":

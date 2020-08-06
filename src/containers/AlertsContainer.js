@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Alert, ListGroup, Row } from "react-bootstrap";
+import { Alert, Row } from "react-bootstrap";
 import { dismissAlert } from "../actions/Actions";
 
 class AlertsContainer extends React.Component {

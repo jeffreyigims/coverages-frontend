@@ -36,7 +36,13 @@ class ClubsContainer extends Component {
             {object.attributes.abbreviation}
           </td>
           <td width="200" align="left">
-            {object.attributes.league.name}
+            <Button
+              variant="link"
+              href={"/leagues/" + object.attributes.league.id}
+              style={{ color: "black" }}
+            >
+              {object.attributes.league.name}
+            </Button>{" "}
           </td>
           <td width="200" align="left">
             {object.attributes.club_groups_count}
@@ -67,7 +73,13 @@ class ClubsContainer extends Component {
           plural={this.state.plural}
           formHelpers={formHelpers}
           form={(values, handleChange, setFieldValue, errors) =>
-            form(values, handleChange, setFieldValue, errors, this.props.leagues)
+            form(
+              values,
+              handleChange,
+              setFieldValue,
+              errors,
+              this.props.leagues
+            )
           }
           postObject={this.postObject}
         />

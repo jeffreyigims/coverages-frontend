@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import EditObject from "../../components/EditObject";
-import AddSubCategory from "../sub_categories/AddSubCategory";
-import { Card, Button, Row, Spinner } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import { capitalize, canDelete } from "../../utils/Helpers";
 import { Redirect } from "react-router-dom";
 

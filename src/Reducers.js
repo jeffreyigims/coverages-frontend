@@ -1,6 +1,5 @@
 import { combineReducers } from "redux";
 import {
-  dismissAlert,
   deleteSport,
   deleteLeague,
   deleteClub,
@@ -109,7 +108,8 @@ const redirectionSlice = createSlice({
       state.redirect = true;
     },
     [deleteSubCategory.fulfilled]: (state, action) => {
-      state.link = "/categories";
+      const id = action.payload.data.attributes.category_id;
+      state.link = "/categories/".concat(id);
       state.redirect = true;
     },
     [deleteCarrier.fulfilled]: (state, action) => {

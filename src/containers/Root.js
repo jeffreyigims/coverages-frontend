@@ -21,10 +21,9 @@ import CoveragesContainer from "./coverages/CoveragesContainer";
 import CoverageContainer from "./coverages/CoverageContainer";
 import BrokerContainer from "./brokers/BrokerContainer";
 import SubCategoryContainer from "./sub_categories/SubCategoryContainer";
-import CoverageWizardContainer from "./coverage_wizard/CoverageWizardContainer";
+import AddCoverages from "./coverages/AddCoverages";
 import AlertsContainer from "./AlertsContainer";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import { Navbar, Row, Col, Container } from "react-bootstrap";
 import Navigation from "../components/Navigation";
 
 const store = configureStore();
@@ -37,6 +36,7 @@ export default class Root extends React.Component {
           <Navigation />
           <AlertsContainer />
           <Router>
+            <Route path="/" exact component={CoveragesContainer} />
             <Route path="/sports" exact component={SportsContainer} />
             <Route path="/sports/:id" exact component={SportContainer} />
             <Route path="/leagues" exact component={LeaguesContainer} />
@@ -56,8 +56,16 @@ export default class Root extends React.Component {
             <Route path="/coverages" exact component={CoveragesContainer} />
             <Route path="/coverages/:id" exact component={CoverageContainer} />
             <Route path="/brokers/:id" exact component={BrokerContainer} />
-            <Route path="/sub_categories/:id" exact component={SubCategoryContainer} />
-            <Route path="/coverage_wizard" exact component={CoverageWizardContainer} />
+            <Route
+              path="/sub_categories/:id"
+              exact
+              component={SubCategoryContainer}
+            />
+            <Route
+              path="/add_coverages"
+              exact
+              component={AddCoverages}
+            />
           </Router>
         </Provider>
       </>

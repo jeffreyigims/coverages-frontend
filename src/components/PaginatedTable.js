@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import GeneralTable from "./GeneralTable";
 import { Pagination } from "semantic-ui-react";
@@ -36,7 +36,6 @@ PaginatedTable.propTypes = {
   showObjects: PropTypes.func.isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.string).isRequired,
   message: PropTypes.string,
-  showObjects: PropTypes.func.isRequired,
   defaultActivePage: PropTypes.number,
   totalPages: PropTypes.number,
 };

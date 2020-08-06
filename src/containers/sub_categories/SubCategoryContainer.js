@@ -6,10 +6,14 @@ import { Button } from "react-bootstrap";
 import GeneralTable from "../../components/GeneralTable";
 import Moment from "react-moment";
 import { EyeFill } from "react-bootstrap-icons";
+import { sub_categories as formHelpers } from "../../utils/Schemas";
+import { subCategoryForm as form } from "../../utils/Forms";
 import {
   fetchSubCategory,
   deleteSubCategory,
+  updateSubCategory,
   fetchCoverages,
+  fetchCategories,
 } from "../../actions/Actions";
 
 class SubCategoryContainer extends Component {
@@ -21,6 +25,7 @@ class SubCategoryContainer extends Component {
   componentDidMount() {
     this.props.dispatch(fetchSubCategory(this.state.id));
     this.props.dispatch(fetchCoverages({ for_sub_category: this.state.id }));
+    this.props.dispatch(fetchCategories());
   }
 
   showDetails = (object) => {
@@ -133,8 +138,21 @@ class SubCategoryContainer extends Component {
           status={this.props.status}
           name={this.state.name}
           showDetails={this.showDetails}
+          formHelpers={formHelpers}
+          form={(values, handleChange, setFieldValue, errors) =>
+            form(
+              values,
+              handleChange,
+              setFieldValue,
+              errors,
+              this.props.selected
+            )
+          }
           deleteObject={(id) => {
             this.props.dispatch(deleteSubCategory(id));
+          }}
+          updateObject={(id, values) => {
+            this.props.dispatch(updateSubCategory({ id: id, values: values }));
           }}
           redirection={{ link: this.props.link, redirect: this.props.redirect }}
         />
@@ -154,7 +172,8 @@ SubCategoryContainer.propTypes = {
 function mapStateToProps(state) {
   const { selected, status, error } = state.sub_categories;
   const { coverages } = state.coverages;
-  const coveragesStatus = state.coverages.status 
+  const { categories } = state.categories;
+  const coveragesStatus = state.coverages.status;
   const { link, redirect } = state.redirections;
   return {
     selected,
@@ -164,6 +183,7 @@ function mapStateToProps(state) {
     redirect,
     coverages,
     coveragesStatus,
+    categories,
   };
 }
 

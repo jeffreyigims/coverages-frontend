@@ -3,14 +3,9 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { coverages as formHelpers } from "../../utils/Schemas";
 import CoverageDetails from "./CoverageDetails";
-import Moment from "react-moment";
 import {
   fetchCoverage,
   updateCoverageAssociations,
-  postCoverageBroker,
-  deleteCoverageBroker,
-  postCoverageCarrier,
-  deleteCoverageCarrier,
   fetchCarriers,
   fetchBrokers,
 } from "../../actions/Actions";
@@ -25,7 +20,7 @@ class CoverageContainer extends Component {
 
   includes = (arr, object, target) => {
     for (let i = 0; i < arr.length; i++) {
-      if (arr[i].data.attributes[target] == object) {
+      if (arr[i].data.attributes[target] === object) {
         return true;
       }
     }

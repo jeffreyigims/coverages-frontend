@@ -53,7 +53,7 @@ class LeagueContainer extends Component {
       <GeneralTable
         objects={object.attributes.clubs}
         showObjects={showObjects}
-        tableHeaders={["Name", "Code", "Groups"]}
+        tableHeaders={["Club", "Code", "Groups"]}
         status={this.props.status}
       />
     );
