@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Form, Col, Row, Card, Spinner, Button } from "react-bootstrap";
 import { Formik } from "formik";
-import DatePicker from "react-datepicker";
+// import DatePicker from "react-datepicker";
 import { objectOptionsID } from "../../utils/Forms";
 
 export default class CoverageDetails extends React.Component {

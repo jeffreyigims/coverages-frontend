@@ -6,8 +6,8 @@ import PropTypes from "prop-types";
 import { Button, Form, Col, Row, Card, Spinner } from "react-bootstrap";
 import { Formik } from "formik";
 import { TrashFill } from "react-bootstrap-icons";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+// import DatePicker from "react-datepicker";
+// import "react-datepicker/dist/react-datepicker.css";
 import Moment from "react-moment";
 import {
   objectOptionsID,
