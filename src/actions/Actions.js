@@ -153,6 +153,8 @@ export const postSubCategory = createPost("sub_categories", "sub_category");
 export const fetchSubCategory = createGet("sub_categories");
 export const deleteSubCategory = createDelete("sub_categories");
 
+export const postClubGroup = createPost("club_groups", "club_group");
+
 // export const fetchCoverages = createFetch("coverages");
 export const postCoverage = createPost("coverages", "coverage");
 export const fetchCoverage = createGet("coverages");

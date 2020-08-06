@@ -1,7 +1,9 @@
+// Returns a capitalized string for use in page titles 
 export function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+// Used in determining if a button should be displayed to delete a specific object
 export function canDelete(object) {
   switch (object.type) {
     case "sport":
@@ -30,4 +32,19 @@ export function canDelete(object) {
     default:
       return true;
   }
+}
+
+// Takes a group of statuses and returns a successful status if all of the statuses are marked successfull
+export function groupStatus(statuses) {
+  const status = "succeeded";
+  for (var key in statuses) {
+    if (statuses[key] === "failed") {
+      return "failed";
+    } else if (statuses[key] === "loading") {
+      return "loading";
+    } else if (statuses[key] === "idle") {
+      return "idle";
+    }
+  }
+  return status;
 }

@@ -43,11 +43,9 @@ export const groups = {
 
 export const club_groups = {
   schema: yup.object({
-    club_index: yup.string().required(),
     group_index: yup.string().required(),
   }),
   initialValues: {
-    club_index: 0,
     group_index: 0,
   },
 };

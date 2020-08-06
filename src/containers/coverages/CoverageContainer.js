@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { coverages as formHelpers } from "../../utils/Schemas";
 import CoverageDetails from "./CoverageDetails";
+import Moment from "react-moment";
 import {
   fetchCoverage,
   updateCoverageAssociations,
@@ -58,8 +59,8 @@ class CoverageContainer extends Component {
   updateCoverage = (values) => {
     const coverage = {
       notes: values.notes,
-      start_date: values.satrt_date,
-      end_date: values.end_date,
+      start_date: Date(values.start_date),
+      end_date: Date(values.end_date),
       has_coverage_line: values.has_coverage_line,
       verified: values.verified,
     };

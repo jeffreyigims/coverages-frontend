@@ -6,12 +6,16 @@ import { Button } from "react-bootstrap";
 import PaginatedTable from "../../components/PaginatedTable";
 import { clubs as formHelpers } from "../../utils/Schemas";
 import { clubForm as form } from "../../utils/Forms";
+import { club_groups as formHelpersGroups } from "../../utils/Schemas";
+import { clubGroupForm as formGroups } from "../../utils/Forms";
 import {
   fetchClub,
   updateClub,
   deleteClub,
   fetchCoverages,
   fetchLeagues,
+  fetchGroups,
+  postClubGroup,
 } from "../../actions/Actions";
 
 class ClubContainer extends Component {
@@ -23,6 +27,7 @@ class ClubContainer extends Component {
   componentDidMount() {
     this.props.dispatch(fetchClub(this.state.id));
     this.props.dispatch(fetchLeagues());
+    this.props.dispatch(fetchGroups());
     this.props.dispatch(fetchCoverages({ for_club: this.state.id }));
   }
 
@@ -91,7 +96,31 @@ class ClubContainer extends Component {
           name={this.state.name}
           formHelpers={formHelpers}
           form={(values, handleChange, setFieldValue, errors) =>
-            form(values, handleChange, setFieldValue, errors, this.props.leagues)
+            form(
+              values,
+              handleChange,
+              setFieldValue,
+              errors,
+              this.props.leagues
+            )
+          }
+          formHelpersGroups={formHelpersGroups}
+          formGroups={(values, handleChange, setFieldValue, errors) =>
+            formGroups(
+              values,
+              handleChange,
+              setFieldValue,
+              errors,
+              this.props.groups
+            )
+          }
+          postObject={(values) =>
+            this.props.dispatch(
+              postClubGroup({
+                club_id: this.props.selected.attributes.id,
+                group_id: this.props.groups[values.group_index].attributes.id,
+              })
+            )
           }
           showDetails={this.showDetails}
           updateObject={(id, values) => {
@@ -118,9 +147,21 @@ ClubContainer.propTypes = {
 function mapStateToProps(state) {
   const { selected, status, error } = state.clubs;
   const { coverages, pages, page } = state.coverages;
+  const { groups } = state.groups;
   const { leagues } = state.leagues;
   const { link, redirect } = state.redirections;
-  return { selected, status, error, link, redirect, coverages, pages, page, leagues };
+  return {
+    selected,
+    status,
+    error,
+    link,
+    redirect,
+    coverages,
+    pages,
+    page,
+    leagues,
+    groups,
+  };
 }
 
 export default connect(mapStateToProps)(ClubContainer);

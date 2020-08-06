@@ -1,5 +1,7 @@
 import React from "react";
 import { Form, Row, Col } from "react-bootstrap";
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
 
 export const objectOptions = (objects) => {
   return objects.map((object, index) => {
@@ -562,7 +564,6 @@ export function groupForm(
 ) {
   return (
     <>
-      {" "}
       <Row>
         <Form.Group as={Col}>
           <Form.Label>Name:</Form.Label>
@@ -582,12 +583,28 @@ export function groupForm(
   );
 }
 
-export function objectForm(
+export function clubGroupForm(
   values,
   handleChange,
   setFieldValue,
   errors,
-  leagues
+  groups
 ) {
-  return <></>;
+  return (
+    <>
+      <Row>
+        <Form.Group as={Col}>
+          <Form.Label>Group:</Form.Label>
+          <Form.Control
+            as="select"
+            name="group_index"
+            value={values.group_index}
+            onChange={handleChange}
+          >
+            {objectOptions(groups)}
+          </Form.Control>
+        </Form.Group>
+      </Row>
+    </>
+  );
 }

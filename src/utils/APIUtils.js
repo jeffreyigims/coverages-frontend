@@ -6,6 +6,9 @@ function reject(response) {
   return response;
 }
 
+const base = "https://coverages-backend.herokuapp.com";
+// const base = "http://localhost:3000";
+
 export function runAjax(link, method = "GET", data = {}, rejectWithValue = {}) {
   var promiseObject = new Promise(async function (resolve, reject) {
     let options;
@@ -13,7 +16,7 @@ export function runAjax(link, method = "GET", data = {}, rejectWithValue = {}) {
       options = {
         method: "GET",
       };
-      link = link + "?" + new URLSearchParams(data);
+      link = base + link + "?" + new URLSearchParams(data);
     } else {
       options = {
         method: method,
@@ -23,6 +26,7 @@ export function runAjax(link, method = "GET", data = {}, rejectWithValue = {}) {
         },
         credentials: "same-origin",
       };
+      link = base + link;
     }
 
     let response = await fetch(link, options);

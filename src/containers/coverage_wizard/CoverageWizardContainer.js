@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import GeneralTable from "../../components/GeneralTable";
+import { groupStatus } from "../../utils/Helpers";
 import PropTypes from "prop-types";
 import { Button, Form, Col, Row, Card, Spinner } from "react-bootstrap";
 import { Formik } from "formik";
 import { TrashFill } from "react-bootstrap-icons";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import Moment from "react-moment";
 import {
   objectOptionsID,
@@ -13,7 +16,6 @@ import {
   objectGroupOptions,
 } from "../../utils/Forms";
 import { coverage_wizard as formHelpers } from "../../utils/Schemas";
-// import { clubForm as form } from "../../utils/Forms";
 import {
   fetchSports,
   fetchLeagues,
@@ -31,26 +33,11 @@ class CoverageWizardContainer extends Component {
 
   componentDidMount() {
     this.props.dispatch(fetchSports());
-    // this.props.dispatch(fetchLeagues());
     this.props.dispatch(fetchClubs());
     this.props.dispatch(fetchCategories());
     this.props.dispatch(fetchCarriers());
     this.props.dispatch(fetchBrokers());
   }
-
-  status = (statuses) => {
-    const status = "succeeded";
-    for (var key in statuses) {
-      if (statuses[key] === "failed") {
-        return "failed";
-      } else if (statuses[key] === "loading") {
-        return "loading";
-      } else if (statuses[key] === "idle") {
-        return "idle";
-      }
-    }
-    return status;
-  };
 
   clubOptions = (league) => {
     const league_id = league?.data.attributes.id;
@@ -183,7 +170,7 @@ class CoverageWizardContainer extends Component {
   };
 
   render() {
-    const status = this.status(this.props.status);
+    const status = groupStatus(this.props.status);
     return (
       <>
         <Card>

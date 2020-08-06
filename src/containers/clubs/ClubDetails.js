@@ -3,7 +3,7 @@ import EditObject from "../../components/EditObject";
 import { Card, Button, Row, Spinner } from "react-bootstrap";
 import { capitalize, canDelete } from "../../utils/Helpers";
 import { Redirect } from "react-router-dom";
-import EditGroups from "./EditGroups";
+import AddGroup from "./AddGroup";
 
 export default class ClubDetails extends Component {
   state = {
@@ -51,7 +51,7 @@ export default class ClubDetails extends Component {
                   onClick={(slot) => this.switchModal("modal_groups")}
                   style={{ marginRight: "10px" }}
                 >
-                  Edit Groups
+                  Add Group
                 </Button>
                 {canDelete(this.props.object) && (
                   <Button
@@ -80,14 +80,14 @@ export default class ClubDetails extends Component {
               name={this.props.name}
               updateObject={this.props.updateObject}
             />
-            <EditGroups
+            <AddGroup
               show={this.state.modal_groups}
               switchModal={this.switchModal}
-              formHelpers={this.props.formHelpers}
-              form={this.props.form}
+              formHelpers={this.props.formHelpersGroups}
+              form={this.props.formGroups}
               object={this.props.object}
               name={this.props.name}
-              updateObject={this.props.updateObject}
+              postObject={this.props.postObject}
             />
           </>
         )}
