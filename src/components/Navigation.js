@@ -2,16 +2,25 @@ import React from "react";
 import { Navbar, Nav, NavDropdown, Form, Button } from "react-bootstrap";
 import { search } from "../actions/Actions";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
+import SearchResults from "./SearchResults";
+import { switchModal } from "../utils/Helpers";
 
 class Navigation extends React.Component {
+  constructor() {
+    super();
+    this.switchModal = switchModal.bind(this);
+  }
+
   state = {
     query: "",
+    show_search: false,
+    modal_name: "show_search",
   };
 
   handleSearch = (e) => {
     e.preventDefault();
     this.props.dispatch(search({ search: this.state.query }));
+    this.switchModal(this.state.modal_name);
   };
 
   handleChange = (e) => {
@@ -27,7 +36,7 @@ class Navigation extends React.Component {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
               <Nav.Link href="/add_coverages">Add Coverages</Nav.Link>
-              <Nav.Link href="/">Metrics</Nav.Link>
+              <Nav.Link href="/metrics">Metrics</Nav.Link>
               <NavDropdown title="Database" id="collasible-nav-dropdown">
                 <NavDropdown.Item href="/coverages">Coverages</NavDropdown.Item>
                 <NavDropdown.Item href="/sports">Sports</NavDropdown.Item>
@@ -59,6 +68,11 @@ class Navigation extends React.Component {
             </Button>
           </Form>
         </Navbar>
+        <SearchResults
+          show={this.state.show_search}
+          switchModal={() => this.switchModal(this.state.modal_name)}
+          query={this.state.query}
+        />
       </>
     );
   }

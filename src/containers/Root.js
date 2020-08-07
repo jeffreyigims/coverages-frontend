@@ -23,6 +23,7 @@ import BrokerContainer from "./brokers/BrokerContainer";
 import SubCategoryContainer from "./sub_categories/SubCategoryContainer";
 import AddCoverages from "./coverages/AddCoverages";
 import AlertsContainer from "./AlertsContainer";
+import MetricsContainer from "./metrics/MetricsContainer";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Navigation from "../components/Navigation";
 
@@ -61,11 +62,8 @@ export default class Root extends React.Component {
               exact
               component={SubCategoryContainer}
             />
-            <Route
-              path="/add_coverages"
-              exact
-              component={AddCoverages}
-            />
+            <Route path="/add_coverages" exact component={AddCoverages} />
+            <Route path="/metrics" exact component={MetricsContainer} />
           </Router>
         </Provider>
       </>

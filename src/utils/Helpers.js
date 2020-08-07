@@ -1,3 +1,6 @@
+import React from "react";
+import { Spinner, Row } from "react-bootstrap";
+
 // Returns a capitalized string for use in page titles
 export function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -45,3 +48,27 @@ export function groupStatus(statuses) {
   }
   return status;
 }
+
+export function statusDisplay(status, success) {
+  switch (status) {
+    case "loading":
+      return (
+        <Row className="row justify-content-center">
+          <Spinner animation="border" variant="primary" />
+        </Row>
+      );
+    case "failed":
+      return "The data could not be displayed at this time.";
+    case "succeeded":
+      return success;
+    default:
+      return;
+  }
+}
+
+export function switchModal(name) {
+  const modal = name;
+  this.setState((prevState) => ({
+    [modal]: !prevState[modal],
+  }));
+};

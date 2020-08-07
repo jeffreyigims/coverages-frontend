@@ -229,3 +229,4 @@ export function updateCoverageAssociations(params, carriers, brokers) {
 export function deleteCoverageAssociations(coverage, carriers, brokers) {}
 
 export const search = createFetch("search");
+export const fetchMetrics = createFetch("metrics");

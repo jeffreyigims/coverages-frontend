@@ -12,6 +12,7 @@ import {
   deleteSubCategory,
   deleteCoverage,
   search,
+  fetchMetrics,
 } from "./actions/Actions";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -93,17 +94,38 @@ function alerts(state = { alerts: [] }, action) {
 
 const searchSlice = createSlice({
   name: "search",
-  initialState: { results: [], status: "idle" },
+  initialState: { results: {}, hits: 0, status: "idle" },
   reducers: {},
   extraReducers: {
     [search.pending]: (state, action) => {
-      state.status = "pending";
+      state.status = "loading";
     },
     [search.failed]: (state, action) => {
       state.status = "failed";
     },
     [search.fulfilled]: (state, action) => {
       state.results = action.payload.data;
+      state.hits = action.payload.hits;
+      state.status = "succeeded";
+    },
+  },
+});
+
+const metricsSlice = createSlice({
+  name: "metrics",
+  initialState: { coverages: [], status: "idle", error: null },
+  reducers: {},
+  extraReducers: {
+    [fetchMetrics.pending]: (state, action) => {
+      state.status = "loading";
+    },
+    [fetchMetrics.rejected]: (state, action) => {
+      state.status = "failed";
+    },
+    [fetchMetrics.fulfilled]: (state, action) => {
+      state.coverages = action.payload.data.map(
+        (coverage) => coverage.attributes
+      );
       state.status = "succeeded";
     },
   },
@@ -158,10 +180,6 @@ const redirectionSlice = createSlice({
     },
     [deleteCoverage.fulfilled]: (state, action) => {
       state.link = "/coverages";
-      state.redirect = true;
-    },
-    [search.fulfilled]: (state, action) => {
-      state.link = "/search";
       state.redirect = true;
     },
   },
@@ -396,6 +414,7 @@ const reducer = combineReducers({
   alerts: alerts,
   redirections: redirectionSlice.reducer,
   search: searchSlice.reducer,
+  metrics: metricsSlice.reducer,
 });
 
 export default reducer;
