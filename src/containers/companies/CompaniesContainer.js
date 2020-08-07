@@ -59,9 +59,9 @@ class CompaniesContainer extends Component {
 }
 
 CompaniesContainer.propTypes = {
-  companies: PropTypes.object.isRequired,
+  companies: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
+  error: PropTypes.string,
 };
 
 function mapStateToProps(state) {

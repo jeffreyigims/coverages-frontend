@@ -89,9 +89,9 @@ class ClubsContainer extends Component {
 }
 
 ClubsContainer.propTypes = {
-  clubs: PropTypes.object.isRequired,
+  clubs: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
+  error: PropTypes.string,
 };
 
 function mapStateToProps(state) {

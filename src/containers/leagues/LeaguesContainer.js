@@ -71,9 +71,9 @@ class LeaguesContainer extends Component {
 }
 
 LeaguesContainer.propTypes = {
-  leagues: PropTypes.object.isRequired,
+  leagues: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
+  error: PropTypes.string,
 };
 
 function mapStateToProps(state) {

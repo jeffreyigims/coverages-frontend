@@ -59,9 +59,9 @@ class SportsContainer extends Component {
 }
 
 SportsContainer.propTypes = {
-  sports: PropTypes.object.isRequired,
+  sports: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
+  error: PropTypes.string,
 };
 
 function mapStateToProps(state) {

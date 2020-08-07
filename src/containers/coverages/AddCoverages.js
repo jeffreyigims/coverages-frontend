@@ -9,6 +9,7 @@ import { TrashFill } from "react-bootstrap-icons";
 import { DatePickerInput } from "rc-datepicker";
 import "rc-datepicker/lib/style.css";
 import Moment from "react-moment";
+import * as moment from "moment";
 import {
   objectOptions,
   objectDataOptions,
@@ -221,7 +222,7 @@ class CoverageWizardContainer extends Component {
                           }}
                         >
                           {objectDataOptions(
-                            this.props.sports[values.sport_index].attributes
+                            this.props.sports[values.sport_index]?.attributes
                               .leagues
                           )}
                         </Form.Control>
@@ -240,7 +241,7 @@ class CoverageWizardContainer extends Component {
                           }}
                         >
                           {this.clubOptions(
-                            this.props.sports[values.sport_index].attributes
+                            this.props.sports[values.sport_index]?.attributes
                               .leagues[values.league_index]
                           )}
                         </Form.Control>
@@ -255,7 +256,7 @@ class CoverageWizardContainer extends Component {
                           onChange={handleChange}
                         >
                           {objectGroupOptions(
-                            this.props.clubs[values.club_index].attributes
+                            this.props.clubs[values.club_index]?.attributes
                               .club_groups
                           )}
                         </Form.Control>
@@ -287,7 +288,7 @@ class CoverageWizardContainer extends Component {
                         >
                           {objectDataOptions(
                             this.props.categories[values.category_index]
-                              .attributes.sub_categories
+                              ?.attributes.sub_categories
                           )}
                         </Form.Control>
                       </Form.Group>
@@ -353,7 +354,9 @@ class CoverageWizardContainer extends Component {
                           onChange={(val) =>
                             setFieldValue(
                               "start_date",
-                              val === "Invalid date" ? null : val
+                              val === "Invalid date"
+                                ? null
+                                : moment(val).format("YYYY-MM-DD")
                             )
                           }
                         />
@@ -367,7 +370,9 @@ class CoverageWizardContainer extends Component {
                           onChange={(val) =>
                             setFieldValue(
                               "end_date",
-                              val === "Invalid date" ? null : val
+                              val === "Invalid date"
+                                ? null
+                                : moment(val).format("YYYY-MM-DD")
                             )
                           }
                         />

@@ -178,9 +178,9 @@ class CoveragesContainer extends Component {
 }
 
 CoveragesContainer.propTypes = {
-  coverages: PropTypes.object.isRequired,
+  coverages: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
+  error: PropTypes.string,
 };
 
 function mapStateToProps(state) {

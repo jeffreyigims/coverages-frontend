@@ -97,6 +97,8 @@ export const sub_categories = {
 
 export const coverages = {
   schema: yup.object({
+    // sport_index: yup.string().required(),
+    // league_index: yup.string().required(),
     // club_index: yup.string().required(),
     // group_index: yup.string().required(),
     // category_index: yup.string().required(),
@@ -116,7 +118,7 @@ export const coverages = {
     brokers: [],
     notes: "",
     start_date: new Date().toString(),
-    end_date: null,
+    end_date: "",
     has_coverage_line: false,
     verified: false,
   },

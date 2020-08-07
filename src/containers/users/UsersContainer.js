@@ -77,9 +77,9 @@ class UsersContainer extends Component {
 }
 
 UsersContainer.propTypes = {
-  users: PropTypes.object.isRequired,
+  users: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
+  error: PropTypes.string,
 };
 
 function mapStateToProps(state) {

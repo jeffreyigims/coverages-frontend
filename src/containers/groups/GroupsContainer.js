@@ -59,9 +59,9 @@ class GroupsContainer extends Component {
 }
 
 GroupsContainer.propTypes = {
-  groups: PropTypes.object.isRequired,
+  groups: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
+  error: PropTypes.string,
 };
 
 function mapStateToProps(state) {

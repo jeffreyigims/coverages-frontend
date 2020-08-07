@@ -27,6 +27,7 @@ export default class GeneralTable extends React.Component {
           ) : (
             "There is no data to display at this time."
           ))}
+        {status === "failed" && "There is no data to display at this time."}
       </>
     );
   }

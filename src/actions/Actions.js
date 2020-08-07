@@ -6,11 +6,11 @@ export const dismissAlert = createAction("alerts/dismissAlert");
 function createFetch(name = "") {
   return createAsyncThunk(
     `${name}/fetch_${name}`,
-    async (values, { rejectWithValue }) => {
+    async (parameters = {}, { rejectWithValue }) => {
       const response = await runAjax(
         `/${name}.json`,
         "GET",
-        {},
+        parameters,
         rejectWithValue
       );
       return response;
@@ -84,7 +84,7 @@ function createDelete(name = "") {
 
 export const fetchCoverages = createAsyncThunk(
   "coverages/fetch_coverages",
-  async (parameters, { rejectWithValue }) => {
+  async (parameters = {}, { rejectWithValue }) => {
     const response = await runAjax(
       "/coverages.json",
       "GET",
@@ -227,3 +227,5 @@ export function updateCoverageAssociations(params, carriers, brokers) {
 }
 
 export function deleteCoverageAssociations(coverage, carriers, brokers) {}
+
+export const search = createFetch("search");

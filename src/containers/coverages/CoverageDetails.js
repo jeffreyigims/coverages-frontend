@@ -6,6 +6,7 @@ import { DatePickerInput } from "rc-datepicker";
 import "rc-datepicker/lib/style.css";
 import { objectOptionsID } from "../../utils/Forms";
 import * as moment from "moment";
+import { Redirect } from "react-router-dom";
 
 export default class CoverageDetails extends React.Component {
   initialValues = (coverage) => {
@@ -14,11 +15,11 @@ export default class CoverageDetails extends React.Component {
     values["start_date"] =
       coverage.start_date == null
         ? null
-        : moment(coverage.start_date).format("MM/DD/YYYY");
+        : moment(coverage.start_date).format("YYYY-MM-DD");
     values["end_date"] =
       coverage.end_date == null
         ? null
-        : moment(coverage.end_date).format("MM/DD/YYYY");
+        : moment(coverage.end_date).format("YYYY-MM-DD");
     values["has_coverage_line"] = coverage.has_coverage_line;
     values["verified"] = coverage.verified;
     values["carriers"] = coverage.coverage_carriers.map(
@@ -33,6 +34,9 @@ export default class CoverageDetails extends React.Component {
   render() {
     return (
       <>
+        {this.props.redirection.redirect === true && (
+          <Redirect to={this.props.redirection.link} />
+        )}
         <Card>
           <Card.Header></Card.Header>
           <Card.Title style={{ marginTop: "10px" }}>
@@ -164,23 +168,23 @@ export default class CoverageDetails extends React.Component {
                               "start_date",
                               val === "Invalid date"
                                 ? null
-                                : moment(val).format("MM/DD/YYYY")
+                                : moment(val).format("YYYY-MM-DD")
                             )
                           }
                         />
                       </Form.Group>
 
                       <Form.Group as={Col}>
-                        <Form.Label>{"Ending Date:"}</Form.Label>
+                        <Form.Label>{"End Date:"}</Form.Label>
                         <DatePickerInput
                           name="end_date"
-                          value={values.end_date}
+                          value={values.start_date}
                           onChange={(val) =>
                             setFieldValue(
                               "end_date",
                               val === "Invalid date"
                                 ? null
-                                : moment(val).format("MM/DD/YYYY")
+                                : moment(val).format("YYYY-MM-DD")
                             )
                           }
                         />
@@ -209,6 +213,15 @@ export default class CoverageDetails extends React.Component {
                         />
                       </Form.Group>
                     </Row>
+                    <Button
+                      className="btn btn-theme float-right"
+                      variant="danger"
+                      onClick={() =>
+                        this.props.deleteObject(this.props.object.attributes.id)
+                      }
+                    >
+                      Delete Coverage
+                    </Button>
                     {dirty === true ? (
                       <Button
                         type="submit"

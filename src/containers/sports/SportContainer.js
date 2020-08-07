@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import DetailStructure from "../../components/DetailStructure";
 import { Button } from "react-bootstrap";
 import GeneralTable from "../../components/GeneralTable";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { fetchSport, updateSport, deleteSport } from "../../actions/Actions";
 import { sports as formHelpers } from "../../utils/Schemas";
 import { sportForm as form } from "../../utils/Forms";
@@ -11,11 +11,11 @@ import { sportForm as form } from "../../utils/Forms";
 class SportContainer extends Component {
   state = {
     name: "sport",
+    id: this.props.match.params.id,
   };
 
   componentDidMount() {
-    let id = this.props.match.params.id;
-    this.props.dispatch(fetchSport(id));
+    this.props.dispatch(fetchSport(this.state.id));
   }
 
   showDetails = (object) => {

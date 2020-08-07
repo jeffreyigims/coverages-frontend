@@ -24,7 +24,7 @@ export const objectOptionsID = (objects) => {
 };
 
 export const objectGroupOptions = (objects) => {
-  return objects.map((object, index) => {
+  return objects?.map((object, index) => {
     return (
       <option key={index} value={index}>
         {object.data.attributes.group.name}
@@ -34,7 +34,7 @@ export const objectGroupOptions = (objects) => {
 };
 
 export const objectDataOptions = (objects) => {
-  return objects.map((object, index) => {
+  return objects?.map((object, index) => {
     return (
       <option key={index} value={index}>
         {object.data.attributes.name}
@@ -419,7 +419,7 @@ export function coverageForm(
             onChange={handleChange}
           >
             {objectGroupOptions(
-              clubs[values.club_index].attributes.club_groups
+              clubs[values.club_index]?.attributes.club_groups
             )}
           </Form.Control>
         </Form.Group>
@@ -450,7 +450,7 @@ export function coverageForm(
             onChange={handleChange}
           >
             {objectDataOptions(
-              categories[values.category_index].attributes.sub_categories
+              categories[values.category_index]?.attributes.sub_categories
             )}
           </Form.Control>
         </Form.Group>

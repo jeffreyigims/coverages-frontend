@@ -8,6 +8,7 @@ import {
   updateCoverageAssociations,
   fetchCarriers,
   fetchBrokers,
+  deleteCoverage,
 } from "../../actions/Actions";
 
 class CoverageContainer extends Component {
@@ -54,8 +55,8 @@ class CoverageContainer extends Component {
   updateCoverage = (values) => {
     const coverage = {
       notes: values.notes,
-      start_date: Date(values.start_date),
-      end_date: Date(values.end_date),
+      start_date: values.start_date,
+      end_date: values.end_date,
       has_coverage_line: values.has_coverage_line,
       verified: values.verified,
     };
@@ -73,10 +74,6 @@ class CoverageContainer extends Component {
     );
   };
 
-  deleteCoverage = (values) => {
-    console.log("Delete");
-  };
-
   render() {
     return (
       <>
@@ -87,7 +84,7 @@ class CoverageContainer extends Component {
           status={this.props.status}
           formHelpers={formHelpers}
           submit={(values) => this.updateCoverage(values)}
-          deleteObject={(values) => this.deleteCoverage(values)}
+          deleteObject={(values) => this.props.dispatch(deleteCoverage(values))}
           redirection={{ link: this.props.link, redirect: this.props.redirect }}
         />
       </>

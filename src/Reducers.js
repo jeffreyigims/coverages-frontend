@@ -10,11 +10,13 @@ import {
   deleteBroker,
   deleteUser,
   deleteSubCategory,
+  deleteCoverage,
+  search,
 } from "./actions/Actions";
 import { createSlice } from "@reduxjs/toolkit";
 
 const fulfilledNew = (state) => {
-  let alerts = state.alerts.concat({
+  let alerts = [].concat({
     message: "The object was successfully added to the system.",
     variant: "success",
   });
@@ -22,7 +24,7 @@ const fulfilledNew = (state) => {
 };
 
 const fulfilledUpdated = (state) => {
-  let alerts = state.alerts.concat({
+  let alerts = [].concat({
     message: "The object was successfully updated in the system.",
     variant: "success",
   });
@@ -30,7 +32,7 @@ const fulfilledUpdated = (state) => {
 };
 
 const fulfilledDeleted = (state) => {
-  let alerts = state.alerts.concat({
+  let alerts = [].concat({
     message: "The object was successfully deleted in the system.",
     variant: "success",
   });
@@ -38,8 +40,8 @@ const fulfilledDeleted = (state) => {
 };
 
 const rejected = (state, action) => {
-  let alerts = state.alerts.concat({
-    message: "The action could not be completed for the following reasons:",
+  let alerts = [].concat({
+    message: "The action could not be completed.",
     variant: "danger",
     errors: action.payload,
   });
@@ -47,10 +49,10 @@ const rejected = (state, action) => {
 };
 
 const rejectedFetch = (state, action) => {
-  let alerts = state.alerts.concat({
-    message: "The data could not be fetched for the following reasons:",
+  let alerts = [].concat({
+    message: "The data could not be fetched.",
     variant: "danger",
-    errors: action.payload,
+    errors: action.payload.data,
   });
   return { alerts };
 };
@@ -59,17 +61,24 @@ function alerts(state = { alerts: [] }, action) {
   if (action.type === "alerts/dismissAlert") {
     return { alerts: [] };
   }
-  const status = action.type.split("/").pop();
-  const new_action = action.type.split("/")[1].split("_")[0];
+  const split = action.type.split("/");
+  const status = split[2];
+  const new_action = split[1].split("_")[0];
+  const object = split[1].split("_")[1];
+  if (
+    status === "pending" ||
+    object === "coverage_brokers" ||
+    object === "coverage_carriers"
+  ) {
+    return state;
+  }
   if (status === "rejected" && new_action !== "fetch" && new_action !== "get") {
     return rejected(state, action);
   }
   if (status === "rejected") {
     return rejectedFetch(state, action);
   }
-  if (status === "pending") {
-    return state;
-  }
+
   switch (new_action) {
     case "post":
       return fulfilledNew(state);
@@ -81,6 +90,24 @@ function alerts(state = { alerts: [] }, action) {
       return state;
   }
 }
+
+const searchSlice = createSlice({
+  name: "search",
+  initialState: { results: [], status: "idle" },
+  reducers: {},
+  extraReducers: {
+    [search.pending]: (state, action) => {
+      state.status = "pending";
+    },
+    [search.failed]: (state, action) => {
+      state.status = "failed";
+    },
+    [search.fulfilled]: (state, action) => {
+      state.results = action.payload.data;
+      state.status = "succeeded";
+    },
+  },
+});
 
 const redirectionSlice = createSlice({
   name: "redirections",
@@ -127,6 +154,14 @@ const redirectionSlice = createSlice({
     },
     [deleteUser.fulfilled]: (state, action) => {
       state.link = "/users";
+      state.redirect = true;
+    },
+    [deleteCoverage.fulfilled]: (state, action) => {
+      state.link = "/coverages";
+      state.redirect = true;
+    },
+    [search.fulfilled]: (state, action) => {
+      state.link = "/search";
       state.redirect = true;
     },
   },
@@ -180,7 +215,7 @@ function createTableReducer(name = "") {
         });
       case `${name}/update_${name}/rejected`:
         return Object.assign({}, state, {
-          status: "failed",
+          selected: state.selected,
         });
       case `${name}/update_${name}/fulfilled`:
         return Object.assign({}, state, {
@@ -248,7 +283,7 @@ function createPaginatedTableReducer(name = "") {
         });
       case `${name}/update_${name}/rejected`:
         return Object.assign({}, state, {
-          status: "failed",
+          selected: state.selected,
         });
       case `${name}/update_${name}/fulfilled`:
         return Object.assign({}, state, {
@@ -360,6 +395,7 @@ const reducer = combineReducers({
   coverages: createPaginatedTableReducer("coverages"),
   alerts: alerts,
   redirections: redirectionSlice.reducer,
+  search: searchSlice.reducer,
 });
 
 export default reducer;

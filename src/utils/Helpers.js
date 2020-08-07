@@ -1,4 +1,4 @@
-// Returns a capitalized string for use in page titles 
+// Returns a capitalized string for use in page titles
 export function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -24,11 +24,8 @@ export function canDelete(object) {
       return object.attributes.coverages.length === 0 ? true : false;
     case "group":
       return object.attributes.club_groups.length === 0 ? true : false;
-    case "user":
-      return object.attributes.coverages.length === 0 &&
-        object.attributes.club === ""
-        ? true
-        : false;
+    case "user_table":
+      return false;
     default:
       return true;
   }
