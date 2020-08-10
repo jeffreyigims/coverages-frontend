@@ -6,8 +6,6 @@ import { Button } from "react-bootstrap";
 import PaginatedTable from "../../components/PaginatedTable";
 import Moment from "react-moment";
 import { EyeFill } from "react-bootstrap-icons";
-import { brokers as formHelpers } from "../../utils/Schemas";
-import { brokerForm as form } from "../../utils/Forms";
 import {
   fetchBroker,
   updateBroker,
@@ -26,7 +24,7 @@ class BrokerContainer extends Component {
     this.props.dispatch(fetchCoverages({ for_broker: this.state.id }));
   }
 
-  showDetails = (object) => {
+  showDetails = () => {
     let showObjects = (objects) => {
       return objects.map((object, index) => {
         return (
@@ -129,8 +127,8 @@ class BrokerContainer extends Component {
               fetchCoverages({ for_broker: this.state.id, page: activePage })
             )
           }
-          defaultActivePage={this.props.page}
-          totalPages={this.props.pages}
+          defaultActivePage={this.props.defaultActivePage}
+          totalPages={this.props.totalPages}
           status={this.props.coveragesStatus}
         />
       </>
@@ -138,30 +136,20 @@ class BrokerContainer extends Component {
   };
 
   render() {
+    const { dispatch } = this.props;
     return (
       <>
         <DetailStructure
-          object={this.props.selected}
-          status={this.props.status}
+          {...this.props}
           name={this.state.name}
-          formHelpers={formHelpers}
-          form={(values, handleChange, setFieldValue, errors) =>
-            form(
-              values,
-              handleChange,
-              setFieldValue,
-              errors,
-              this.props.selected.attributes.company
-            )
-          }
           showDetails={this.showDetails}
           updateObject={(id, values) => {
-            this.props.dispatch(updateBroker({ id: id, values: values }));
+            dispatch(updateBroker({ id: id, values: values }));
           }}
           deleteObject={(id) => {
-            this.props.dispatch(deleteBroker(id));
+            dispatch(deleteBroker(id));
           }}
-          redirection={{ link: this.props.link, redirect: this.props.redirect }}
+          additional={{ company: this.props.selected }}
         />
       </>
     );
@@ -171,25 +159,25 @@ class BrokerContainer extends Component {
 BrokerContainer.propTypes = {
   selected: PropTypes.object,
   status: PropTypes.string.isRequired,
-  errors: PropTypes.object,
-  link: PropTypes.string,
-  redirect: PropTypes.bool,
+  redirections: PropTypes.object.isRequired,
+  coverages: PropTypes.arrayOf(PropTypes.object).isRequired,
+  totalPages: PropTypes.number,
+  defaultActivePage: PropTypes.number.isRequired,
+  coveragesStatus: PropTypes.string.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { selected, error, status } = state.brokers;
-  const { coverages, pages, page } = state.coverages;
-  const { link, redirect } = state.redirections;
+  const { selected, status } = state.brokers;
+  const { coverages, totalPages, defaultActivePage } = state.coverages;
+  const redirections = state.redirections;
   const coveragesStatus = state.coverages.status;
   return {
     selected,
     status,
-    error,
-    link,
-    redirect,
+    redirections,
     coverages,
-    pages,
-    page,
+    defaultActivePage,
+    totalPages,
     coveragesStatus,
   };
 }

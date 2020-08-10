@@ -3,10 +3,8 @@ import { connect } from "react-redux";
 import ListStructure from "../../components/ListStructure";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
-import Moment from "react-moment";
 import { EyeFill } from "react-bootstrap-icons";
-import { coverages as formHelpers } from "../../utils/Schemas";
-import { coverageForm as form } from "../../utils/Forms";
+import { displayDate } from "../../utils/Helpers";
 import {
   fetchCoverages,
   fetchClubs,
@@ -96,10 +94,10 @@ class CoveragesContainer extends Component {
             </Button>
           </td>
           <td width="200" align="left">
-            <Moment format="MM/DD/YYYY">{object.attributes.created_at}</Moment>
+            {displayDate(object.attributes.created_at, "MM/DD/YYYY")}
           </td>
           <td width="200" align="left">
-            <Moment format="MM/DD/YYYY">{object.attributes.updated_at}</Moment>
+            {displayDate(object.attributes.updated_at, "MM/DD/YYYY")}
           </td>
           <td width="200" align="left">
             {object.attributes.verified ? "true" : "false"}
@@ -143,34 +141,34 @@ class CoveragesContainer extends Component {
   };
 
   render() {
+    const {
+      coverages,
+      clubs,
+      categories,
+      carriers,
+      brokers,
+      dispatch,
+      ...otherProps
+    } = this.props;
     return (
       <>
         <ListStructure
+          {...otherProps}
           objects={this.props.coverages}
-          status={this.props.status}
           showObjects={this.showObjects}
           tableHeaders={this.state.tableHeaders}
           name={this.state.name}
           plural={this.state.plural}
-          formHelpers={formHelpers}
-          form={(values, handleChange, setFieldValue, errors) =>
-            form(
-              values,
-              handleChange,
-              setFieldValue,
-              errors,
-              this.props.clubs,
-              this.props.categories,
-              this.props.carriers,
-              this.props.brokers
-            )
-          }
-          postObject={(values) => this.postObject(values)}
+          postObject={this.postObject}
           onPageChange={(e, { activePage }) =>
-            this.props.dispatch(fetchCoverages({ page: activePage }))
+            dispatch(fetchCoverages({ page: activePage }))
           }
-          defaultActivePage={this.props.page}
-          totalPages={this.props.pages}
+          additional={{
+            clubs: clubs,
+            categories: categories,
+            carriers: carriers,
+            brokers: brokers,
+          }}
         />
       </>
     );
@@ -180,11 +178,16 @@ class CoveragesContainer extends Component {
 CoveragesContainer.propTypes = {
   coverages: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string,
+  defaultActivePage: PropTypes.number.isRequired,
+  totalPages: PropTypes.number,
+  clubs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  carriers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  brokers: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 function mapStateToProps(state) {
-  const { coverages, page, pages, status, error } = state.coverages;
+  const { coverages, defaultActivePage, totalPages, status } = state.coverages;
   const { clubs } = state.clubs;
   const { categories } = state.categories;
   const { carriers } = state.carriers;
@@ -195,10 +198,9 @@ function mapStateToProps(state) {
     categories,
     carriers,
     brokers,
-    page,
-    pages,
+    defaultActivePage,
+    totalPages,
     status,
-    error,
   };
 }
 

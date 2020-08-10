@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import EditObject from "../components/EditObject";
 import { Card, Button } from "react-bootstrap";
 import { capitalize, canDelete, switchModal } from "../utils/Helpers";
-import "../App.css";
+import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
 
 export default class DetailStructure extends Component {
@@ -17,25 +17,28 @@ export default class DetailStructure extends Component {
 
   render() {
     const {
-      object,
+      selected,
       status,
-      redirection,
+      redirections,
       showDetails,
       deleteObject,
       updateObject,
+      additional,
       name,
     } = this.props;
     return (
       <>
-        {redirection.redirect === true && <Redirect to={redirection.link} />}
+        {redirections.redirect === true && <Redirect to={redirections.link} />}
         <Card>
           <Card.Header></Card.Header>
           {status === "succeeded" && (
             <Card.Title style={{ marginTop: "10px" }}>
-              {capitalize(object.attributes.name)} Details
+              {capitalize(selected.attributes.name)} Details
             </Card.Title>
           )}
-          <Card.Body>{status === "succeeded" && showDetails(object)}</Card.Body>
+          <Card.Body>
+            {status === "succeeded" && showDetails(selected)}
+          </Card.Body>
           <Card.Footer>
             {status === "succeeded" && (
               <>
@@ -48,11 +51,11 @@ export default class DetailStructure extends Component {
                     Edit {capitalize(name)}
                   </Button>
                 )}
-                {canDelete(object) && (
+                {canDelete(selected) && (
                   <Button
                     className="btn btn-theme float-right"
                     variant="danger"
-                    onClick={() => deleteObject(object.attributes.id)}
+                    onClick={() => deleteObject(selected.attributes.id)}
                     style={{ marginRight: "10px" }}
                   >
                     Delete {capitalize(name)}
@@ -66,11 +69,10 @@ export default class DetailStructure extends Component {
           <EditObject
             show={this.state.modal_edit}
             switchModal={() => this.switchModal("modal_edit")}
-            formHelpers={this.props.formHelpers}
-            form={this.props.form}
-            object={object}
+            selected={selected}
             name={name}
             updateObject={updateObject}
+            additional={additional}
           />
         )}
       </>
@@ -78,4 +80,13 @@ export default class DetailStructure extends Component {
   }
 }
 
-DetailStructure.propTypes = {};
+DetailStructure.propTypes = {
+  selected: PropTypes.object,
+  status: PropTypes.string.isRequired,
+  redirections: PropTypes.object.isRequired,
+  additonal: PropTypes.object,
+  showDetails: PropTypes.func,
+  deleteObject: PropTypes.func,
+  updateObject: PropTypes.func,
+  name: PropTypes.string,
+};

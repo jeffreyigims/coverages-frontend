@@ -1,21 +1,19 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import GeneralTable from "../../components/GeneralTable";
-import { groupStatus } from "../../utils/Helpers";
+import { groupStatus, displayDate, formatDate } from "../../utils/Helpers";
 import PropTypes from "prop-types";
 import { Button, Form, Col, Row, Card, Spinner } from "react-bootstrap";
 import { Formik } from "formik";
 import { TrashFill } from "react-bootstrap-icons";
 import { DatePickerInput } from "rc-datepicker";
 import "rc-datepicker/lib/style.css";
-import Moment from "react-moment";
-import * as moment from "moment";
 import {
   objectOptions,
   objectDataOptions,
   objectGroupOptions,
 } from "../../utils/Forms";
-import { coverage_wizard as formHelpers } from "../../utils/Schemas";
+import { schemaFor } from "../../utils/Schemas";
 import {
   fetchSports,
   fetchClubs,
@@ -62,8 +60,8 @@ class CoverageWizardContainer extends Component {
       carriers: values.carriers,
       brokers: values.brokers,
       notes: values.notes,
-      start_date: values.start_date,
-      end_date: values.end_date,
+      start_date: formatDate(values.start_date),
+      end_date: formatDate(values.end_date),
       has_coverage_line: values.has_coverage_line,
       verified: values.verified,
     };
@@ -134,7 +132,7 @@ class CoverageWizardContainer extends Component {
             </td>
           ) : (
             <td width="200" align="left">
-              <Moment format="MMMM Do YYYY">{object.start_date}</Moment>
+              {displayDate(object.start_date, "MMMM Do YYYY")}
             </td>
           )}
           {object.end_date === null ? (
@@ -143,7 +141,7 @@ class CoverageWizardContainer extends Component {
             </td>
           ) : (
             <td width="200" align="left">
-              <Moment format="MMMM Do YYYY">{object.end_date}</Moment>
+              {displayDate(object.end_date, "MMMM Do YYYY")}
             </td>
           )}
           <td width="200" align="left">
@@ -170,7 +168,9 @@ class CoverageWizardContainer extends Component {
   };
 
   render() {
+    const { sports, clubs, categories, carriers, brokers } = this.props;
     const status = groupStatus(this.props.status);
+    const { schema, initialValues } = schemaFor("coverage_wizard");
     return (
       <>
         <Card>
@@ -184,9 +184,9 @@ class CoverageWizardContainer extends Component {
             </Row>
             {status === "succeeded" && (
               <Formik
-                validationSchema={formHelpers.schema}
-                onSubmit={(values) => this.handleCreate(values)}
-                initialValues={formHelpers.initialValues}
+                validationSchema={schema}
+                onSubmit={this.handleCreate}
+                initialValues={initialValues}
               >
                 {({
                   handleSubmit,
@@ -205,7 +205,7 @@ class CoverageWizardContainer extends Component {
                           value={values.sport_index}
                           onChange={handleChange}
                         >
-                          {objectOptions(this.props.sports)}
+                          {objectOptions(sports)}
                         </Form.Control>
                       </Form.Group>
                     </Row>
@@ -222,8 +222,7 @@ class CoverageWizardContainer extends Component {
                           }}
                         >
                           {objectDataOptions(
-                            this.props.sports[values.sport_index]?.attributes
-                              .leagues
+                            sports[values.sport_index].attributes.leagues
                           )}
                         </Form.Control>
                       </Form.Group>
@@ -241,8 +240,9 @@ class CoverageWizardContainer extends Component {
                           }}
                         >
                           {this.clubOptions(
-                            this.props.sports[values.sport_index]?.attributes
-                              .leagues[values.league_index]
+                            sports[values.sport_index].attributes.leagues[
+                              values.league_index
+                            ]
                           )}
                         </Form.Control>
                       </Form.Group>
@@ -256,8 +256,7 @@ class CoverageWizardContainer extends Component {
                           onChange={handleChange}
                         >
                           {objectGroupOptions(
-                            this.props.clubs[values.club_index]?.attributes
-                              .club_groups
+                            clubs[values.club_index].attributes.club_groups
                           )}
                         </Form.Control>
                       </Form.Group>
@@ -274,7 +273,7 @@ class CoverageWizardContainer extends Component {
                             setFieldValue("sub_category_index", 0);
                           }}
                         >
-                          {objectOptions(this.props.categories)}
+                          {objectOptions(categories)}
                         </Form.Control>
                       </Form.Group>
 
@@ -287,8 +286,8 @@ class CoverageWizardContainer extends Component {
                           onChange={handleChange}
                         >
                           {objectDataOptions(
-                            this.props.categories[values.category_index]
-                              ?.attributes.sub_categories
+                            categories[values.category_index].attributes
+                              .sub_categories
                           )}
                         </Form.Control>
                       </Form.Group>
@@ -311,7 +310,7 @@ class CoverageWizardContainer extends Component {
                             )
                           }
                         >
-                          {objectOptions(this.props.carriers)}
+                          {objectOptions(carriers)}
                         </Form.Control>
                       </Form.Group>
 
@@ -332,7 +331,7 @@ class CoverageWizardContainer extends Component {
                             )
                           }
                         >
-                          {objectOptions(this.props.brokers)}
+                          {objectOptions(brokers)}
                         </Form.Control>
                       </Form.Group>
                     </Row>
@@ -352,12 +351,7 @@ class CoverageWizardContainer extends Component {
                           name="start_date"
                           value={values.start_date}
                           onChange={(val) =>
-                            setFieldValue(
-                              "start_date",
-                              val === "Invalid date"
-                                ? null
-                                : moment(val).format("YYYY-MM-DD")
-                            )
+                            setFieldValue("start_date", formatDate(val))
                           }
                         />
                       </Form.Group>
@@ -368,12 +362,7 @@ class CoverageWizardContainer extends Component {
                           name="end_date"
                           value={values.end_date}
                           onChange={(val) =>
-                            setFieldValue(
-                              "end_date",
-                              val === "Invalid date"
-                                ? null
-                                : moment(val).format("YYYY-MM-DD")
-                            )
+                            setFieldValue("end_date", formatDate(val))
                           }
                         />
                       </Form.Group>
@@ -459,8 +448,11 @@ class CoverageWizardContainer extends Component {
 }
 
 CoverageWizardContainer.propTypes = {
-  carriers: PropTypes.object.isRequired,
-  brokers: PropTypes.object.isRequired,
+  sports: PropTypes.arrayOf(PropTypes.object).isRequired,
+  clubs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  carriers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  brokers: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 function mapStateToProps(state) {

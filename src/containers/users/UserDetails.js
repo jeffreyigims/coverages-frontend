@@ -1,90 +1,74 @@
-import React, { Component } from "react";
+import React from "react";
 import EditObject from "../../components/EditObject";
+import PropTypes from "prop-types";
 import { Card, Button } from "react-bootstrap";
-import { capitalize, canDelete } from "../../utils/Helpers";
+import { capitalize, canDelete, switchModal } from "../../utils/Helpers";
 import { Redirect } from "react-router-dom";
 
-export default class UserDetails extends Component {
+export default class UserDetails extends React.Component {
+  constructor() {
+    super();
+    this.switchModal = switchModal.bind(this);
+  }
+
   state = {
     modal_edit: false,
-    modal_sub: false,
-  };
-
-  switchModal = (name) => {
-    const modal = name;
-    this.setState((prevState) => ({
-      [modal]: !prevState[modal],
-    }));
   };
 
   render() {
+    const {
+      selected,
+      status,
+      redirections,
+      showDetails,
+      deleteObject,
+      updateObject,
+      name,
+    } = this.props;
     return (
       <>
-        {this.props.redirection.redirect === true && (
-          <Redirect to={this.props.redirection.link} />
-        )}
+        {redirections.redirect === true && <Redirect to={redirections.link} />}
         <Card>
           <Card.Header></Card.Header>
-          {this.props.status === "succeeded" && (
+          {status === "succeeded" && (
             <Card.Title style={{ marginTop: "10px" }}>
-              {capitalize(this.props.object.attributes.name)} Details
+              {capitalize(selected.attributes.name)} Details
             </Card.Title>
           )}
-          <Card.Body>{this.props.showDetails(this.props.object)}</Card.Body>
+          <Card.Body>{showDetails(selected)}</Card.Body>
           <Card.Footer>
-            {this.props.status === "succeeded" && (
+            {status === "succeeded" && (
               <>
                 <Button
                   className="btn btn-theme float-right"
                   variant="primary"
                   onClick={(slot) => this.switchModal("modal_edit")}
                 >
-                  Edit {capitalize(this.props.name)}
+                  Edit {capitalize(name)}
                 </Button>
-                {/* <Button
-                  className="btn btn-theme float-right"
-                  variant="primary"
-                  onClick={(slot) => this.switchModal("modal_sub")}
-                  style={{ marginRight: "10px" }}
-                >
-                  Add Sub
-                </Button> */}
-                {canDelete(this.props.object) && (
+                {canDelete(selected) && (
                   <Button
                     className="btn btn-theme float-right"
                     variant="danger"
-                    onClick={() =>
-                      this.props.deleteObject(this.props.object.attributes.id)
-                    }
+                    onClick={() => deleteObject(selected.attributes.id)}
                     style={{ marginRight: "10px" }}
                   >
-                    Delete {capitalize(this.props.name)}
+                    Delete {capitalize(name)}
                   </Button>
                 )}
               </>
             )}
           </Card.Footer>
         </Card>
-        {this.props.status === "succeeded" && (
+        {status === "succeeded" && (
           <>
             <EditObject
               show={this.state.modal_edit}
-              switchModal={this.switchModal}
-              formHelpers={this.props.formHelpers}
-              form={this.props.form}
-              object={this.props.object}
-              name={this.props.name}
-              updateObject={this.props.updateObject}
+              switchModal={() => this.switchModal("modal_edit")}
+              selected={selected}
+              name={name}
+              updateObject={updateObject}
             />
-            {/* <AddSubCategory
-              show={this.state.modal_sub}
-              switchModal={this.switchModal}
-              formHelpers={this.props.formHelpersSub}
-              form={this.props.formSub}
-              object={this.props.object}
-              name={this.props.name}
-              postSub={this.props.postSub}
-            /> */}
           </>
         )}
       </>
@@ -92,4 +76,12 @@ export default class UserDetails extends Component {
   }
 }
 
-UserDetails.propTypes = {};
+UserDetails.propTypes = {
+  selected: PropTypes.object,
+  status: PropTypes.string.isRequired,
+  redirections: PropTypes.object.isRequired,
+  showDetails: PropTypes.func,
+  deleteObject: PropTypes.func,
+  updateObject: PropTypes.func,
+  name: PropTypes.string,
+};

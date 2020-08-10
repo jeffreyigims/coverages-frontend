@@ -2,10 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import CompanyDetails from "./CompanyDetails";
 import PropTypes from "prop-types";
-import { companies as formHelpers } from "../../utils/Schemas";
-import { companyForm as form } from "../../utils/Forms";
-import { brokers as formHelpersBroker } from "../../utils/Schemas";
-import { brokerForm as formBroker } from "../../utils/Forms";
 import {
   fetchCompany,
   updateCompany,
@@ -32,33 +28,19 @@ class CompanyContainer extends Component {
   };
 
   render() {
+    const { dispatch } = this.props;
     return (
       <>
         <CompanyDetails
-          object={this.props.selected}
-          secondary={this.props.secondary}
-          status={this.props.status}
+          {...this.props}
           name={this.state.name}
-          formHelpers={formHelpers}
-          form={form}
-          formHelpersBroker={formHelpersBroker}
-          formBroker={(values, handleChange, setFieldValue, errors) =>
-            formBroker(
-              values,
-              handleChange,
-              setFieldValue,
-              errors,
-              this.props.selected.attributes
-            )
-          }
-          postSub={(values) => this.postSubBroker(values)}
+          postBroker={(values) => this.postSubBroker(values)}
           updateObject={(id, values) => {
-            this.props.dispatch(updateCompany({ id: id, values: values }));
+            dispatch(updateCompany({ id: id, values: values }));
           }}
           deleteObject={(id) => {
-            this.props.dispatch(deleteCompany(id));
+            dispatch(deleteCompany(id));
           }}
-          redirection={{ link: this.props.link, redirect: this.props.redirect }}
         />
       </>
     );
@@ -67,16 +49,15 @@ class CompanyContainer extends Component {
 
 CompanyContainer.propTypes = {
   selected: PropTypes.object.isRequired,
+  secondary: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
-  link: PropTypes.string,
-  redirect: PropTypes.bool,
+  redirections: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { selected, status, error, secondary } = state.companies;
-  const { link, redirect } = state.redirections;
-  return { selected, status, error, link, redirect, secondary };
+  const { selected, status, secondary } = state.companies;
+  const redirections = state.redirections;
+  return { selected, status, redirections, secondary };
 }
 
 export default connect(mapStateToProps)(CompanyContainer);

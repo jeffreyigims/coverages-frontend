@@ -1,7 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { coverages as formHelpers } from "../../utils/Schemas";
 import CoverageDetails from "./CoverageDetails";
 import {
   fetchCoverage,
@@ -11,7 +10,7 @@ import {
   deleteCoverage,
 } from "../../actions/Actions";
 
-class CoverageContainer extends Component {
+class CoverageContainer extends React.Component {
   componentDidMount() {
     let id = this.props.match.params.id;
     this.props.dispatch(fetchCoverage(id));
@@ -19,6 +18,7 @@ class CoverageContainer extends Component {
     this.props.dispatch(fetchBrokers());
   }
 
+  // Custom includes function to get correct attribute
   includes = (arr, object, target) => {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i].data.attributes[target] === object) {
@@ -31,6 +31,7 @@ class CoverageContainer extends Component {
   handleBrokers = (objects) => {
     // Get array of current associated brokers
     let curr = this.props.selected.attributes.coverage_brokers;
+    // Find brokers that need added or detroyed from list differences
     let needAdded = objects.filter(
       (object) => !this.includes(curr, object, "broker_id")
     );
@@ -43,6 +44,7 @@ class CoverageContainer extends Component {
   handleCarriers = (objects) => {
     // Get array of current associated carriers
     let curr = this.props.selected.attributes.coverage_carriers;
+    // Find carriers that need added or detroyed from list differences
     let needAdded = objects.filter(
       (object) => !this.includes(curr, object, "carrier_id")
     );
@@ -65,7 +67,7 @@ class CoverageContainer extends Component {
     this.props.dispatch(
       updateCoverageAssociations(
         {
-          id: this.props.selected.attributes.id,
+          id: this.props.match.params.id,
           values: coverage,
         },
         carriers,
@@ -75,17 +77,13 @@ class CoverageContainer extends Component {
   };
 
   render() {
+    const { dispatch, ...otherProps } = this.props;
     return (
       <>
         <CoverageDetails
-          object={this.props.selected}
-          carriers={this.props.carriers}
-          brokers={this.props.brokers}
-          status={this.props.status}
-          formHelpers={formHelpers}
-          submit={(values) => this.updateCoverage(values)}
-          deleteObject={(values) => this.props.dispatch(deleteCoverage(values))}
-          redirection={{ link: this.props.link, redirect: this.props.redirect }}
+          {...otherProps}
+          submit={this.updateCoverage}
+          deleteObject={(values) => dispatch(deleteCoverage(values))}
         />
       </>
     );
@@ -93,19 +91,19 @@ class CoverageContainer extends Component {
 }
 
 CoverageContainer.propTypes = {
-  selected: PropTypes.object.isRequired,
+  selected: PropTypes.object,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
-  link: PropTypes.string,
-  redirect: PropTypes.bool,
+  carriers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  brokers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  redirections: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { selected, status, error } = state.coverages;
+  const { selected, status } = state.coverages;
   const { carriers } = state.carriers;
   const { brokers } = state.brokers;
-  const { link, redirect } = state.redirections;
-  return { selected, status, error, link, redirect, carriers, brokers };
+  const redirections = state.redirections;
+  return { selected, status, carriers, brokers, redirections };
 }
 
 export default connect(mapStateToProps)(CoverageContainer);

@@ -1,20 +1,21 @@
 import React from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 import { Formik } from "formik";
-import { capitalize } from "../utils/Helpers";
-import { map } from "../utils/Helpers";
+import { capitalize, map } from "../utils/Helpers";
+import { formFor } from "../utils/Forms";
+import { schemaFor } from "../utils/Schemas";
 
-export default class EditObject extends React.Component {
+export default class AddObject extends React.Component {
   render() {
     const {
       show,
       switchModal,
       updateObject,
       name,
-      object,
-      formHelpers,
-      form,
+      selected,
+      additional,
     } = this.props;
+    const { schema, initialValues } = schemaFor(name);
     return (
       <Modal show={show} onHide={switchModal}>
         <Modal.Header closeButton>
@@ -23,12 +24,12 @@ export default class EditObject extends React.Component {
 
         <Modal.Body>
           <Formik
-            validationSchema={formHelpers.schema}
+            validationSchema={schema}
             onSubmit={(values) => {
-              updateObject(object.attributes.id, values);
+              updateObject(selected.attributes.id, values);
               switchModal("modal_edit");
             }}
-            initialValues={map(formHelpers.initialValues, object.attributes)}
+            initialValues={map(initialValues, selected.attributes)}
           >
             {({
               handleSubmit,
@@ -38,7 +39,14 @@ export default class EditObject extends React.Component {
               errors,
             }) => (
               <Form noValidate onSubmit={handleSubmit}>
-                {form(values, handleChange, setFieldValue, errors)}
+                {formFor(
+                  name,
+                  values,
+                  handleChange,
+                  setFieldValue,
+                  errors,
+                  additional
+                )}
                 <Button
                   type="submit"
                   variant="primary"

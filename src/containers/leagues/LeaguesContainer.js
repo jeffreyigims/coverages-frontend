@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import ListStructure from "../../components/ListStructure";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
-import { leagues as formHelpers } from "../../utils/Schemas";
-import { leagueForm as form } from "../../utils/Forms";
 import { fetchLeagues, postLeague, fetchSports } from "../../actions/Actions";
 
 class LeaguesContainer extends Component {
@@ -50,19 +48,17 @@ class LeaguesContainer extends Component {
   };
 
   render() {
+    const { leagues, status, sports } = this.props;
     return (
       <>
         <ListStructure
-          objects={this.props.leagues}
-          status={this.props.status}
+          objects={leagues}
+          status={status}
           showObjects={this.showObjects}
           tableHeaders={this.state.tableHeaders}
           name={this.state.name}
           plural={this.state.plural}
-          formHelpers={formHelpers}
-          form={(values, handleChange, setFieldValue, errors) =>
-            form(values, handleChange, setFieldValue, errors, this.props.sports)
-          }
+          additional={{ sports: sports }}
           postObject={this.postObject}
         />
       </>
@@ -72,14 +68,14 @@ class LeaguesContainer extends Component {
 
 LeaguesContainer.propTypes = {
   leagues: PropTypes.arrayOf(PropTypes.object).isRequired,
+  sports: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string,
 };
 
 function mapStateToProps(state) {
-  const { leagues, status, error } = state.leagues;
+  const { leagues, status } = state.leagues;
   const { sports } = state.sports;
-  return { sports, leagues, status, error };
+  return { sports, leagues, status };
 }
 
 export default connect(mapStateToProps)(LeaguesContainer);

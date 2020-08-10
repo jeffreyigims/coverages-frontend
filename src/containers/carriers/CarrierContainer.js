@@ -6,8 +6,6 @@ import { Button } from "react-bootstrap";
 import Moment from "react-moment";
 import { EyeFill } from "react-bootstrap-icons";
 import PaginatedTable from "../../components/PaginatedTable";
-import { carriers as formHelpers } from "../../utils/Schemas";
-import { carrierForm as form } from "../../utils/Forms";
 import {
   fetchCarrier,
   updateCarrier,
@@ -129,30 +127,27 @@ class CarrierContainer extends Component {
               fetchCoverages({ for_carrier: this.state.id, page: activePage })
             )
           }
-          defaultActivePage={this.props.page}
-          totalPages={this.props.pages}
+          defaultActivePage={this.props.defaultActivePage}
+          totalPages={this.props.totalPages}
         />
       </>
     );
   };
 
   render() {
+    const { dispatch } = this.props;
     return (
       <>
         <DetailStructure
-          object={this.props.selected}
-          status={this.props.status}
+          {...this.props}
           name={this.state.name}
-          formHelpers={formHelpers}
-          form={form}
           showDetails={this.showDetails}
           updateObject={(id, values) => {
-            this.props.dispatch(updateCarrier({ id: id, values: values }));
+            dispatch(updateCarrier({ id: id, values: values }));
           }}
           deleteObject={(id) => {
-            this.props.dispatch(deleteCarrier(id));
+            dispatch(deleteCarrier(id));
           }}
-          redirection={{ link: this.props.link, redirect: this.props.redirect }}
         />
       </>
     );
@@ -162,16 +157,27 @@ class CarrierContainer extends Component {
 CarrierContainer.propTypes = {
   selected: PropTypes.object,
   status: PropTypes.string.isRequired,
-  errors: PropTypes.object,
-  link: PropTypes.string,
-  redirect: PropTypes.bool,
+  redirections: PropTypes.object.isRequired,
+  coverages: PropTypes.arrayOf(PropTypes.object).isRequired,
+  totalPages: PropTypes.number,
+  defaultActivePage: PropTypes.number.isRequired,
+  coveragesStatus: PropTypes.string.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { selected, status, error } = state.carriers;
-  const { coverages, pages, page } = state.coverages;
-  const { link, redirect } = state.redirections;
-  return { selected, status, error, link, redirect, coverages, pages, page };
+  const { selected, status } = state.carriers;
+  const { coverages, totalPages, defaultActivePage } = state.coverages;
+  const { coveragesStatus } = state.coverages.status;
+  const redirections = state.redirections;
+  return {
+    selected,
+    status,
+    redirections,
+    coverages,
+    defaultActivePage,
+    totalPages,
+    coveragesStatus,
+  };
 }
 
 export default connect(mapStateToProps)(CarrierContainer);

@@ -17,7 +17,7 @@ export default class PaginatedTable extends React.Component {
       <>
         <GeneralTable {...otherProps} />
         {this.props.objects.length > 0 &&
-          this.props.onPageChange != null &&
+          onPageChange != null &&
           this.props.status === "succeeded" && (
             <Row className="row justify-content-center">
               <Pagination

@@ -4,8 +4,6 @@ import DetailStructure from "../../components/DetailStructure";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import GeneralTable from "../../components/GeneralTable";
-import { groups as formHelpers } from "../../utils/Schemas";
-import { groupForm as form } from "../../utils/Forms";
 import { fetchGroup, deleteGroup, updateGroup } from "../../actions/Actions";
 
 class GroupContainer extends Component {
@@ -60,22 +58,19 @@ class GroupContainer extends Component {
   };
 
   render() {
+    const { dispatch } = this.props;
     return (
       <>
         <DetailStructure
-          object={this.props.selected}
-          status={this.props.status}
+          {...this.props}
           name={this.state.name}
-          formHelpers={formHelpers}
-          form={form}
           showDetails={this.showDetails}
           updateObject={(id, values) => {
-            this.props.dispatch(updateGroup({ id: id, values: values }));
+            dispatch(updateGroup({ id: id, values: values }));
           }}
           deleteObject={(id) => {
-            this.props.dispatch(deleteGroup(id));
+            dispatch(deleteGroup(id));
           }}
-          redirection={{ link: this.props.link, redirect: this.props.redirect }}
         />
       </>
     );
@@ -83,17 +78,15 @@ class GroupContainer extends Component {
 }
 
 GroupContainer.propTypes = {
-  selected: PropTypes.object.isRequired,
+  selected: PropTypes.object,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
-  link: PropTypes.string,
-  redirect: PropTypes.bool,
+  redirections: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { selected, status, error } = state.groups;
-  const { link, redirect } = state.redirections;
-  return { selected, status, error, link, redirect };
+  const { selected, status } = state.groups;
+  const redirections = state.redirections;
+  return { selected, status, redirections };
 }
 
 export default connect(mapStateToProps)(GroupContainer);

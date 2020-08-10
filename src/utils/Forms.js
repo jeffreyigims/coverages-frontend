@@ -2,6 +2,7 @@ import React from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import { DatePickerInput } from "rc-datepicker";
 import "rc-datepicker/lib/style.css";
+import { formatDate } from "./Helpers";
 
 export const objectOptions = (objects) => {
   return objects.map((object, index) => {
@@ -43,7 +44,7 @@ export const objectDataOptions = (objects) => {
   });
 };
 
-export function sportForm(values, handleChange, setFieldValue, errors) {
+function sportForm(values, handleChange, setFieldValue, errors, additional) {
   return (
     <Row>
       <Form.Group as={Col}>
@@ -63,13 +64,7 @@ export function sportForm(values, handleChange, setFieldValue, errors) {
   );
 }
 
-export function leagueForm(
-  values,
-  handleChange,
-  setFieldValue,
-  errors,
-  sports
-) {
+function leagueForm(values, handleChange, setFieldValue, errors, additional) {
   return (
     <>
       <Row>
@@ -110,7 +105,7 @@ export function leagueForm(
             onChange={handleChange}
             isInvalid={!!errors.sport_index}
           >
-            {objectOptions(sports)}
+            {objectOptions(additional.sports)}
           </Form.Control>
         </Form.Group>
         <Form.Control.Feedback type="invalid">
@@ -121,7 +116,7 @@ export function leagueForm(
   );
 }
 
-export function clubForm(values, handleChange, setFieldValue, errors, leagues) {
+function clubForm(values, handleChange, setFieldValue, errors, additional) {
   return (
     <>
       <Row>
@@ -157,7 +152,7 @@ export function clubForm(values, handleChange, setFieldValue, errors, leagues) {
             value={values.league_index}
             onChange={handleChange}
           >
-            {objectOptions(leagues)}
+            {objectOptions(additional.leagues)}
           </Form.Control>
         </Form.Group>
       </Row>
@@ -165,7 +160,7 @@ export function clubForm(values, handleChange, setFieldValue, errors, leagues) {
   );
 }
 
-export function companyForm(values, handleChange, setFieldValue, errors) {
+function companyForm(values, handleChange, setFieldValue, errors, additional) {
   return (
     <>
       <Row>
@@ -187,13 +182,7 @@ export function companyForm(values, handleChange, setFieldValue, errors) {
   );
 }
 
-export function brokerForm(
-  values,
-  handleChange,
-  setFieldValue,
-  errors,
-  company
-) {
+function brokerForm(values, handleChange, setFieldValue, errors, additional) {
   return (
     <>
       <Row>
@@ -202,7 +191,10 @@ export function brokerForm(
           <Form.Control
             type="text"
             name="company"
-            value={company.name}
+            value={
+              additional.company.attributes?.company.name ||
+              additional.company.name
+            }
             disabled
           />
         </Form.Group>
@@ -224,7 +216,7 @@ export function brokerForm(
   );
 }
 
-export function categoryForm(values, handleChange, setFieldValue, errors) {
+function categoryForm(values, handleChange, setFieldValue, errors, additional) {
   return (
     <>
       <Row>
@@ -246,12 +238,12 @@ export function categoryForm(values, handleChange, setFieldValue, errors) {
   );
 }
 
-export function subCategoryForm(
+function subCategoryForm(
   values,
   handleChange,
   setFieldValue,
   errors,
-  category
+  additional
 ) {
   return (
     <>
@@ -261,7 +253,10 @@ export function subCategoryForm(
           <Form.Control
             type="text"
             name="category"
-            value={category.attributes.name}
+            value={
+              additional.selected.attributes.category?.name ||
+              additional.selected.attributes.name
+            }
             disabled
           />
         </Form.Group>
@@ -283,13 +278,7 @@ export function subCategoryForm(
   );
 }
 
-export function carrierForm(
-  values,
-  handleChange,
-  setFieldValue,
-  errors,
-  leagues
-) {
+function carrierForm(values, handleChange, setFieldValue, errors, additional) {
   return (
     <>
       <Row>
@@ -321,7 +310,7 @@ function roleOptions() {
   });
 }
 
-export function userForm(values, handleChange, setFieldValue, errors, leagues) {
+function userForm(values, handleChange, setFieldValue, errors, additional) {
   return (
     <>
       <Row>
@@ -382,16 +371,7 @@ export function userForm(values, handleChange, setFieldValue, errors, leagues) {
   );
 }
 
-export function coverageForm(
-  values,
-  handleChange,
-  setFieldValue,
-  errors,
-  clubs,
-  categories,
-  carriers,
-  brokers
-) {
+function coverageForm(values, handleChange, setFieldValue, errors, additional) {
   return (
     <>
       <Row>
@@ -406,7 +386,7 @@ export function coverageForm(
               setFieldValue("group_index", 0);
             }}
           >
-            {objectOptions(clubs)}
+            {objectOptions(additional.clubs)}
           </Form.Control>
         </Form.Group>
 
@@ -419,7 +399,7 @@ export function coverageForm(
             onChange={handleChange}
           >
             {objectGroupOptions(
-              clubs[values.club_index]?.attributes.club_groups
+              additional.clubs[values.club_index]?.attributes.club_groups
             )}
           </Form.Control>
         </Form.Group>
@@ -437,7 +417,7 @@ export function coverageForm(
               setFieldValue("sub_category_index", 0);
             }}
           >
-            {objectOptions(categories)}
+            {objectOptions(additional.categories)}
           </Form.Control>
         </Form.Group>
 
@@ -450,7 +430,8 @@ export function coverageForm(
             onChange={handleChange}
           >
             {objectDataOptions(
-              categories[values.category_index]?.attributes.sub_categories
+              additional.categories[values.category_index]?.attributes
+                .sub_categories
             )}
           </Form.Control>
         </Form.Group>
@@ -474,7 +455,7 @@ export function coverageForm(
               )
             }
           >
-            {objectOptions(carriers)}
+            {objectOptions(additional.carriers)}
           </Form.Control>
         </Form.Group>
 
@@ -495,7 +476,7 @@ export function coverageForm(
               )
             }
           >
-            {objectOptions(brokers)}
+            {objectOptions(additional.brokers)}
           </Form.Control>
         </Form.Group>
       </Row>
@@ -516,7 +497,7 @@ export function coverageForm(
           <DatePickerInput
             name="start_date"
             value={values.start_date}
-            onChange={(val) => setFieldValue("start_date", val)}
+            onChange={(val) => setFieldValue("start_date", formatDate(val))}
           />
         </Form.Group>
 
@@ -525,7 +506,7 @@ export function coverageForm(
           <DatePickerInput
             name="end_date"
             value={values.end_date}
-            onChange={(val) => setFieldValue("end_date", val)}
+            onChange={(val) => setFieldValue("end_date", formatDate(val))}
           />
         </Form.Group>
       </Row>
@@ -555,13 +536,7 @@ export function coverageForm(
   );
 }
 
-export function groupForm(
-  values,
-  handleChange,
-  setFieldValue,
-  errors,
-  leagues
-) {
+function groupForm(values, handleChange, setFieldValue, errors, additional) {
   return (
     <>
       <Row>
@@ -583,12 +558,12 @@ export function groupForm(
   );
 }
 
-export function clubGroupForm(
+function clubGroupForm(
   values,
   handleChange,
   setFieldValue,
   errors,
-  groups
+  additional
 ) {
   return (
     <>
@@ -601,10 +576,41 @@ export function clubGroupForm(
             value={values.group_index}
             onChange={handleChange}
           >
-            {objectOptions(groups)}
+            {objectOptions(additional.groups)}
           </Form.Control>
         </Form.Group>
       </Row>
     </>
   );
+}
+
+export function formFor(name, ...values) {
+  switch (name) {
+    case "sport":
+      return sportForm(...values);
+    case "league":
+      return leagueForm(...values);
+    case "club":
+      return clubForm(...values);
+    case "group":
+      return groupForm(...values);
+    case "club_group":
+      return clubGroupForm(...values);
+    case "category":
+      return categoryForm(...values);
+    case "sub category":
+      return subCategoryForm(...values);
+    case "carrier":
+      return carrierForm(...values);
+    case "company":
+      return companyForm(...values);
+    case "broker":
+      return brokerForm(...values);
+    case "coverage":
+      return coverageForm(...values);
+    case "user":
+      return userForm(...values);
+    default:
+      return;
+  }
 }

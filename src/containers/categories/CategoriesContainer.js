@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import ListStructure from "../../components/ListStructure";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
-import { categories as formHelpers } from "../../utils/Schemas";
-import { categoryForm as form } from "../../utils/Forms";
 import { fetchCategories, postCategory } from "../../actions/Actions";
 
 class CategoriesContainer extends Component {
@@ -40,18 +38,17 @@ class CategoriesContainer extends Component {
   };
 
   render() {
+    const { categories, status, dispatch } = this.props;
     return (
       <>
         <ListStructure
-          objects={this.props.categories}
-          status={this.props.status}
+          objects={categories}
+          status={status}
           showObjects={this.showObjects}
           tableHeaders={this.state.tableHeaders}
           name={this.state.name}
           plural={this.state.plural}
-          formHelpers={formHelpers}
-          form={form}
-          postObject={(values) => this.props.dispatch(postCategory(values))}
+          postObject={(values) => dispatch(postCategory(values))}
         />
       </>
     );
@@ -61,12 +58,11 @@ class CategoriesContainer extends Component {
 CategoriesContainer.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
-  errors: PropTypes.string,
 };
 
 function mapStateToProps(state) {
-  const { categories, status, errors } = state.categories;
-  return { categories, status, errors };
+  const { categories, status } = state.categories;
+  return { categories, status };
 }
 
 export default connect(mapStateToProps)(CategoriesContainer);

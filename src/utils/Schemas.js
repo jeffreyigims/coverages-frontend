@@ -1,6 +1,7 @@
 import * as yup from "yup";
+import { formatDate } from "./Helpers";
 
-export const sports = {
+const sports = {
   schema: yup.object({
     name: yup.string().required(),
   }),
@@ -9,7 +10,7 @@ export const sports = {
   },
 };
 
-export const leagues = {
+const leagues = {
   schema: yup.object({
     name: yup.string().required(),
   }),
@@ -20,7 +21,7 @@ export const leagues = {
   },
 };
 
-export const clubs = {
+const clubs = {
   schema: yup.object({
     name: yup.string().required(),
     abbreviation: yup.string(),
@@ -32,7 +33,7 @@ export const clubs = {
   },
 };
 
-export const groups = {
+const groups = {
   schema: yup.object({
     name: yup.string().required(),
   }),
@@ -41,7 +42,7 @@ export const groups = {
   },
 };
 
-export const club_groups = {
+const club_groups = {
   schema: yup.object({
     group_index: yup.string().required(),
   }),
@@ -50,7 +51,7 @@ export const club_groups = {
   },
 };
 
-export const companies = {
+const companies = {
   schema: yup.object({
     name: yup.string().required(),
   }),
@@ -59,7 +60,7 @@ export const companies = {
   },
 };
 
-export const brokers = {
+const brokers = {
   schema: yup.object({
     name: yup.string().required(),
   }),
@@ -68,7 +69,7 @@ export const brokers = {
   },
 };
 
-export const carriers = {
+const carriers = {
   schema: yup.object({
     name: yup.string().required(),
   }),
@@ -77,7 +78,7 @@ export const carriers = {
   },
 };
 
-export const categories = {
+const categories = {
   schema: yup.object({
     name: yup.string().required(),
   }),
@@ -86,7 +87,7 @@ export const categories = {
   },
 };
 
-export const sub_categories = {
+const sub_categories = {
   schema: yup.object({
     name: yup.string().required(),
   }),
@@ -97,17 +98,15 @@ export const sub_categories = {
 
 export const coverages = {
   schema: yup.object({
-    // sport_index: yup.string().required(),
-    // league_index: yup.string().required(),
-    // club_index: yup.string().required(),
-    // group_index: yup.string().required(),
-    // category_index: yup.string().required(),
-    // sub_category_index: yup.string().required(),
-    // notes: yup.string(),
-    // start_date: yup.date(),
-    // end_date: yup.date(),
-    // has_coverage_line: yup.boolean(),
-    // verified: yup.boolean(),
+    club_index: yup.string().required(),
+    group_index: yup.string().required(),
+    category_index: yup.string().required(),
+    sub_category_index: yup.string().required(),
+    notes: yup.string(),
+    start_date: yup.string().nullable(),
+    end_date: yup.string().nullable(),
+    has_coverage_line: yup.boolean().required(),
+    verified: yup.boolean().required(),
   }),
   initialValues: {
     club_index: 0,
@@ -117,24 +116,24 @@ export const coverages = {
     carriers: [],
     brokers: [],
     notes: "",
-    start_date: new Date().toString(),
-    end_date: "",
+    start_date: formatDate(new Date()),
+    end_date: formatDate(null),
     has_coverage_line: false,
     verified: false,
   },
 };
 
-export const coverage_wizard = {
+const coverage_wizard = {
   schema: yup.object({
-    // club_index: yup.string().required(),
-    // group_index: yup.string().required(),
-    // category_index: yup.string().required(),
-    // sub_category_index: yup.string().required(),
-    // notes: yup.string(),
-    // start_date: yup.date(),
-    // end_date: yup.date(),
-    // has_coverage_line: yup.boolean().required(),
-    // verified: yup.boolean().required(),
+    club_index: yup.string().required(),
+    group_index: yup.string().required(),
+    category_index: yup.string().required(),
+    sub_category_index: yup.string().required(),
+    notes: yup.string(),
+    start_date: yup.string().nullable(),
+    end_date: yup.string().nullable(),
+    has_coverage_line: yup.boolean().required(),
+    verified: yup.boolean().required(),
   }),
   initialValues: {
     sport_index: 0,
@@ -146,14 +145,14 @@ export const coverage_wizard = {
     carriers: [],
     brokers: [],
     notes: "",
-    start_date: new Date().toString(),
-    end_date: null,
+    start_date: formatDate(new Date()),
+    end_date: formatDate(null),
     has_coverage_line: false,
     verified: false,
   },
 };
 
-export const users = {
+const users = {
   schema: yup.object({
     first_name: yup.string().required(),
     last_name: yup.string().required(),
@@ -167,3 +166,36 @@ export const users = {
     username: "",
   },
 };
+
+export function schemaFor(name) {
+  switch (name) {
+    case "sport":
+      return sports;
+    case "league":
+      return leagues;
+    case "club":
+      return clubs;
+    case "group":
+      return groups;
+    case "club_group":
+      return club_groups;
+    case "category":
+      return categories;
+    case "sub category":
+      return sub_categories;
+    case "carrier":
+      return carriers;
+    case "company":
+      return companies;
+    case "broker":
+      return brokers;
+    case "coverage":
+      return coverages;
+    case "coverage_wizard":
+      return coverage_wizard;
+    case "user":
+      return users;
+    default:
+      return;
+  }
+}

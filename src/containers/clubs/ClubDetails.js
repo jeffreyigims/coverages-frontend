@@ -1,35 +1,35 @@
 import React, { Component } from "react";
 import EditObject from "../../components/EditObject";
+import AddObject from "../../components/AddObject";
 import { Card, Button } from "react-bootstrap";
-import { capitalize, canDelete } from "../../utils/Helpers";
+import { capitalize, canDelete, switchModal } from "../../utils/Helpers";
 import { Redirect } from "react-router-dom";
-import AddGroup from "./AddGroup";
 
 export default class ClubDetails extends Component {
+  constructor() {
+    super();
+    this.switchModal = switchModal.bind(this);
+  }
+
   state = {
     modal_edit: false,
     modal_groups: false,
-  };
-
-  switchModal = (name) => {
-    const modal = name;
-    this.setState((prevState) => ({
-      [modal]: !prevState[modal],
-    }));
   };
 
   render() {
     const {
       selected,
       status,
-      redirection,
+      redirections,
       showDetails,
       deleteObject,
       name,
+      leagues,
+      groups,
     } = this.props;
     return (
       <>
-        {redirection.redirect === true && <Redirect to={redirection.link} />}
+        {redirections.redirect === true && <Redirect to={redirections.link} />}
         <Card>
           <Card.Header></Card.Header>
           {status === "succeeded" && (
@@ -77,20 +77,18 @@ export default class ClubDetails extends Component {
             <EditObject
               show={this.state.modal_edit}
               switchModal={() => this.switchModal("modal_edit")}
-              formHelpers={this.props.formHelpers}
-              form={this.props.form}
-              object={this.props.selected}
+              selected={this.props.selected}
               name={this.props.name}
               updateObject={this.props.updateObject}
+              additional={{ leagues: leagues }}
             />
-            <AddGroup
+            <AddObject
               show={this.state.modal_groups}
-              switchModal={this.switchModal}
-              formHelpers={this.props.formHelpersGroups}
-              form={this.props.formGroups}
-              object={this.props.selected}
-              name={this.props.name}
+              switchModal={() => this.switchModal("modal_groups")}
+              selected={this.props.selected}
+              name={"club_group"}
               postObject={this.props.postObject}
+              additional={{ groups: groups }}
             />
           </>
         )}

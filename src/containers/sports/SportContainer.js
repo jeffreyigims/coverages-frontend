@@ -5,8 +5,6 @@ import { Button } from "react-bootstrap";
 import GeneralTable from "../../components/GeneralTable";
 import PropTypes from "prop-types";
 import { fetchSport, updateSport, deleteSport } from "../../actions/Actions";
-import { sports as formHelpers } from "../../utils/Schemas";
-import { sportForm as form } from "../../utils/Forms";
 
 class SportContainer extends Component {
   state = {
@@ -51,22 +49,19 @@ class SportContainer extends Component {
   };
 
   render() {
+    const { dispatch } = this.props;
     return (
       <>
         <DetailStructure
-          object={this.props.selected}
-          status={this.props.status}
+          {...this.props}
           name={this.state.name}
-          formHelpers={formHelpers}
-          form={form}
           showDetails={this.showDetails}
           updateObject={(id, values) => {
-            this.props.dispatch(updateSport({ id: id, values: values }));
+            dispatch(updateSport({ id: id, values: values }));
           }}
           deleteObject={(id) => {
-            this.props.dispatch(deleteSport(id));
+            dispatch(deleteSport(id));
           }}
-          redirection={{ link: this.props.link, redirect: this.props.redirect }}
         />
       </>
     );
@@ -76,15 +71,13 @@ class SportContainer extends Component {
 SportContainer.propTypes = {
   selected: PropTypes.object,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string,
-  link: PropTypes.string,
-  redirect: PropTypes.bool,
+  redirections: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { selected, status, error } = state.sports;
-  const { link, redirect } = state.redirections;
-  return { selected, status, error, link, redirect };
+  const { selected, status } = state.sports;
+  const redirections = state.redirections;
+  return { selected, status, redirections };
 }
 
 export default connect(mapStateToProps)(SportContainer);

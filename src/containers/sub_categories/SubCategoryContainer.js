@@ -6,14 +6,11 @@ import { Button } from "react-bootstrap";
 import GeneralTable from "../../components/GeneralTable";
 import Moment from "react-moment";
 import { EyeFill } from "react-bootstrap-icons";
-import { sub_categories as formHelpers } from "../../utils/Schemas";
-import { subCategoryForm as form } from "../../utils/Forms";
 import {
   fetchSubCategory,
   deleteSubCategory,
   updateSubCategory,
   fetchCoverages,
-  fetchCategories,
 } from "../../actions/Actions";
 
 class SubCategoryContainer extends Component {
@@ -25,7 +22,6 @@ class SubCategoryContainer extends Component {
   componentDidMount() {
     this.props.dispatch(fetchSubCategory(this.state.id));
     this.props.dispatch(fetchCoverages({ for_sub_category: this.state.id }));
-    this.props.dispatch(fetchCategories());
   }
 
   showDetails = (object) => {
@@ -78,7 +74,7 @@ class SubCategoryContainer extends Component {
                 href={"/users/" + object.attributes.user.id}
                 style={{ color: "black" }}
               >
-                {object.attributes.user.first_name}{" "}
+                {object.attributes.user.first_name}
                 {object.attributes.user.last_name}
               </Button>
             </td>
@@ -131,30 +127,20 @@ class SubCategoryContainer extends Component {
   };
 
   render() {
+    const { dispatch } = this.props;
     return (
       <>
         <DetailStructure
-          object={this.props.selected}
-          status={this.props.status}
+          {...this.props}
           name={this.state.name}
           showDetails={this.showDetails}
-          formHelpers={formHelpers}
-          form={(values, handleChange, setFieldValue, errors) =>
-            form(
-              values,
-              handleChange,
-              setFieldValue,
-              errors,
-              this.props.selected
-            )
-          }
           deleteObject={(id) => {
-            this.props.dispatch(deleteSubCategory(id));
+            dispatch(deleteSubCategory(id));
           }}
           updateObject={(id, values) => {
-            this.props.dispatch(updateSubCategory({ id: id, values: values }));
+            dispatch(updateSubCategory({ id: id, values: values }));
           }}
-          redirection={{ link: this.props.link, redirect: this.props.redirect }}
+          additional={{ selected: this.props.selected }}
         />
       </>
     );
@@ -162,28 +148,28 @@ class SubCategoryContainer extends Component {
 }
 
 SubCategoryContainer.propTypes = {
-  selected: PropTypes.object.isRequired,
+  selected: PropTypes.object,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
-  link: PropTypes.string,
-  redirect: PropTypes.bool,
+  redirections: PropTypes.object.isRequired,
+  coverages: PropTypes.arrayOf(PropTypes.object).isRequired,
+  totalPages: PropTypes.number,
+  defaultActivePage: PropTypes.number.isRequired,
+  coveragesStatus: PropTypes.string.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { selected, status, error } = state.sub_categories;
-  const { coverages } = state.coverages;
-  const { categories } = state.categories;
+  const { selected, status } = state.sub_categories;
+  const { coverages, totalPages, defaultActivePage } = state.coverages;
   const coveragesStatus = state.coverages.status;
-  const { link, redirect } = state.redirections;
+  const redirections = state.redirections;
   return {
     selected,
     status,
-    error,
-    link,
-    redirect,
+    redirections,
     coverages,
+    defaultActivePage,
+    totalPages,
     coveragesStatus,
-    categories,
   };
 }
 

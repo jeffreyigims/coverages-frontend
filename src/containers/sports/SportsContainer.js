@@ -3,17 +3,9 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import ListStructure from "../../components/ListStructure";
 import { Button } from "react-bootstrap";
-import { sports as formHelpers } from "../../utils/Schemas";
-import { sportForm as form } from "../../utils/Forms";
 import { fetchSports, postSport } from "../../actions/Actions";
 
 class SportsContainer extends React.Component {
-  // state = {
-  //   tableHeaders: ["Sport", "Leagues"],
-  //   name: "sport",
-  //   plural: "sports",
-  // };
-
   componentDidMount() {
     this.props.dispatch(fetchSports());
   }
@@ -50,8 +42,6 @@ class SportsContainer extends React.Component {
           tableHeaders={["Sport", "Leagues"]}
           name={"sport"}
           plural={"sports"}
-          formHelpers={formHelpers}
-          form={form}
           postObject={(values) => dispatch(postSport(values))}
         />
       </>

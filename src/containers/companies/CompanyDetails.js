@@ -1,22 +1,20 @@
-import React, { Component } from "react";
+import React from "react";
 import EditObject from "../../components/EditObject";
-import AddBroker from "../brokers/AddBroker";
+import AddObject from "../../components/AddObject";
+import PropTypes from "prop-types";
 import { Card, Button } from "react-bootstrap";
-import { capitalize, canDelete } from "../../utils/Helpers";
+import { capitalize, canDelete, switchModal } from "../../utils/Helpers";
 import { Redirect } from "react-router-dom";
 import GeneralTable from "../../components/GeneralTable";
 
-export default class CompanyDetails extends Component {
+export default class CompanyDetails extends React.Component {
+  constructor() {
+    super();
+    this.switchModal = switchModal.bind(this);
+  }
   state = {
     modal_edit: false,
     modal_broker: false,
-  };
-
-  switchModal = (name) => {
-    const modal = name;
-    this.setState((prevState) => ({
-      [modal]: !prevState[modal],
-    }));
   };
 
   showDetails = (object) => {
@@ -52,31 +50,37 @@ export default class CompanyDetails extends Component {
   };
 
   render() {
+    const {
+      selected,
+      status,
+      redirections,
+      updateObject,
+      deleteObject,
+      name,
+      postBroker,
+    } = this.props;
     return (
       <>
-        {this.props.redirection.redirect === true && (
-          <Redirect to={this.props.redirection.link} />
-        )}
+        {redirections.redirect === true && <Redirect to={redirections.link} />}
         <Card>
           <Card.Header></Card.Header>
-          {this.props.status === "succeeded" && (
+          {status === "succeeded" && (
             <Card.Title style={{ marginTop: "10px" }}>
-              {capitalize(this.props.object.attributes.name)} Details
+              {capitalize(selected.attributes.name)} Details
             </Card.Title>
           )}
           <Card.Body>
-            {this.props.status === "succeeded" &&
-              this.showDetails(this.props.object)}
+            {status === "succeeded" && this.showDetails(selected)}
           </Card.Body>
           <Card.Footer>
-            {this.props.status === "succeeded" && (
+            {status === "succeeded" && (
               <>
                 <Button
                   className="btn btn-theme float-right"
                   variant="primary"
                   onClick={(slot) => this.switchModal("modal_edit")}
                 >
-                  Edit {capitalize(this.props.name)}
+                  Edit {capitalize(name)}
                 </Button>
                 <Button
                   className="btn btn-theme float-right"
@@ -86,41 +90,36 @@ export default class CompanyDetails extends Component {
                 >
                   Add Broker
                 </Button>
-                {canDelete(this.props.object) && (
+                {canDelete(selected) && (
                   <Button
                     className="btn btn-theme float-right"
                     variant="danger"
-                    onClick={() =>
-                      this.props.deleteObject(this.props.object.attributes.id)
-                    }
+                    onClick={() => deleteObject(selected.attributes.id)}
                     style={{ marginRight: "10px" }}
                   >
-                    Delete {capitalize(this.props.name)}
+                    Delete {capitalize(name)}
                   </Button>
                 )}
               </>
             )}
           </Card.Footer>
         </Card>
-        {this.props.status === "succeeded" && (
+        {status === "succeeded" && (
           <>
             <EditObject
               show={this.state.modal_edit}
-              switchModal={this.switchModal}
-              formHelpers={this.props.formHelpers}
-              form={this.props.form}
-              object={this.props.object}
-              name={this.props.name}
-              updateObject={this.props.updateObject}
+              switchModal={() => this.switchModal("modal_edit")}
+              selected={selected}
+              name={name}
+              updateObject={updateObject}
             />
-            <AddBroker
+            <AddObject
               show={this.state.modal_broker}
-              switchModal={this.switchModal}
-              formHelpers={this.props.formHelpersBroker}
-              form={this.props.formBroker}
-              object={this.props.object}
-              name={this.props.name}
-              postSub={this.props.postSub}
+              switchModal={() => this.switchModal("modal_broker")}
+              selected={selected}
+              name={"broker"}
+              postObject={postBroker}
+              additional={{ company: selected.attributes }}
             />
           </>
         )}
@@ -129,4 +128,12 @@ export default class CompanyDetails extends Component {
   }
 }
 
-CompanyDetails.propTypes = {};
+CompanyDetails.propTypes = {
+  selected: PropTypes.object,
+  redirections: PropTypes.object,
+  status: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  updateObject: PropTypes.func.isRequired,
+  deleteObject: PropTypes.func.isRequired,
+  postBroker: PropTypes.func.isRequired,
+};

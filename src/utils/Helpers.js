@@ -1,5 +1,7 @@
 import React from "react";
 import { Spinner, Row } from "react-bootstrap";
+import * as moment from "moment";
+import Moment from "react-moment";
 
 // Returns a capitalized string for use in page titles
 export function capitalize(string) {
@@ -28,6 +30,8 @@ export function canDelete(object) {
     case "group":
       return object.attributes.club_groups.length === 0 ? true : false;
     case "user_table":
+      return false;
+    case "user":
       return false;
     default:
       return true;
@@ -82,4 +86,15 @@ export function map(values, object) {
     new_values[key] = object[key];
   }
   return new_values;
+}
+
+// Returns date formatted or null
+export function formatDate(date) {
+  return date == null || date === "Invalid date"
+    ? null
+    : moment(date).format("YYYY-MM-DD");
+}
+
+export function displayDate(date, format) {
+  return <Moment format={format}>{date}</Moment>;
 }

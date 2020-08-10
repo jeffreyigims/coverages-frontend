@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import ListStructure from "../../components/ListStructure";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
-import { groups as formHelpers } from "../../utils/Schemas";
-import { groupForm as form } from "../../utils/Forms";
 import { fetchGroups, postGroup } from "../../actions/Actions";
 
 class GroupsContainer extends Component {
@@ -40,18 +38,17 @@ class GroupsContainer extends Component {
   };
 
   render() {
+    const { groups, status, dispatch } = this.props;
     return (
       <>
         <ListStructure
-          objects={this.props.groups}
-          status={this.props.status}
+          objects={groups}
+          status={status}
           showObjects={this.showObjects}
           tableHeaders={this.state.tableHeaders}
           name={this.state.name}
           plural={this.state.plural}
-          formHelpers={formHelpers}
-          form={form}
-          postObject={(values) => this.props.dispatch(postGroup(values))}
+          postObject={(values) => dispatch(postGroup(values))}
         />
       </>
     );
@@ -61,12 +58,11 @@ class GroupsContainer extends Component {
 GroupsContainer.propTypes = {
   groups: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string,
 };
 
 function mapStateToProps(state) {
-  const { groups, status, error } = state.groups;
-  return { groups, status, error };
+  const { groups, status } = state.groups;
+  return { groups, status };
 }
 
 export default connect(mapStateToProps)(GroupsContainer);

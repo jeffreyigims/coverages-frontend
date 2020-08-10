@@ -3,23 +3,27 @@ import PropTypes from "prop-types";
 import { Modal, Form, Button } from "react-bootstrap";
 import { Formik } from "formik";
 import { capitalize } from "../utils/Helpers";
+import { formFor } from "../utils/Forms";
+import { schemaFor } from "../utils/Schemas";
 
 export default class NewObject extends React.Component {
   render() {
+    const { show, switchModal, postObject, name, additional } = this.props;
+    const { schema, initialValues } = schemaFor(name);
     return (
-      <Modal show={this.props.show} onHide={this.props.switchModal}>
+      <Modal show={show} onHide={switchModal}>
         <Modal.Header closeButton>
-          <Modal.Title>New {capitalize(this.props.name)}</Modal.Title>
+          <Modal.Title>New {capitalize(name)}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
           <Formik
-            validationSchema={this.props.formHelpers.schema}
+            validationSchema={schema}
             onSubmit={(values) => {
-              this.props.postObject(values);
-              this.props.switchModal();
+              postObject(values);
+              switchModal();
             }}
-            initialValues={this.props.formHelpers.initialValues}
+            initialValues={initialValues}
           >
             {({
               handleSubmit,
@@ -29,13 +33,20 @@ export default class NewObject extends React.Component {
               errors,
             }) => (
               <Form noValidate onSubmit={handleSubmit}>
-                {this.props.form(values, handleChange, setFieldValue, errors)}
+                {formFor(
+                  name,
+                  values,
+                  handleChange,
+                  setFieldValue,
+                  errors,
+                  additional
+                )}
                 <Button
                   type="submit"
                   variant="primary"
                   className="btn btn-theme float-right"
                 >
-                  Create {capitalize(this.props.name)}
+                  Create {capitalize(name)}
                 </Button>
               </Form>
             )}
@@ -49,4 +60,5 @@ export default class NewObject extends React.Component {
 NewObject.propTypes = {
   name: PropTypes.string.isRequired,
   postObject: PropTypes.func.isRequired,
+  switchModal: PropTypes.func.isRequired,
 };

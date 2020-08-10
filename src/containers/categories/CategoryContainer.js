@@ -2,10 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import CategoryDetails from "./CategoryDetails";
 import PropTypes from "prop-types";
-import { categories as formHelpers } from "../../utils/Schemas";
-import { categoryForm as form } from "../../utils/Forms";
-import { sub_categories as formHelpersSub } from "../../utils/Schemas";
-import { subCategoryForm as formSub } from "../../utils/Forms";
 import {
   fetchCategory,
   updateCategory,
@@ -32,33 +28,19 @@ class CategoryContainer extends Component {
   };
 
   render() {
+    const { dispatch } = this.props;
     return (
       <>
         <CategoryDetails
-          object={this.props.selected}
-          secondary={this.props.secondary}
-          status={this.props.status}
+          {...this.props}
           name={this.state.name}
-          formHelpers={formHelpers}
-          form={form}
-          formHelpersSub={formHelpersSub}
-          formSub={(values, handleChange, setFieldValue, errors) =>
-            formSub(
-              values,
-              handleChange,
-              setFieldValue,
-              errors,
-              this.props.selected
-            )
-          }
           postSub={(values) => this.postSubCategory(values)}
           updateObject={(id, values) => {
-            this.props.dispatch(updateCategory({ id: id, values: values }));
+            dispatch(updateCategory({ id: id, values: values }));
           }}
           deleteObject={(id) => {
-            this.props.dispatch(deleteCategory(id));
+            dispatch(deleteCategory(id));
           }}
-          redirection={{ link: this.props.link, redirect: this.props.redirect }}
         />
       </>
     );
@@ -66,17 +48,16 @@ class CategoryContainer extends Component {
 }
 
 CategoryContainer.propTypes = {
-  selected: PropTypes.object.isRequired,
+  selected: PropTypes.object,
+  secondary: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
-  link: PropTypes.string,
-  redirect: PropTypes.bool,
+  redirections: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { selected, status, error, secondary } = state.categories;
-  const { link, redirect } = state.redirections;
-  return { selected, status, error, link, redirect, secondary };
+  const { selected, status, secondary } = state.categories;
+  const redirections = state.redirections;
+  return { selected, secondary, status, redirections };
 }
 
 export default connect(mapStateToProps)(CategoryContainer);

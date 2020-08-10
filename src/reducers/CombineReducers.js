@@ -43,7 +43,6 @@ const metricsSlice = createSlice({
   },
 });
 
-
 // General reducer used for most tables and operations
 function createTableReducer(name = "") {
   let initialState = {
@@ -122,8 +121,8 @@ function createPaginatedTableReducer(name = "") {
     status: "idle",
     errors: null,
     selected: null,
-    page: 1,
-    pages: null,
+    defaultActivePage: 1,
+    totalPages: null,
   };
   return function reducer(state = initialState, action) {
     switch (action.type) {
@@ -138,8 +137,8 @@ function createPaginatedTableReducer(name = "") {
       case `${name}/fetch_${name}/fulfilled`:
         return Object.assign({}, state, {
           [name]: action.payload.objects.data,
-          pages: action.payload.pages,
-          page: action.payload.page,
+          totalPages: action.payload.pages,
+          defaultActivePage: action.payload.page,
           status: "succeeded",
         });
       case `${name}/post_${name}/rejected`:
@@ -185,7 +184,7 @@ function createPaginatedTableReducer(name = "") {
   };
 }
 
-// Reducer used for objects when we want to keep track of associated objects that are posted 
+// Reducer used for objects when we want to keep track of associated objects that are posted
 function createSpecialTableReducer(name = "", target = "") {
   let initialState = {
     [name]: [],

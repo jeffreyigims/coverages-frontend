@@ -1,58 +1,59 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Form, Col, Row, Card, Spinner, Button } from "react-bootstrap";
+import { Form, Col, Row, Card, Button } from "react-bootstrap";
 import { Formik } from "formik";
 import { DatePickerInput } from "rc-datepicker";
 import "rc-datepicker/lib/style.css";
 import { objectOptionsID } from "../../utils/Forms";
-import * as moment from "moment";
+import { schemaFor } from "../../utils/Schemas";
 import { Redirect } from "react-router-dom";
+import { formatDate, statusDisplay } from "../../utils/Helpers";
 
 export default class CoverageDetails extends React.Component {
   initialValues = (coverage) => {
-    var values = {};
-    values["notes"] = coverage.notes;
-    values["start_date"] =
-      coverage.start_date == null
-        ? null
-        : moment(coverage.start_date).format("YYYY-MM-DD");
-    values["end_date"] =
-      coverage.end_date == null
-        ? null
-        : moment(coverage.end_date).format("YYYY-MM-DD");
-    values["has_coverage_line"] = coverage.has_coverage_line;
-    values["verified"] = coverage.verified;
-    values["carriers"] = coverage.coverage_carriers.map(
-      (coverage_carrier) => coverage_carrier.data.attributes.carrier_id
-    );
-    values["brokers"] = coverage.coverage_brokers.map(
-      (coverage_brokers) => coverage_brokers.data.attributes.broker_id
-    );
-    return values;
+    return coverage == null
+      ? null
+      : {
+          notes: coverage.notes,
+          start_date: formatDate(coverage.start_date),
+          end_date: formatDate(coverage.end_date),
+          has_coverage_line: coverage.has_coverage_line,
+          verified: coverage.verified,
+          carriers: coverage.coverage_carriers.map(
+            (coverage_carrier) => coverage_carrier.data.attributes.carrier_id
+          ),
+          brokers: coverage.coverage_brokers.map(
+            (coverage_brokers) => coverage_brokers.data.attributes.broker_id
+          ),
+        };
   };
 
   render() {
+    const {
+      redirections,
+      status,
+      selected,
+      brokers,
+      carriers,
+      submit,
+      deleteObject,
+    } = this.props;
+    const { schema } = schemaFor("coverage");
     return (
       <>
-        {this.props.redirection.redirect === true && (
-          <Redirect to={this.props.redirection.link} />
-        )}
+        {redirections.redirect === true && <Redirect to={redirections.link} />}
         <Card>
           <Card.Header></Card.Header>
           <Card.Title style={{ marginTop: "10px" }}>
             Coverage Details
           </Card.Title>
           <Card.Body>
-            <Row className="row justify-content-center">
-              {this.props.status === "loading" && (
-                <Spinner animation="border" variant="primary" />
-              )}
-            </Row>
-            {this.props.status === "succeeded" && (
+            {statusDisplay(
+              status,
               <Formik
-                validationSchema={this.props.formHelpers.schema}
-                onSubmit={this.props.submit}
-                initialValues={this.initialValues(this.props.object.attributes)}
+                validationSchema={schema}
+                onSubmit={submit}
+                initialValues={this.initialValues(selected?.attributes)}
                 enableReinitialize={true}
               >
                 {({
@@ -69,7 +70,7 @@ export default class CoverageDetails extends React.Component {
                         <Form.Control
                           type="text"
                           name="club"
-                          value={this.props.object.attributes.club.name}
+                          value={selected?.attributes.club.name}
                           disabled
                         />
                       </Form.Group>
@@ -79,7 +80,7 @@ export default class CoverageDetails extends React.Component {
                         <Form.Control
                           type="text"
                           name="group"
-                          value={this.props.object.attributes.group.name}
+                          value={selected?.attributes.group.name}
                           disabled
                         />
                       </Form.Group>
@@ -90,7 +91,7 @@ export default class CoverageDetails extends React.Component {
                         <Form.Control
                           type="text"
                           name="category"
-                          value={this.props.object.attributes.category.name}
+                          value={selected?.attributes.category.name}
                           disabled
                         />
                       </Form.Group>
@@ -100,7 +101,7 @@ export default class CoverageDetails extends React.Component {
                         <Form.Control
                           type="text"
                           name="sub_category"
-                          value={this.props.object.attributes.sub_category.name}
+                          value={selected?.attributes.sub_category.name}
                           disabled
                         />
                       </Form.Group>
@@ -123,7 +124,7 @@ export default class CoverageDetails extends React.Component {
                             )
                           }
                         >
-                          {objectOptionsID(this.props.carriers)}
+                          {objectOptionsID(carriers)}
                         </Form.Control>
                       </Form.Group>
 
@@ -144,7 +145,7 @@ export default class CoverageDetails extends React.Component {
                             )
                           }
                         >
-                          {objectOptionsID(this.props.brokers)}
+                          {objectOptionsID(brokers)}
                         </Form.Control>
                       </Form.Group>
                     </Row>
@@ -164,12 +165,7 @@ export default class CoverageDetails extends React.Component {
                           name="start_date"
                           value={values.start_date}
                           onChange={(val) =>
-                            setFieldValue(
-                              "start_date",
-                              val === "Invalid date"
-                                ? null
-                                : moment(val).format("YYYY-MM-DD")
-                            )
+                            setFieldValue("start_date", formatDate(val))
                           }
                         />
                       </Form.Group>
@@ -178,14 +174,9 @@ export default class CoverageDetails extends React.Component {
                         <Form.Label>{"End Date:"}</Form.Label>
                         <DatePickerInput
                           name="end_date"
-                          value={values.start_date}
+                          value={values.end_date}
                           onChange={(val) =>
-                            setFieldValue(
-                              "end_date",
-                              val === "Invalid date"
-                                ? null
-                                : moment(val).format("YYYY-MM-DD")
-                            )
+                            setFieldValue("end_date", formatDate(val))
                           }
                         />
                       </Form.Group>
@@ -216,9 +207,7 @@ export default class CoverageDetails extends React.Component {
                     <Button
                       className="btn btn-theme float-right"
                       variant="danger"
-                      onClick={() =>
-                        this.props.deleteObject(this.props.object.attributes.id)
-                      }
+                      onClick={() => deleteObject(selected?.attributes.id)}
                     >
                       Delete Coverage
                     </Button>
@@ -247,6 +236,11 @@ export default class CoverageDetails extends React.Component {
 }
 
 CoverageDetails.propTypes = {
+  selected: PropTypes.object,
   status: PropTypes.string.isRequired,
+  carriers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  brokers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  redirections: PropTypes.object.isRequired,
   submit: PropTypes.func.isRequired,
+  deleteObject: PropTypes.func.isRequired,
 };

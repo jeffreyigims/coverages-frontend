@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import ListStructure from "../../components/ListStructure";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
-import { clubs as formHelpers } from "../../utils/Schemas";
-import { clubForm as form } from "../../utils/Forms";
 import { fetchClubs, postClub, fetchLeagues } from "../../actions/Actions";
 
 class ClubsContainer extends Component {
@@ -66,11 +64,8 @@ class ClubsContainer extends Component {
           tableHeaders={["Name", "Code", "League", "Groups"]}
           name={"club"}
           plural={"clubs"}
-          formHelpers={formHelpers}
-          form={(values, handleChange, setFieldValue, errors) =>
-            form(values, handleChange, setFieldValue, errors, leagues)
-          }
           postObject={this.postObject}
+          additional={{ leagues: leagues }}
         />
       </>
     );
@@ -80,6 +75,7 @@ class ClubsContainer extends Component {
 ClubsContainer.propTypes = {
   clubs: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
+  leagues: PropTypes.arrayOf(PropTypes.object).isRequired,
   error: PropTypes.string,
 };
 

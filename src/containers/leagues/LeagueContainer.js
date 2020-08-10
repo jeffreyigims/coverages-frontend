@@ -4,8 +4,6 @@ import DetailStructure from "../../components/DetailStructure";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import GeneralTable from "../../components/GeneralTable";
-import { leagues as formHelpers } from "../../utils/Schemas";
-import { leagueForm as form } from "../../utils/Forms";
 import {
   fetchLeague,
   updateLeague,
@@ -60,24 +58,20 @@ class LeagueContainer extends Component {
   };
 
   render() {
+    const { dispatch, sports } = this.props;
     return (
       <>
         <DetailStructure
-          object={this.props.selected}
-          status={this.props.status}
+          {...this.props}
           name={this.state.name}
-          formHelpers={formHelpers}
-          form={(values, handleChange, setFieldValue, errors) =>
-            form(values, handleChange, setFieldValue, errors, this.props.sports)
-          }
           showDetails={this.showDetails}
           updateObject={(id, values) => {
-            this.props.dispatch(updateLeague({ id: id, values: values }));
+            dispatch(updateLeague({ id: id, values: values }));
           }}
           deleteObject={(id) => {
-            this.props.dispatch(deleteLeague(id));
+            dispatch(deleteLeague(id));
           }}
-          redirection={{ link: this.props.link, redirect: this.props.redirect }}
+          additional={{ sports: sports }}
         />
       </>
     );
@@ -87,16 +81,14 @@ class LeagueContainer extends Component {
 LeagueContainer.propTypes = {
   selected: PropTypes.object,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string,
-  link: PropTypes.string,
-  redirect: PropTypes.bool,
+  redirections: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { selected, status, error } = state.leagues;
+  const { selected, status } = state.leagues;
   const { sports } = state.sports;
-  const { link, redirect } = state.redirections;
-  return { selected, status, error, link, redirect, sports };
+  const redirections = state.redirections;
+  return { selected, status, sports, redirections };
 }
 
 export default connect(mapStateToProps)(LeagueContainer);

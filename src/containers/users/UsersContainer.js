@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import ListStructure from "../../components/ListStructure";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
-import { users as formHelpers } from "../../utils/Schemas";
-import { userForm as form } from "../../utils/Forms";
 import { fetchUsers, postUser } from "../../actions/Actions";
 
 class UsersContainer extends Component {
@@ -58,17 +56,16 @@ class UsersContainer extends Component {
   };
 
   render() {
+    const { users, status } = this.props;
     return (
       <>
         <ListStructure
-          objects={this.props.users}
-          status={this.props.status}
+          objects={users}
+          status={status}
           showObjects={this.showObjects}
           tableHeaders={this.state.tableHeaders}
           name={this.state.name}
           plural={this.state.plural}
-          formHelpers={formHelpers}
-          form={form}
           postObject={this.postObject}
         />
       </>
@@ -79,12 +76,11 @@ class UsersContainer extends Component {
 UsersContainer.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string,
 };
 
 function mapStateToProps(state) {
-  const { users, status, error } = state.users;
-  return { users, status, error };
+  const { users, status } = state.users;
+  return { users, status };
 }
 
 export default connect(mapStateToProps)(UsersContainer);

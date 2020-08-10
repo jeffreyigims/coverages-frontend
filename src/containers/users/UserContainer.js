@@ -4,8 +4,6 @@ import UserDetails from "./UserDetails";
 import PropTypes from "prop-types";
 import Moment from "react-moment";
 import { EyeFill } from "react-bootstrap-icons";
-import { users as formHelpers } from "../../utils/Schemas";
-import { userForm as form } from "../../utils/Forms";
 import {
   fetchUser,
   updateUser,
@@ -130,31 +128,27 @@ class UserContainer extends Component {
               fetchCoverages({ for_user: this.state.id, page: activePage })
             )
           }
-          defaultActivePage={this.props.page}
-          totalPages={this.props.pages}
+          defaultActivePage={this.props.defaultActivePage}
+          totalPages={this.props.totalPages}
         />
       </>
     );
   };
 
   render() {
+    const { dispatch } = this.props;
     return (
       <>
         <UserDetails
-          object={this.props.selected}
-          secondary={this.props.coverages}
-          status={this.props.status}
+          {...this.props}
           name={this.state.name}
-          formHelpers={formHelpers}
-          form={form}
           showDetails={this.showDetails}
           updateObject={(id, values) => {
-            this.props.dispatch(updateUser({ id: id, values: values }));
+            dispatch(updateUser({ id: id, values: values }));
           }}
           deleteObject={(id) => {
-            this.props.dispatch(deleteUser(id));
+            dispatch(deleteUser(id));
           }}
-          redirection={{ link: this.props.link, redirect: this.props.redirect }}
         />
       </>
     );
@@ -164,25 +158,25 @@ class UserContainer extends Component {
 UserContainer.propTypes = {
   selected: PropTypes.object,
   status: PropTypes.string.isRequired,
-  errors: PropTypes.object,
-  link: PropTypes.string,
-  redirect: PropTypes.bool,
+  redirections: PropTypes.object.isRequired,
+  coverages: PropTypes.arrayOf(PropTypes.object).isRequired,
+  totalPages: PropTypes.number,
+  defaultActivePage: PropTypes.number.isRequired,
+  coveragesStatus: PropTypes.string.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { selected, status, error } = state.users;
-  const { coverages, pages, page } = state.coverages;
+  const { selected, status } = state.users;
+  const { coverages, totalPages, defaultActivePage } = state.coverages;
   const coveragesStatus = state.coverages.status;
-  const { link, redirect } = state.redirections;
+  const redirections = state.redirections;
   return {
     selected,
     status,
-    error,
-    link,
-    redirect,
+    redirections,
     coverages,
-    pages,
-    page,
+    defaultActivePage,
+    totalPages,
     coveragesStatus,
   };
 }
