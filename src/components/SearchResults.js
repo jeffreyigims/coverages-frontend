@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { Modal, Table, Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import { statusDisplay } from "../utils/Helpers";
-import GeneralTable from "./GeneralTable";
 
 class SearchResults extends React.Component {
   createLists = (results) => {

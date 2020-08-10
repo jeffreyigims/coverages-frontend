@@ -1,19 +1,13 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Modal, Form, Button } from "react-bootstrap";
 import { Formik } from "formik";
 import { capitalize } from "../utils/Helpers";
 
-class NewObject extends React.Component {
-  handleClose = (name) => {
-    this.props.switchModal(name);
-  };
-
+export default class NewObject extends React.Component {
   render() {
     return (
-      <Modal
-        show={this.props.show}
-        onHide={() => this.handleClose("modal_new")}
-      >
+      <Modal show={this.props.show} onHide={this.props.switchModal}>
         <Modal.Header closeButton>
           <Modal.Title>New {capitalize(this.props.name)}</Modal.Title>
         </Modal.Header>
@@ -23,13 +17,19 @@ class NewObject extends React.Component {
             validationSchema={this.props.formHelpers.schema}
             onSubmit={(values) => {
               this.props.postObject(values);
-              this.handleClose("modal_new");
+              this.props.switchModal();
             }}
             initialValues={this.props.formHelpers.initialValues}
           >
-            {({ handleSubmit, handleChange, setFieldValue, values, errors }) => (
+            {({
+              handleSubmit,
+              handleChange,
+              setFieldValue,
+              values,
+              errors,
+            }) => (
               <Form noValidate onSubmit={handleSubmit}>
-                {this.props.form(values, handleChange, setFieldValue ,errors)}
+                {this.props.form(values, handleChange, setFieldValue, errors)}
                 <Button
                   type="submit"
                   variant="primary"
@@ -46,4 +46,7 @@ class NewObject extends React.Component {
   }
 }
 
-export default NewObject;
+NewObject.propTypes = {
+  name: PropTypes.string.isRequired,
+  postObject: PropTypes.func.isRequired,
+};

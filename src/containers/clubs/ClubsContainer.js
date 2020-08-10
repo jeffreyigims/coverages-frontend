@@ -8,12 +8,6 @@ import { clubForm as form } from "../../utils/Forms";
 import { fetchClubs, postClub, fetchLeagues } from "../../actions/Actions";
 
 class ClubsContainer extends Component {
-  state = {
-    tableHeaders: ["Name", "Code", "League", "Groups"],
-    name: "club",
-    plural: "clubs",
-  };
-
   componentDidMount() {
     this.props.dispatch(fetchClubs());
     this.props.dispatch(fetchLeagues());
@@ -42,7 +36,7 @@ class ClubsContainer extends Component {
               style={{ color: "black" }}
             >
               {object.attributes.league.name}
-            </Button>{" "}
+            </Button>
           </td>
           <td width="200" align="left">
             {object.attributes.club_groups_count}
@@ -62,24 +56,19 @@ class ClubsContainer extends Component {
   };
 
   render() {
+    const { clubs, status, leagues } = this.props;
     return (
       <>
         <ListStructure
-          objects={this.props.clubs}
-          status={this.props.status}
+          objects={clubs}
+          status={status}
           showObjects={this.showObjects}
-          tableHeaders={this.state.tableHeaders}
-          name={this.state.name}
-          plural={this.state.plural}
+          tableHeaders={["Name", "Code", "League", "Groups"]}
+          name={"club"}
+          plural={"clubs"}
           formHelpers={formHelpers}
           form={(values, handleChange, setFieldValue, errors) =>
-            form(
-              values,
-              handleChange,
-              setFieldValue,
-              errors,
-              this.props.leagues
-            )
+            form(values, handleChange, setFieldValue, errors, leagues)
           }
           postObject={this.postObject}
         />

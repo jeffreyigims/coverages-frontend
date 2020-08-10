@@ -7,22 +7,23 @@ import "semantic-ui-css/semantic.min.css";
 
 export default class PaginatedTable extends React.Component {
   render() {
+    const {
+      onPageChange,
+      defaultActivePage,
+      totalPages,
+      ...otherProps
+    } = this.props;
     return (
       <>
-        <GeneralTable
-          tableHeaders={this.props.tableHeaders}
-          showObjects={this.props.showObjects}
-          objects={this.props.objects}
-          status={this.props.status}
-        />
+        <GeneralTable {...otherProps} />
         {this.props.objects.length > 0 &&
           this.props.onPageChange != null &&
           this.props.status === "succeeded" && (
             <Row className="row justify-content-center">
               <Pagination
-                onPageChange={this.props.onPageChange}
-                defaultActivePage={this.props.defaultActivePage}
-                totalPages={this.props.totalPages}
+                onPageChange={onPageChange}
+                defaultActivePage={defaultActivePage}
+                totalPages={totalPages}
               />
             </Row>
           )}

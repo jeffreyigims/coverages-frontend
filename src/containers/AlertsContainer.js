@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Alert, Row } from "react-bootstrap";
 import { dismissAlert } from "../actions/Actions";
+import PropTypes from "prop-types";
 
 class AlertsContainer extends React.Component {
   displayErrors = (errors) => {
@@ -10,8 +11,8 @@ class AlertsContainer extends React.Component {
     }
   };
 
-  showAlerts = () => {
-    return this.props.alerts.map((alert, index) => {
+  showAlerts = (alerts) => {
+    return alerts.map((alert, index) => {
       return (
         <Alert
           key={index}
@@ -28,11 +29,14 @@ class AlertsContainer extends React.Component {
   };
 
   render() {
-    return <>{this.showAlerts()}</>;
+    const { alerts } = this.props;
+    return <>{this.showAlerts(alerts)}</>;
   }
 }
 
-AlertsContainer.propTypes = {};
+AlertsContainer.propTypes = {
+  alerts: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
 function mapStateToProps(state) {
   const { alerts } = state.alerts;

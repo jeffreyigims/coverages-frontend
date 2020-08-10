@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import ListStructure from "../../components/ListStructure";
@@ -7,12 +7,12 @@ import { sports as formHelpers } from "../../utils/Schemas";
 import { sportForm as form } from "../../utils/Forms";
 import { fetchSports, postSport } from "../../actions/Actions";
 
-class SportsContainer extends Component {
-  state = {
-    tableHeaders: ["Sport", "Leagues"],
-    name: "sport",
-    plural: "sports",
-  };
+class SportsContainer extends React.Component {
+  // state = {
+  //   tableHeaders: ["Sport", "Leagues"],
+  //   name: "sport",
+  //   plural: "sports",
+  // };
 
   componentDidMount() {
     this.props.dispatch(fetchSports());
@@ -40,18 +40,19 @@ class SportsContainer extends Component {
   };
 
   render() {
+    const { sports, status, dispatch } = this.props;
     return (
       <>
         <ListStructure
-          objects={this.props.sports}
-          status={this.props.status}
+          objects={sports}
+          status={status}
           showObjects={this.showObjects}
-          tableHeaders={this.state.tableHeaders}
-          name={this.state.name}
-          plural={this.state.plural}
+          tableHeaders={["Sport", "Leagues"]}
+          name={"sport"}
+          plural={"sports"}
           formHelpers={formHelpers}
           form={form}
-          postObject={(values) => this.props.dispatch(postSport(values))}
+          postObject={(values) => dispatch(postSport(values))}
         />
       </>
     );
@@ -61,12 +62,11 @@ class SportsContainer extends Component {
 SportsContainer.propTypes = {
   sports: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string,
 };
 
 function mapStateToProps(state) {
-  const { sports, status, error } = state.sports;
-  return { sports, status, error };
+  const { sports, status } = state.sports;
+  return { sports, status };
 }
 
 export default connect(mapStateToProps)(SportsContainer);

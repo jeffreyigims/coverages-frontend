@@ -125,48 +125,45 @@ class ClubContainer extends Component {
   };
 
   render() {
+    const {
+      selected,
+      status,
+      leagues,
+      groups,
+      link,
+      redirect,
+      dispatch,
+    } = this.props;
     return (
       <>
         <ClubDetails
-          object={this.props.selected}
-          status={this.props.status}
-          name={this.state.name}
+          selected={selected}
+          status={status}
+          name={"club"}
           formHelpers={formHelpers}
           form={(values, handleChange, setFieldValue, errors) =>
-            form(
-              values,
-              handleChange,
-              setFieldValue,
-              errors,
-              this.props.leagues
-            )
+            form(values, handleChange, setFieldValue, errors, leagues)
           }
           formHelpersGroups={formHelpersGroups}
           formGroups={(values, handleChange, setFieldValue, errors) =>
-            formGroups(
-              values,
-              handleChange,
-              setFieldValue,
-              errors,
-              this.props.groups
-            )
+            formGroups(values, handleChange, setFieldValue, errors, groups)
           }
           postObject={(values) =>
             this.props.dispatch(
               postClubGroup({
-                club_id: this.props.selected.attributes.id,
-                group_id: this.props.groups[values.group_index].attributes.id,
+                club_id: selected.attributes.id,
+                group_id: groups[values.group_index].attributes.id,
               })
             )
           }
           showDetails={this.showDetails}
           updateObject={(id, values) => {
-            this.props.dispatch(updateClub({ id: id, values: values }));
+            dispatch(updateClub({ id: id, values: values }));
           }}
           deleteObject={(id) => {
-            this.props.dispatch(deleteClub(id));
+            dispatch(deleteClub(id));
           }}
-          redirection={{ link: this.props.link, redirect: this.props.redirect }}
+          redirection={{ link: link, redirect: redirect }}
         />
       </>
     );
@@ -182,7 +179,7 @@ ClubContainer.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { selected, status, error } = state.clubs;
+  const { selected, status } = state.clubs;
   const { coverages, pages, page } = state.coverages;
   const { groups } = state.groups;
   const { leagues } = state.leagues;
@@ -190,7 +187,6 @@ function mapStateToProps(state) {
   return {
     selected,
     status,
-    error,
     link,
     redirect,
     coverages,

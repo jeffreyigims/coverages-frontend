@@ -82,19 +82,6 @@ function createDelete(name = "") {
   );
 }
 
-export const fetchCoverages = createAsyncThunk(
-  "coverages/fetch_coverages",
-  async (parameters = {}, { rejectWithValue }) => {
-    const response = await runAjax(
-      "/coverages.json",
-      "GET",
-      parameters,
-      rejectWithValue
-    );
-    return response;
-  }
-);
-
 export const fetchSports = createFetch("sports");
 export const postSport = createPost("sports", "sport");
 export const fetchSport = createGet("sports");
@@ -154,13 +141,15 @@ export const fetchSubCategory = createGet("sub_categories");
 export const updateSubCategory = createUpdate("sub_categories", "sub_category");
 export const deleteSubCategory = createDelete("sub_categories");
 
-export const postClubGroup = createPost("club_groups", "club_group");
-
-// export const fetchCoverages = createFetch("coverages");
+export const fetchCoverages = createFetch("coverages");
 export const postCoverage = createPost("coverages", "coverage");
 export const fetchCoverage = createGet("coverages");
 export const updateCoverage = createUpdate("coverages", "coverage");
 export const deleteCoverage = createDelete("coverages");
+
+export const postClubGroup = createPost("club_groups", "club_group");
+export const search = createFetch("search");
+export const fetchMetrics = createFetch("metrics");
 
 export const postCoverageCarrier = createPost(
   "coverage_carriers",
@@ -225,8 +214,3 @@ export function updateCoverageAssociations(params, carriers, brokers) {
     dispatch(updateCoverage(params));
   };
 }
-
-export function deleteCoverageAssociations(coverage, carriers, brokers) {}
-
-export const search = createFetch("search");
-export const fetchMetrics = createFetch("metrics");

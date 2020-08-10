@@ -74,9 +74,9 @@ class SportContainer extends Component {
 }
 
 SportContainer.propTypes = {
-  selected: PropTypes.object.isRequired,
+  selected: PropTypes.object,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
+  error: PropTypes.string,
   link: PropTypes.string,
   redirect: PropTypes.bool,
 };

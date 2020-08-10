@@ -49,6 +49,7 @@ export function groupStatus(statuses) {
   return status;
 }
 
+// Generates either a different display based on the status
 export function statusDisplay(status, success) {
   switch (status) {
     case "loading":
@@ -66,9 +67,19 @@ export function statusDisplay(status, success) {
   }
 }
 
+// Used in modal components
 export function switchModal(name) {
   const modal = name;
   this.setState((prevState) => ({
     [modal]: !prevState[modal],
   }));
-};
+}
+
+// Maps list of keys to the values of an object
+export function map(values, object) {
+  var new_values = {};
+  for (var key in values) {
+    new_values[key] = object[key];
+  }
+  return new_values;
+}

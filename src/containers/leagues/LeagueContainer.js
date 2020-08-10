@@ -16,11 +16,11 @@ import {
 class LeagueContainer extends Component {
   state = {
     name: "league",
+    id: this.props.match.params.id,
   };
 
   componentDidMount() {
-    let id = this.props.match.params.id;
-    this.props.dispatch(fetchLeague(id));
+    this.props.dispatch(fetchLeague(this.state.id));
     this.props.dispatch(fetchSports());
   }
 
@@ -85,9 +85,9 @@ class LeagueContainer extends Component {
 }
 
 LeagueContainer.propTypes = {
-  selected: PropTypes.object.isRequired,
+  selected: PropTypes.object,
   status: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
+  error: PropTypes.string,
   link: PropTypes.string,
   redirect: PropTypes.bool,
 };

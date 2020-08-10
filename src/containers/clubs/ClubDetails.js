@@ -19,31 +19,36 @@ export default class ClubDetails extends Component {
   };
 
   render() {
+    const {
+      selected,
+      status,
+      redirection,
+      showDetails,
+      deleteObject,
+      name,
+    } = this.props;
     return (
       <>
-        {this.props.redirection.redirect === true && (
-          <Redirect to={this.props.redirection.link} />
-        )}
+        {redirection.redirect === true && <Redirect to={redirection.link} />}
         <Card>
           <Card.Header></Card.Header>
-          {this.props.status === "succeeded" && (
+          {status === "succeeded" && (
             <Card.Title style={{ marginTop: "10px" }}>
-              {capitalize(this.props.object.attributes.name)} Details
+              {capitalize(selected.attributes.name)} Details
             </Card.Title>
           )}
           <Card.Body>
-            {this.props.status === "succeeded" &&
-              this.props.showDetails(this.props.object)}
+            {status === "succeeded" && showDetails(selected)}
           </Card.Body>
           <Card.Footer>
-            {this.props.status === "succeeded" && (
+            {status === "succeeded" && (
               <>
                 <Button
                   className="btn btn-theme float-right"
                   variant="primary"
                   onClick={(slot) => this.switchModal("modal_edit")}
                 >
-                  Edit {capitalize(this.props.name)}
+                  Edit {capitalize(name)}
                 </Button>
                 <Button
                   className="btn btn-theme float-right"
@@ -53,30 +58,28 @@ export default class ClubDetails extends Component {
                 >
                   Add Group
                 </Button>
-                {canDelete(this.props.object) && (
+                {canDelete(selected) && (
                   <Button
                     className="btn btn-theme float-right"
                     variant="danger"
-                    onClick={() =>
-                      this.props.deleteObject(this.props.object.attributes.id)
-                    }
+                    onClick={() => deleteObject(selected.attributes.id)}
                     style={{ marginRight: "10px" }}
                   >
-                    Delete {capitalize(this.props.name)}
+                    Delete {capitalize(name)}
                   </Button>
                 )}
               </>
             )}
           </Card.Footer>
         </Card>
-        {this.props.status === "succeeded" && (
+        {status === "succeeded" && (
           <>
             <EditObject
               show={this.state.modal_edit}
-              switchModal={this.switchModal}
+              switchModal={() => this.switchModal("modal_edit")}
               formHelpers={this.props.formHelpers}
               form={this.props.form}
-              object={this.props.object}
+              object={this.props.selected}
               name={this.props.name}
               updateObject={this.props.updateObject}
             />
@@ -85,7 +88,7 @@ export default class ClubDetails extends Component {
               switchModal={this.switchModal}
               formHelpers={this.props.formHelpersGroups}
               form={this.props.formGroups}
-              object={this.props.object}
+              object={this.props.selected}
               name={this.props.name}
               postObject={this.props.postObject}
             />

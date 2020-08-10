@@ -1,23 +1,29 @@
 import React from "react";
+import PropTypes from "prop-types";
 import PaginatedTable from "../components/PaginatedTable";
 import NewObject from "../components/NewObject";
 import { Card, Button } from "react-bootstrap";
-import { capitalize } from "../utils/Helpers";
-import "../App.css";
+import { capitalize, switchModal } from "../utils/Helpers";
 
 export default class ListStructure extends React.Component {
+  constructor() {
+    super();
+    this.switchModal = switchModal.bind(this);
+  }
+
   state = {
     modal_new: false,
   };
 
-  switchModal = (name) => {
-    const modal = name;
-    this.setState((prevState) => ({
-      [modal]: !prevState[modal],
-    }));
-  };
-
   render() {
+    const {
+      formHelpers,
+      form,
+      name,
+      plural,
+      postObject,
+      ...otherProps
+    } = this.props;
     return (
       <>
         <Card>
@@ -26,15 +32,7 @@ export default class ListStructure extends React.Component {
             All {capitalize(this.props.plural)}
           </Card.Title>
           <Card.Body>
-            <PaginatedTable
-              objects={this.props.objects}
-              showObjects={this.props.showObjects}
-              tableHeaders={this.props.tableHeaders}
-              status={this.props.status}
-              onPageChange={this.props.onPageChange}
-              defaultActivePage={this.props.defaultActivePage}
-              totalPages={this.props.totalPages}
-            />
+            <PaginatedTable {...otherProps} />
           </Card.Body>
           <Card.Footer>
             <Button
@@ -48,16 +46,19 @@ export default class ListStructure extends React.Component {
         </Card>
         <NewObject
           show={this.state.modal_new}
-          switchModal={this.switchModal}
-          formHelpers={this.props.formHelpers}
-          form={this.props.form}
-          name={this.props.name}
-          plural={this.props.plural}
-          postObject={this.props.postObject}
+          switchModal={() => this.switchModal("modal_new")}
+          formHelpers={formHelpers}
+          form={form}
+          name={name}
+          plural={plural}
+          postObject={postObject}
         />
       </>
     );
   }
 }
 
-ListStructure.propTypes = {};
+ListStructure.propTypes = {
+  name: PropTypes.string.isRequired,
+  postObject: PropTypes.func.isRequired,
+};
