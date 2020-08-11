@@ -96,5 +96,5 @@ export function formatDate(date) {
 }
 
 export function displayDate(date, format) {
-  return <Moment format={format}>{date}</Moment>;
+  return date === null ? "N/A" : <Moment format={format}>{date}</Moment>;
 }

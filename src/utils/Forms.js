@@ -44,6 +44,24 @@ export const objectDataOptions = (objects) => {
   });
 };
 
+export const brokerOptions = (objects) => {
+  return objects.map((object, index) => {
+    return (
+      <option key={index} value={index}>
+        {object.attributes.name} - {object.attributes.company.name}
+      </option>
+    );
+  });
+};
+
+function clubOptions(all_clubs, league) {
+  const league_id = league?.data.attributes.id;
+  let clubs = all_clubs.filter(
+    (club) => club.attributes.league_id === league_id
+  );
+  return objectOptions(clubs);
+}
+
 function sportForm(values, handleChange, setFieldValue, errors, additional) {
   return (
     <Row>
@@ -476,7 +494,7 @@ function coverageForm(values, handleChange, setFieldValue, errors, additional) {
               )
             }
           >
-            {objectOptions(additional.brokers)}
+            {brokerOptions(additional.brokers)}
           </Form.Control>
         </Form.Group>
       </Row>
@@ -532,6 +550,208 @@ function coverageForm(values, handleChange, setFieldValue, errors, additional) {
           />
         </Form.Group>
       </Row>
+    </>
+  );
+}
+
+function coverageWizardForm(
+  values,
+  handleChange,
+  setFieldValue,
+  errors,
+  additional
+) {
+  return (
+    <>
+      <Row>
+        <Form.Group as={Col}>
+          <Form.Label>Sport:</Form.Label>
+          <Form.Control
+            as="select"
+            name="sport_index"
+            value={values.sport_index}
+            onChange={handleChange}
+          >
+            {objectOptions(additional.sports)}
+          </Form.Control>
+        </Form.Group>
+      </Row>
+      <Row>
+        <Form.Group as={Col}>
+          <Form.Label>League:</Form.Label>
+          <Form.Control
+            as="select"
+            name="league_index"
+            value={values.league_index}
+            onChange={(e) => {
+              handleChange(e);
+              setFieldValue("club_index", 0);
+            }}
+          >
+            {objectDataOptions(
+              additional.sports[values.sport_index].attributes.leagues
+            )}
+          </Form.Control>
+        </Form.Group>
+      </Row>
+      <Row>
+        <Form.Group as={Col}>
+          <Form.Label>Club:</Form.Label>
+          <Form.Control
+            as="select"
+            name="club_index"
+            value={values.club_index}
+            onChange={(e) => {
+              handleChange(e);
+              setFieldValue("group_index", 0);
+            }}
+          >
+            {clubOptions(
+              additional.clubs,
+              additional.sports[values.sport_index].attributes.leagues[
+                values.league_index
+              ]
+            )}
+          </Form.Control>
+        </Form.Group>
+
+        <Form.Group as={Col}>
+          <Form.Label>Group:</Form.Label>
+          <Form.Control
+            as="select"
+            name="group_index"
+            value={values.group_index}
+            onChange={handleChange}
+          >
+            {objectGroupOptions(
+              additional.clubs[values.club_index].attributes.club_groups
+            )}
+          </Form.Control>
+        </Form.Group>
+      </Row>
+      <Row>
+        <Form.Group as={Col}>
+          <Form.Label>Category:</Form.Label>
+          <Form.Control
+            as="select"
+            name="category_index"
+            value={values.category_index}
+            onChange={(e) => {
+              handleChange(e);
+              setFieldValue("sub_category_index", 0);
+            }}
+          >
+            {objectOptions(additional.categories)}
+          </Form.Control>
+        </Form.Group>
+
+        <Form.Group as={Col}>
+          <Form.Label>Sub Category:</Form.Label>
+          <Form.Control
+            as="select"
+            name="sub_category_index"
+            value={values.sub_category_index}
+            onChange={handleChange}
+          >
+            {objectDataOptions(
+              additional.categories[values.category_index].attributes
+                .sub_categories
+            )}
+          </Form.Control>
+        </Form.Group>
+      </Row>
+      <Row>
+        <Form.Group as={Col}>
+          <Form.Label>Carriers:</Form.Label>
+          <Form.Control
+            as="select"
+            multiple
+            name="carriers"
+            value={values.carriers}
+            onChange={(event) =>
+              setFieldValue(
+                "carriers",
+                Array.from(event.target.selectedOptions, (option) =>
+                  Number(option.value)
+                )
+              )
+            }
+          >
+            {objectOptions(additional.carriers)}
+          </Form.Control>
+        </Form.Group>
+
+        <Form.Group as={Col}>
+          <Form.Label>Brokers:</Form.Label>
+          <Form.Control
+            as="select"
+            multiple
+            name="brokers"
+            value={values.brokers}
+            onChange={(event) =>
+              setFieldValue(
+                "brokers",
+                Array.from(event.target.selectedOptions, (option) =>
+                  Number(option.value)
+                )
+              )
+            }
+          >
+            {brokerOptions(additional.brokers)}
+          </Form.Control>
+        </Form.Group>
+      </Row>
+      <Form.Group>
+        <Form.Label>Notes:</Form.Label>
+        <Form.Control
+          type="text"
+          name="notes"
+          value={values.notes}
+          onChange={handleChange}
+        />
+      </Form.Group>
+      <Row>
+        <Form.Group as={Col}>
+          <Form.Label>{"Start Date:"}</Form.Label>
+          <DatePickerInput
+            name="start_date"
+            value={values.start_date}
+            onChange={(val) => setFieldValue("start_date", formatDate(val))}
+          />
+        </Form.Group>
+
+        <Form.Group as={Col}>
+          <Form.Label>{"Ending Date:"}</Form.Label>
+          <DatePickerInput
+            name="end_date"
+            value={values.end_date}
+            onChange={(val) => setFieldValue("end_date", formatDate(val))}
+          />
+        </Form.Group>
+      </Row>
+      <Row>
+        <Form.Group as={Col}>
+          <Form.Check
+            type="checkbox"
+            name="has_coverage_line"
+            label={"Has Coverage Line"}
+            checked={values.has_coverage_line}
+            value={values.has_coverage_line}
+            onChange={handleChange}
+          />
+        </Form.Group>
+
+        <Form.Group as={Col}>
+          <Form.Check
+            type="checkbox"
+            name="verified"
+            label={"Verified"}
+            checked={values.verified}
+            value={values.verified}
+            onChange={handleChange}
+          />
+        </Form.Group>
+      </Row>{" "}
     </>
   );
 }
@@ -608,6 +828,8 @@ export function formFor(name, ...values) {
       return brokerForm(...values);
     case "coverage":
       return coverageForm(...values);
+    case "coverage_wizard":
+      return coverageWizardForm(...values);
     case "user":
       return userForm(...values);
     default:

@@ -165,25 +165,29 @@ export const deleteCoverageBroker = createDelete("coverage_brokers");
 
 export function postCoverageAssociations(coverage, carriers, brokers) {
   return (dispatch) => {
+    var coverage_id;
     dispatch(postCoverage(coverage)).then((response) => {
-      let coverage_id = response.payload.data.id;
-      carriers.map((carrier_id) =>
-        dispatch(
-          postCoverageCarrier({
-            coverage_id: coverage_id,
-            carrier_id: carrier_id,
-          })
-        )
-      );
-      brokers.map((broker_id) =>
-        dispatch(
-          postCoverageBroker({
-            coverage_id: coverage_id,
-            broker_id: broker_id,
-          })
-        )
-      );
+      coverage_id = response.payload.data?.id;
     });
+    if (coverage_id === null) {
+      return;
+    }
+    carriers.map((carrier_id) =>
+      dispatch(
+        postCoverageCarrier({
+          coverage_id: coverage_id,
+          carrier_id: carrier_id,
+        })
+      )
+    );
+    brokers.map((broker_id) =>
+      dispatch(
+        postCoverageBroker({
+          coverage_id: coverage_id,
+          broker_id: broker_id,
+        })
+      )
+    );
   };
 }
 

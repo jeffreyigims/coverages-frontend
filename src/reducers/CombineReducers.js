@@ -118,6 +118,7 @@ function createTableReducer(name = "") {
 function createPaginatedTableReducer(name = "") {
   let initialState = {
     [name]: [],
+    rejected: [],
     status: "idle",
     errors: null,
     selected: null,
@@ -145,6 +146,7 @@ function createPaginatedTableReducer(name = "") {
         return Object.assign({}, state, {
           [name]: state[name],
           error: action.payload,
+          rejected: state.rejected.concat(action.payload),
         });
       case `${name}/post_${name}/fulfilled`:
         return Object.assign({}, state, {
