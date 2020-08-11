@@ -1,7 +1,9 @@
 import { combineReducers } from "redux";
+import { connectRouter } from 'connected-react-router'
 import { search, fetchMetrics } from "../actions/Actions";
 import { createSlice } from "@reduxjs/toolkit";
 import { redirectionSlice } from "./Redirections";
+import { authenticationSlice } from "./Authentication";
 import { alerts } from "./Alerts";
 
 const searchSlice = createSlice({
@@ -263,7 +265,8 @@ function createSpecialTableReducer(name = "", target = "") {
   };
 }
 
-const reducer = combineReducers({
+const createRootReducer = (history) => combineReducers({
+  router: connectRouter(history),
   sports: createTableReducer("sports"),
   leagues: createTableReducer("leagues"),
   clubs: createTableReducer("clubs"),
@@ -280,6 +283,7 @@ const reducer = combineReducers({
   redirections: redirectionSlice.reducer,
   search: searchSlice.reducer,
   metrics: metricsSlice.reducer,
+  authentication: authenticationSlice.reducer,
 });
 
-export default reducer;
+export default createRootReducer;

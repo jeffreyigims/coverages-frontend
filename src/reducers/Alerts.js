@@ -40,8 +40,33 @@ const rejectedFetch = (state, action) => {
   return { alerts };
 };
 
-const actions = ["fetch", "get", "update", "post", "delete"];
-const statuses = ["idle", "pending", "rejected", "fulfilled"];
+const fulfilledLogin = (state) => {
+  let alerts = [].concat({
+    message: "The user has successfully logged into the system",
+    variant: "success",
+  });
+  return { alerts };
+};
+
+const rejectedLogin = (state, action) => {
+  let alerts = [].concat({
+    message: "The user cannot log into the system",
+    variant: "danger",
+    errors: action.payload.data,
+  });
+  return { alerts };
+};
+
+const fulfilledLogout = (state) => {
+  let alerts = [].concat({
+    message: "The user has successfully logged out of the system",
+    variant: "success",
+  });
+  return { alerts };
+};
+
+const actions = ["fetch", "get", "update", "post", "delete", "login", "logout"];
+const statuses = ["pending", "rejected", "fulfilled"];
 
 function express(action, status) {
   return `${actions.indexOf(action)}${statuses.indexOf(status)}`;
@@ -76,6 +101,12 @@ export function alerts(state = { alerts: [] }, action) {
       return rejectedFetch(state, action);
     case express("get", "rejected"):
       return rejectedFetch(state, action);
+    case express("login", "rejected"):
+      return rejectedLogin(state, action);
+    case express("login", "fulfilled"):
+      return fulfilledLogin(state);
+    case express("logout", ""):
+      return fulfilledLogout(state);
     default:
       return state;
   }

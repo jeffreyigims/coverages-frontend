@@ -1,6 +1,7 @@
 import React from "react";
 import { Provider } from "react-redux";
-import configureStore from "../ConfigureStore";
+import { ConnectedRouter } from "connected-react-router";
+import configureStore, { history } from "../ConfigureStore";
 import SportsContainer from "./sports/SportsContainer";
 import SportContainer from "./sports/SportContainer";
 import LeaguesContainer from "./leagues/LeaguesContainer";
@@ -24,7 +25,8 @@ import SubCategoryContainer from "./sub_categories/SubCategoryContainer";
 import AddCoverages from "./coverages/AddCoverages";
 import AlertsContainer from "./AlertsContainer";
 import MetricsContainer from "./metrics/MetricsContainer";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import LoginContainer from "./authentication/LoginContainer";
+import { Route } from "react-router-dom";
 import Navigation from "../components/Navigation";
 
 const store = configureStore();
@@ -34,10 +36,11 @@ export default class Root extends React.Component {
     return (
       <>
         <Provider store={store}>
-          <Navigation />
-          <AlertsContainer />
-          <Router>
-            <Route path="/" exact component={CoveragesContainer} />
+          <ConnectedRouter history={history}>
+            <Navigation />
+            <AlertsContainer />
+            <Route path="/" exact component={LoginContainer} />
+
             <Route path="/add_coverages" exact component={AddCoverages} />
             <Route path="/metrics" exact component={MetricsContainer} />
 
@@ -72,7 +75,7 @@ export default class Root extends React.Component {
 
             <Route path="/coverages" exact component={CoveragesContainer} />
             <Route path="/coverages/:id" exact component={CoverageContainer} />
-          </Router>
+          </ConnectedRouter>
         </Provider>
       </>
     );

@@ -207,6 +207,8 @@ class CoverageWizardContainer extends Component {
                 validationSchema={schema}
                 onSubmit={this.handleCreate}
                 initialValues={initialValues}
+                validateOnChange={false}
+                validateOnBlur={false}
               >
                 {({
                   handleSubmit,

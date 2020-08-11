@@ -120,6 +120,16 @@ class ClubContainer extends Component {
     );
   };
 
+  updateObject = (id, values) => {
+    const new_object = {
+      name: values.name,
+      abbreviation: values.abbreviation,
+      league_id: this.props.leagues[values.league_index].attributes.id,
+    };
+    console.log(new_object);
+    this.props.dispatch(updateClub({ id: id, values: new_object }));
+  };
+
   render() {
     const { groups, dispatch } = this.props;
     return (
@@ -136,9 +146,7 @@ class ClubContainer extends Component {
             )
           }
           showDetails={this.showDetails}
-          updateObject={(id, values) => {
-            dispatch(updateClub({ id: id, values: values }));
-          }}
+          updateObject={this.updateObject}
           deleteObject={(id) => {
             dispatch(deleteClub(id));
           }}

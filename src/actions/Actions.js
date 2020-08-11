@@ -218,3 +218,20 @@ export function updateCoverageAssociations(params, carriers, brokers) {
     dispatch(updateCoverage(params));
   };
 }
+
+export const login = createAsyncThunk(
+  `authentication/login`,
+  async (auth, { rejectWithValue }) => {
+    const response = await runAjax(
+      `/user_token`,
+      "POST",
+      {
+        auth,
+      },
+      rejectWithValue
+    );
+    return response;
+  }
+);
+
+export const logout = createAction("authentication/logout");

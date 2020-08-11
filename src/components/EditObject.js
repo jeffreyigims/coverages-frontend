@@ -30,6 +30,8 @@ export default class AddObject extends React.Component {
               switchModal("modal_edit");
             }}
             initialValues={map(initialValues, selected.attributes)}
+            validateOnChange={false}
+            validateOnBlur={false}
           >
             {({
               handleSubmit,
