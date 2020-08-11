@@ -3,16 +3,10 @@ import { connect } from "react-redux";
 import GeneralTable from "../../components/GeneralTable";
 import { groupStatus, displayDate, formatDate } from "../../utils/Helpers";
 import PropTypes from "prop-types";
-import { Button, Form, Col, Row, Card, Spinner } from "react-bootstrap";
+import { Button, Form, Row, Card, Spinner } from "react-bootstrap";
 import { Formik } from "formik";
 import { TrashFill } from "react-bootstrap-icons";
-import { DatePickerInput } from "rc-datepicker";
-import "rc-datepicker/lib/style.css";
-import {
-  objectOptions,
-  objectDataOptions,
-  objectGroupOptions,
-} from "../../utils/Forms";
+import { formFor } from "../../utils/Forms";
 import { schemaFor } from "../../utils/Schemas";
 import {
   fetchSports,
@@ -35,14 +29,6 @@ class CoverageWizardContainer extends Component {
     this.props.dispatch(fetchCarriers());
     this.props.dispatch(fetchBrokers());
   }
-
-  clubOptions = (league) => {
-    const league_id = league?.data.attributes.id;
-    let clubs = this.props.clubs.filter(
-      (club) => club.attributes.league_id === league_id
-    );
-    return objectOptions(clubs);
-  };
 
   handleCreate = (values) => {
     let coverage = {
@@ -126,24 +112,12 @@ class CoverageWizardContainer extends Component {
               : this.props.brokers[object.brokers[0]]?.attributes.company
                   .name || "Unknown"}{" "}
           </td>
-          {object.start_date === null ? (
-            <td width="200" align="left">
-              {"N/A"}{" "}
-            </td>
-          ) : (
-            <td width="200" align="left">
-              {displayDate(object.start_date, "MMMM Do YYYY")}
-            </td>
-          )}
-          {object.end_date === null ? (
-            <td width="200" align="left">
-              {"N/A"}{" "}
-            </td>
-          ) : (
-            <td width="200" align="left">
-              {displayDate(object.end_date, "MMMM Do YYYY")}
-            </td>
-          )}
+          <td width="200" align="left">
+            {displayDate(object.start_date, "MMMM Do YYYY")}
+          </td>
+          <td width="200" align="left">
+            {displayDate(object.end_date, "MMMM Do YYYY")}
+          </td>
           <td width="200" align="left">
             {object.verified ? "true" : "false"}
           </td>
@@ -167,8 +141,54 @@ class CoverageWizardContainer extends Component {
     });
   };
 
+  showRejected = (objects) => {
+    return objects.map((obj, index) => {
+      let object = obj.object.data.attributes;
+      return (
+        <tr key={index}>
+          <td width="200" align="left">
+            {object.league.name}
+          </td>
+          <td width="200" align="left">
+            {object.club.name}
+          </td>
+          <td width="200" align="left">
+            {object.group.name}
+          </td>
+          <td width="200" align="left">
+            {object.category.name}
+          </td>
+          <td width="200" align="left">
+            {object.sub_category.name}
+          </td>
+          <td width="200" align="left">
+            {object.carriers.length > 1
+              ? "Multiple"
+              : object.carriers[0]?.name || "Unknown"}
+          </td>
+          <td width="200" align="left">
+            {object.brokers.length > 1
+              ? "Multiple"
+              : object.brokers[0]?.name || "Unknown"}
+          </td>
+          <td width="200" align="left">
+            {displayDate(object.start_date, "MMMM Do YYYY")}
+          </td>
+          <td width="200" align="left">
+            {displayDate(object.end_date, "MMMM Do YYYY")}
+          </td>
+          <td width="200" align="left">
+            {object.verified ? "true" : "false"}
+          </td>
+          <td width="100" align="center">
+            {obj.errors[Object.keys(obj.errors)[0]][0]}
+          </td>
+        </tr>
+      );
+    });
+  };
+
   render() {
-    const { sports, clubs, categories, carriers, brokers } = this.props;
     const status = groupStatus(this.props.status);
     const { schema, initialValues } = schemaFor("coverage_wizard");
     return (
@@ -194,202 +214,17 @@ class CoverageWizardContainer extends Component {
                   setFieldValue,
                   values,
                   dirty,
+                  errors,
                 }) => (
                   <Form noValidate onSubmit={handleSubmit}>
-                    <Row>
-                      <Form.Group as={Col}>
-                        <Form.Label>Sport:</Form.Label>
-                        <Form.Control
-                          as="select"
-                          name="sport_index"
-                          value={values.sport_index}
-                          onChange={handleChange}
-                        >
-                          {objectOptions(sports)}
-                        </Form.Control>
-                      </Form.Group>
-                    </Row>
-                    <Row>
-                      <Form.Group as={Col}>
-                        <Form.Label>League:</Form.Label>
-                        <Form.Control
-                          as="select"
-                          name="league_index"
-                          value={values.league_index}
-                          onChange={(e) => {
-                            handleChange(e);
-                            setFieldValue("club_index", 0);
-                          }}
-                        >
-                          {objectDataOptions(
-                            sports[values.sport_index].attributes.leagues
-                          )}
-                        </Form.Control>
-                      </Form.Group>
-                    </Row>
-                    <Row>
-                      <Form.Group as={Col}>
-                        <Form.Label>Club:</Form.Label>
-                        <Form.Control
-                          as="select"
-                          name="club_index"
-                          value={values.club_index}
-                          onChange={(e) => {
-                            handleChange(e);
-                            setFieldValue("group_index", 0);
-                          }}
-                        >
-                          {this.clubOptions(
-                            sports[values.sport_index].attributes.leagues[
-                              values.league_index
-                            ]
-                          )}
-                        </Form.Control>
-                      </Form.Group>
-
-                      <Form.Group as={Col}>
-                        <Form.Label>Group:</Form.Label>
-                        <Form.Control
-                          as="select"
-                          name="group_index"
-                          value={values.group_index}
-                          onChange={handleChange}
-                        >
-                          {objectGroupOptions(
-                            clubs[values.club_index].attributes.club_groups
-                          )}
-                        </Form.Control>
-                      </Form.Group>
-                    </Row>
-                    <Row>
-                      <Form.Group as={Col}>
-                        <Form.Label>Category:</Form.Label>
-                        <Form.Control
-                          as="select"
-                          name="category_index"
-                          value={values.category_index}
-                          onChange={(e) => {
-                            handleChange(e);
-                            setFieldValue("sub_category_index", 0);
-                          }}
-                        >
-                          {objectOptions(categories)}
-                        </Form.Control>
-                      </Form.Group>
-
-                      <Form.Group as={Col}>
-                        <Form.Label>Sub Category:</Form.Label>
-                        <Form.Control
-                          as="select"
-                          name="sub_category_index"
-                          value={values.sub_category_index}
-                          onChange={handleChange}
-                        >
-                          {objectDataOptions(
-                            categories[values.category_index].attributes
-                              .sub_categories
-                          )}
-                        </Form.Control>
-                      </Form.Group>
-                    </Row>
-                    <Row>
-                      <Form.Group as={Col}>
-                        <Form.Label>Carriers:</Form.Label>
-                        <Form.Control
-                          as="select"
-                          multiple
-                          name="carriers"
-                          value={values.carriers}
-                          onChange={(event) =>
-                            setFieldValue(
-                              "carriers",
-                              Array.from(
-                                event.target.selectedOptions,
-                                (option) => Number(option.value)
-                              )
-                            )
-                          }
-                        >
-                          {objectOptions(carriers)}
-                        </Form.Control>
-                      </Form.Group>
-
-                      <Form.Group as={Col}>
-                        <Form.Label>Brokers:</Form.Label>
-                        <Form.Control
-                          as="select"
-                          multiple
-                          name="brokers"
-                          value={values.brokers}
-                          onChange={(event) =>
-                            setFieldValue(
-                              "brokers",
-                              Array.from(
-                                event.target.selectedOptions,
-                                (option) => Number(option.value)
-                              )
-                            )
-                          }
-                        >
-                          {objectOptions(brokers)}
-                        </Form.Control>
-                      </Form.Group>
-                    </Row>
-                    <Form.Group>
-                      <Form.Label>Notes:</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="notes"
-                        value={values.notes}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <Row>
-                      <Form.Group as={Col}>
-                        <Form.Label>{"Start Date:"}</Form.Label>
-                        <DatePickerInput
-                          name="start_date"
-                          value={values.start_date}
-                          onChange={(val) =>
-                            setFieldValue("start_date", formatDate(val))
-                          }
-                        />
-                      </Form.Group>
-
-                      <Form.Group as={Col}>
-                        <Form.Label>{"Ending Date:"}</Form.Label>
-                        <DatePickerInput
-                          name="end_date"
-                          value={values.end_date}
-                          onChange={(val) =>
-                            setFieldValue("end_date", formatDate(val))
-                          }
-                        />
-                      </Form.Group>
-                    </Row>
-                    <Row>
-                      <Form.Group as={Col}>
-                        <Form.Check
-                          type="checkbox"
-                          name="has_coverage_line"
-                          label={"Has Coverage Line"}
-                          checked={values.has_coverage_line}
-                          value={values.has_coverage_line}
-                          onChange={handleChange}
-                        />
-                      </Form.Group>
-
-                      <Form.Group as={Col}>
-                        <Form.Check
-                          type="checkbox"
-                          name="verified"
-                          label={"Verified"}
-                          checked={values.verified}
-                          value={values.verified}
-                          onChange={handleChange}
-                        />
-                      </Form.Group>
-                    </Row>
+                    {formFor(
+                      "coverage_wizard",
+                      values,
+                      handleChange,
+                      setFieldValue,
+                      errors,
+                      this.props
+                    )}
                     <Button
                       type="submit"
                       className="btn btn-theme float-right"
@@ -442,6 +277,33 @@ class CoverageWizardContainer extends Component {
             )}
           </Card.Footer>
         </Card>
+        <Card>
+          <Card.Header></Card.Header>
+          <Card.Title style={{ marginTop: "10px" }}>
+            Rejected Coverages
+          </Card.Title>
+          <Card.Body>
+            <GeneralTable
+              tableHeaders={[
+                "League",
+                "Club",
+                "Group",
+                "Category",
+                "Sub",
+                "Carrier",
+                "Broker",
+                "Start",
+                "End",
+                "Verified",
+                "Error",
+              ]}
+              showObjects={this.showRejected}
+              objects={this.props.rejected}
+              status={"succeeded"}
+            />
+          </Card.Body>
+          <Card.Footer></Card.Footer>
+        </Card>
       </>
     );
   }
@@ -453,6 +315,7 @@ CoverageWizardContainer.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.object).isRequired,
   carriers: PropTypes.arrayOf(PropTypes.object).isRequired,
   brokers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rejected: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 function mapStateToProps(state) {
@@ -466,6 +329,7 @@ function mapStateToProps(state) {
   const carriersStatus = state.carriers.status;
   const { brokers } = state.brokers;
   const brokersStatus = state.brokers.status;
+  const { rejected } = state.coverages;
   return {
     status: {
       sportsStatus,
@@ -479,6 +343,7 @@ function mapStateToProps(state) {
     categories,
     carriers,
     brokers,
+    rejected,
   };
 }
 
