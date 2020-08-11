@@ -24,6 +24,8 @@ export default class NewObject extends React.Component {
               switchModal();
             }}
             initialValues={initialValues}
+            validateOnChange={false}
+            validateOnBlur={false}
           >
             {({
               handleSubmit,

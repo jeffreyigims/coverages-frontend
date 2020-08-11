@@ -167,6 +167,17 @@ const users = {
   },
 };
 
+const login = {
+  schema: yup.object({
+    username: yup.string().required(),
+    password: yup.string().required(),
+  }),
+  initialValues: {
+    username: "",
+    password: "",
+  },
+};
+
 export function schemaFor(name) {
   switch (name) {
     case "sport":
@@ -195,6 +206,8 @@ export function schemaFor(name) {
       return coverage_wizard;
     case "user":
       return users;
+    case "login":
+      return login;
     default:
       return;
   }

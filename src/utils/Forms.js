@@ -804,6 +804,43 @@ function clubGroupForm(
   );
 }
 
+function loginForm(values, handleChange, setFieldValue, errors, additional) {
+  return (
+    <>
+      <Row>
+        <Form.Group as={Col}>
+          <Form.Label>Username:</Form.Label>
+          <Form.Control
+            type="text"
+            name="username"
+            value={values.username}
+            onChange={handleChange}
+            isInvalid={!!errors.username}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.username}
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Row>
+      <Row>
+        <Form.Group as={Col}>
+          <Form.Label>Password:</Form.Label>
+          <Form.Control
+            type="password"
+            name="password"
+            value={values.password}
+            onChange={handleChange}
+            isInvalid={!!errors.password}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.password}
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Row>
+    </>
+  );
+}
+
 export function formFor(name, ...values) {
   switch (name) {
     case "sport":
@@ -832,6 +869,8 @@ export function formFor(name, ...values) {
       return coverageWizardForm(...values);
     case "user":
       return userForm(...values);
+    case "login":
+      return loginForm(...values);
     default:
       return;
   }

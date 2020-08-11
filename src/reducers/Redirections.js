@@ -10,6 +10,7 @@ import {
   deleteUser,
   deleteSubCategory,
   deleteCoverage,
+  login,
 } from "../actions/Actions";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -61,6 +62,10 @@ export const redirectionSlice = createSlice({
       state.redirect = true;
     },
     [deleteCoverage.fulfilled]: (state, action) => {
+      state.link = "/coverages";
+      state.redirect = true;
+    },
+    [login.fulfilled]: (state, action) => {
       state.link = "/coverages";
       state.redirect = true;
     },
