@@ -121,7 +121,7 @@ class CarrierContainer extends Component {
             "Verified",
             "View",
           ]}
-          status={this.props.status}
+          status={this.props.coveragesStatus}
           onPageChange={(e, { activePage }) =>
             this.props.dispatch(
               fetchCoverages({ for_carrier: this.state.id, page: activePage })
@@ -167,7 +167,7 @@ CarrierContainer.propTypes = {
 function mapStateToProps(state) {
   const { selected, status } = state.carriers;
   const { coverages, totalPages, defaultActivePage } = state.coverages;
-  const { coveragesStatus } = state.coverages.status;
+  const coveragesStatus = state.coverages.status;
   const redirections = state.redirections;
   return {
     selected,
