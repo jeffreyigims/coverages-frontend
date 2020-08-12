@@ -3,7 +3,7 @@ import EditObject from "../../components/EditObject";
 import AddObject from "../../components/AddObject";
 import PropTypes from "prop-types";
 import { Card, Button } from "react-bootstrap";
-import { capitalize, canDelete, switchModal } from "../../utils/Helpers";
+import { capitalize, switchModal } from "../../utils/Helpers";
 import { Redirect } from "react-router-dom";
 import GeneralTable from "../../components/GeneralTable";
 
@@ -52,6 +52,7 @@ export default class CompanyDetails extends React.Component {
   render() {
     const {
       selected,
+      secondary,
       status,
       redirections,
       updateObject,
@@ -90,7 +91,7 @@ export default class CompanyDetails extends React.Component {
                 >
                   Add Broker
                 </Button>
-                {canDelete(selected) && (
+                { secondary.length === 0 && (
                   <Button
                     className="btn btn-theme float-right"
                     variant="danger"

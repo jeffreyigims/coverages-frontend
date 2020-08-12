@@ -16,7 +16,7 @@ class MetricsContainer extends React.Component {
 }
 
 MetricsContainer.propTypes = {
-  coverages: PropTypes.arrayOf(PropTypes.object).isRequired,
+  coverages: PropTypes.arrayOf(PropTypes.array).isRequired,
   status: PropTypes.string.isRequired,
 };
 

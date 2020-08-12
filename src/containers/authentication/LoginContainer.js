@@ -21,10 +21,10 @@ class LoginContainer extends React.Component {
 
   render() {
     const { schema, initialValues } = schemaFor("login");
-    const { redirections } = this.props;
+    const { logged } = this.props;
     return (
       <>
-        {redirections.redirect === true && <Redirect to={redirections.link} />}
+        {logged === true && <Redirect to={"/coverages"} />}
         <Card>
           <Card.Header></Card.Header>
           <Card.Title style={{ marginTop: "10px" }}>Login</Card.Title>
@@ -71,13 +71,13 @@ class LoginContainer extends React.Component {
 }
 
 LoginContainer.propTypes = {
-  redirections: PropTypes.object.isRequired,
+  logged: PropTypes.bool.isRequired,
 };
 
 function mapStateToProps(state) {
-  const redirections = state.redirections;
+  const { logged } = state.authentication;
   return {
-    redirections,
+    logged,
   };
 }
 

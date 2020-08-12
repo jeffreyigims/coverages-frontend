@@ -115,7 +115,9 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    push: (link) => dispatch(push(link)),
+    push: (link) => {
+      dispatch(push(link));
+    },
     dispatch,
   };
 };

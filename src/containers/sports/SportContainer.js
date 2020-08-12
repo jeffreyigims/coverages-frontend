@@ -40,7 +40,7 @@ class SportContainer extends Component {
 
     return (
       <GeneralTable
-        objects={object.attributes.leagues}
+        objects={object?.attributes.leagues}
         showObjects={showObjects}
         tableHeaders={["League", "Level"]}
         status={this.props.status}

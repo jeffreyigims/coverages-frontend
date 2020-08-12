@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import EditObject from "../../components/EditObject";
 import PropTypes from "prop-types";
 import { Card, Button } from "react-bootstrap";
-import { capitalize, canDelete, switchModal } from "../../utils/Helpers";
+import { capitalize, switchModal } from "../../utils/Helpers";
 import { Redirect } from "react-router-dom";
 import GeneralTable from "../../components/GeneralTable";
 import AddObject from "../../components/AddObject";
@@ -53,6 +53,7 @@ export default class CategoryDetails extends Component {
   render() {
     const {
       selected,
+      secondary,
       redirections,
       status,
       name,
@@ -91,7 +92,7 @@ export default class CategoryDetails extends Component {
                 >
                   Add Sub
                 </Button>
-                {canDelete(selected) && (
+                {secondary.length === 0 && (
                   <Button
                     className="btn btn-theme float-right"
                     variant="danger"
