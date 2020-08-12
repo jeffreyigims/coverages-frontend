@@ -589,7 +589,7 @@ function coverageWizardForm(
             }}
           >
             {objectDataOptions(
-              additional.sports[values.sport_index].attributes.leagues
+              additional.sports[values.sport_index]?.attributes.leagues
             )}
           </Form.Control>
         </Form.Group>
@@ -608,7 +608,7 @@ function coverageWizardForm(
           >
             {clubOptions(
               additional.clubs,
-              additional.sports[values.sport_index].attributes.leagues[
+              additional.sports[values.sport_index]?.attributes.leagues[
                 values.league_index
               ]
             )}
@@ -624,7 +624,7 @@ function coverageWizardForm(
             onChange={handleChange}
           >
             {objectGroupOptions(
-              additional.clubs[values.club_index].attributes.club_groups
+              additional.clubs[values.club_index]?.attributes.club_groups
             )}
           </Form.Control>
         </Form.Group>
@@ -654,7 +654,7 @@ function coverageWizardForm(
             onChange={handleChange}
           >
             {objectDataOptions(
-              additional.categories[values.category_index].attributes
+              additional.categories[values.category_index]?.attributes
                 .sub_categories
             )}
           </Form.Control>

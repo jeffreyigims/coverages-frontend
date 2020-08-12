@@ -12,6 +12,20 @@ const PlotlyRenderers = createPlotlyRenderers(Plot);
 export default class Metrics extends React.Component {
   render() {
     const { objects, status } = this.props;
+    const attributes = [
+      [
+        "coverage_line",
+        "verified",
+        "sub",
+        "category",
+        "group",
+        "club",
+        "league",
+        "sport",
+        "carrier",
+        "company",
+      ],
+    ].concat(objects);
     return (
       <>
         <Card>
@@ -21,7 +35,7 @@ export default class Metrics extends React.Component {
             {statusDisplay(
               status,
               <PivotTableUI
-                data={objects}
+                data={attributes}
                 onChange={(s) => this.setState(s)}
                 renderers={Object.assign({}, TableRenderers, PlotlyRenderers)}
                 {...this.state}

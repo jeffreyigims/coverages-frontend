@@ -49,7 +49,7 @@ class GroupContainer extends Component {
 
     return (
       <GeneralTable
-        objects={object.attributes.club_groups}
+        objects={object?.attributes.club_groups}
         showObjects={showObjects}
         tableHeaders={["League", "Name", "Code"]}
         status={this.props.status}

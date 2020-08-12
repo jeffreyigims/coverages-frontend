@@ -10,7 +10,7 @@ export default class GeneralTable extends React.Component {
       <>
         {statusDisplay(
           status,
-          objects.length > 0 ? (
+          objects != null && objects.length > 0 ? (
             <Table striped bordered hover>
               <thead>
                 <tr>
@@ -31,7 +31,7 @@ export default class GeneralTable extends React.Component {
 }
 
 GeneralTable.propTypes = {
-  objects: PropTypes.arrayOf(PropTypes.object).isRequired,
+  objects: PropTypes.arrayOf(PropTypes.object),
   showObjects: PropTypes.func.isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.string).isRequired,
   status: PropTypes.string.isRequired,

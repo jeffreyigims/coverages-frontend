@@ -1,5 +1,5 @@
-const base = "https://coverages-backend.herokuapp.com";
-// const base = "http://localhost:3000";
+// const base = "https://coverages-backend.herokuapp.com";
+const base = "http://localhost:3000";
 
 // Utility function used in calls to the API service
 export function runAjax(link, method = "GET", data = {}, rejectWithValue = {}) {
@@ -33,7 +33,10 @@ export function runAjax(link, method = "GET", data = {}, rejectWithValue = {}) {
       });
       return resolve(rejectWithValue(res));
     } else {
-      return resolve(response.json());
+      let res = await response.json().catch((error) => {
+        resolve(rejectWithValue(error));
+      });
+      return resolve(res);
     }
   });
 

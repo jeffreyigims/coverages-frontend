@@ -98,10 +98,10 @@ const sub_categories = {
 
 export const coverages = {
   schema: yup.object({
-    club_index: yup.string().required(),
-    group_index: yup.string().required(),
-    category_index: yup.string().required(),
-    sub_category_index: yup.string().required(),
+    club_index: yup.string(),
+    group_index: yup.string(),
+    category_index: yup.string(),
+    sub_category_index: yup.string(),
     notes: yup.string(),
     start_date: yup.string().nullable(),
     end_date: yup.string().nullable(),

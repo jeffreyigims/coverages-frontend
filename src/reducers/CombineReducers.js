@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { connectRouter } from 'connected-react-router'
+import { connectRouter } from "connected-react-router";
 import { search, fetchMetrics } from "../actions/Actions";
 import { createSlice } from "@reduxjs/toolkit";
 import { redirectionSlice } from "./Redirections";
@@ -36,9 +36,7 @@ const metricsSlice = createSlice({
       state.status = "failed";
     },
     [fetchMetrics.fulfilled]: (state, action) => {
-      state.coverages = action.payload.data.map(
-        (coverage) => coverage.attributes
-      );
+      state.coverages = action.payload.data;
       state.status = "succeeded";
     },
   },
@@ -264,25 +262,26 @@ function createSpecialTableReducer(name = "", target = "") {
   };
 }
 
-const createRootReducer = (history) => combineReducers({
-  router: connectRouter(history),
-  sports: createTableReducer("sports"),
-  leagues: createTableReducer("leagues"),
-  clubs: createTableReducer("clubs"),
-  groups: createTableReducer("groups"),
-  club_groups: createTableReducer("club_groups"),
-  companies: createSpecialTableReducer("companies", "brokers"),
-  brokers: createTableReducer("brokers"),
-  carriers: createTableReducer("carriers"),
-  users: createTableReducer("users"),
-  categories: createSpecialTableReducer("categories", "sub_categories"),
-  sub_categories: createTableReducer("sub_categories"),
-  coverages: createPaginatedTableReducer("coverages"),
-  alerts: alerts,
-  redirections: redirectionSlice.reducer,
-  search: searchSlice.reducer,
-  metrics: metricsSlice.reducer,
-  authentication: authenticationSlice.reducer,
-});
+const createRootReducer = (history) =>
+  combineReducers({
+    router: connectRouter(history),
+    sports: createTableReducer("sports"),
+    leagues: createTableReducer("leagues"),
+    clubs: createTableReducer("clubs"),
+    groups: createTableReducer("groups"),
+    club_groups: createTableReducer("club_groups"),
+    companies: createSpecialTableReducer("companies", "brokers"),
+    brokers: createTableReducer("brokers"),
+    carriers: createTableReducer("carriers"),
+    users: createTableReducer("users"),
+    categories: createSpecialTableReducer("categories", "sub_categories"),
+    sub_categories: createTableReducer("sub_categories"),
+    coverages: createPaginatedTableReducer("coverages"),
+    alerts: alerts,
+    redirections: redirectionSlice.reducer,
+    search: searchSlice.reducer,
+    metrics: metricsSlice.reducer,
+    authentication: authenticationSlice.reducer,
+  });
 
 export default createRootReducer;

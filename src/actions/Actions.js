@@ -164,9 +164,9 @@ export const postCoverageBroker = createPost(
 export const deleteCoverageBroker = createDelete("coverage_brokers");
 
 export function postCoverageAssociations(coverage, carriers, brokers) {
-  return (dispatch) => {
+  return async (dispatch) => {
     var coverage_id;
-    dispatch(postCoverage(coverage)).then((response) => {
+    await dispatch(postCoverage(coverage)).then((response) => {
       coverage_id = response.payload.data?.id;
     });
     if (coverage_id === null) {
