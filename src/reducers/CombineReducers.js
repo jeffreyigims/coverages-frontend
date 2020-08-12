@@ -8,7 +8,7 @@ import { alerts } from "./Alerts";
 
 const searchSlice = createSlice({
   name: "search",
-  initialState: { results: {}, hits: 0, status: "idle" },
+  initialState: { results: [], status: "idle" },
   reducers: {},
   extraReducers: {
     [search.pending]: (state, action) => {
@@ -19,7 +19,6 @@ const searchSlice = createSlice({
     },
     [search.fulfilled]: (state, action) => {
       state.results = action.payload.data;
-      state.hits = action.payload.hits;
       state.status = "succeeded";
     },
   },

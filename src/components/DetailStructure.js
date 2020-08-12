@@ -36,9 +36,7 @@ export default class DetailStructure extends Component {
               {capitalize(selected.attributes.name)} Details
             </Card.Title>
           )}
-          <Card.Body>
-            {status === "succeeded" && showDetails(selected)}
-          </Card.Body>
+          <Card.Body>{showDetails(selected)}</Card.Body>
           <Card.Footer>
             {status === "succeeded" && (
               <>

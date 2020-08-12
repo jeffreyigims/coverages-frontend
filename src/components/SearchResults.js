@@ -5,32 +5,35 @@ import { connect } from "react-redux";
 import { statusDisplay } from "../utils/Helpers";
 
 class SearchResults extends React.Component {
-  createLists = (results) => {
-    const keys = Object.keys(results);
-    return keys.map((key) => {
-      return results[key].map((object, index) => (
-        <tr key={key + index}>
+  createTable = (results) => {
+    return results.map((result, index) => {
+      return (
+        <tr key={index}>
           <td width="200" align="left">
-            <Button variant="link" href={"/" + key} style={{ color: "black" }}>
-              {key}
-            </Button>{" "}
+            <Button
+              variant="link"
+              href={"/" + result.type}
+              style={{ color: "black" }}
+            >
+              {result.type}
+            </Button>
           </td>
           <td width="200" align="left">
             <Button
               variant="link"
-              href={"/" + key + "/" + object.id}
+              href={"/" + result.type + "/" + result.id}
               style={{ color: "black" }}
             >
-              {object.name || `${object.first_name} ${object.last_name}`}
+              {result.name || `${result.first_name} ${result.last_name}`}
             </Button>
           </td>
         </tr>
-      ));
+      );
     });
   };
 
   render() {
-    const { show, switchModal, results, hits, status } = this.props;
+    const { show, switchModal, results, status } = this.props;
     return (
       <Modal show={show} onHide={switchModal}>
         <Modal.Header closeButton>
@@ -41,7 +44,7 @@ class SearchResults extends React.Component {
         <Modal.Body>
           {statusDisplay(
             status,
-            hits === 0 ? (
+            results.length === 0 ? (
               "There are no results for the search term."
             ) : (
               <Table striped bordered hover>
@@ -52,7 +55,7 @@ class SearchResults extends React.Component {
                     ))}
                   </tr>
                 </thead>
-                <tbody>{this.createLists(results)}</tbody>
+                <tbody>{this.createTable(results)}</tbody>
               </Table>
             )
           )}
@@ -66,13 +69,13 @@ SearchResults.propTypes = {
   show: PropTypes.bool.isRequired,
   switchModal: PropTypes.func.isRequired,
   query: PropTypes.string.isRequired,
-  results: PropTypes.object.isRequired,
+  results: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.string.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { results, status, hits } = state.search;
-  return { results, status, hits };
+  const { results, status } = state.search;
+  return { results, status };
 }
 
 export default connect(mapStateToProps)(SearchResults);
