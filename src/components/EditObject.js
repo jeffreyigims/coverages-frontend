@@ -29,7 +29,12 @@ export default class AddObject extends React.Component {
               updateObject(selected.attributes.id, values);
               switchModal("modal_edit");
             }}
-            initialValues={map(initialValues, selected.attributes)}
+            initialValues={map(
+              name,
+              initialValues,
+              selected.attributes,
+              additional
+            )}
             validateOnChange={false}
             validateOnBlur={false}
           >

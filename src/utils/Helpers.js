@@ -80,10 +80,24 @@ export function switchModal(name) {
 }
 
 // Maps list of keys to the values of an object
-export function map(values, object) {
+export function map(name, values, object, additional) {
   var new_values = {};
   for (var key in values) {
     new_values[key] = object[key];
+  }
+  switch (name) {
+    case "club":
+      new_values["league_index"] = additional.leagues.findIndex(
+        (league) => league.attributes.id === object.league_id
+      );
+      break;
+    case "league":
+      new_values["sport_index"] = additional.sports.findIndex(
+        (sport) => sport.attributes.id === object.sport_id
+      );
+      break;
+    default:
+      break;
   }
   return new_values;
 }
