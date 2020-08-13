@@ -57,6 +57,15 @@ class LeagueContainer extends Component {
     );
   };
 
+  updateObject = (id, values) => {
+    const new_object = {
+      name: values.name,
+      level: values.level,
+      sport_id: this.props.sports[values.sport_index].attributes.id,
+    };
+    this.props.dispatch(updateLeague({ id: id, values: new_object }));
+  };
+
   render() {
     const { dispatch, sports } = this.props;
     return (
@@ -65,9 +74,7 @@ class LeagueContainer extends Component {
           {...this.props}
           name={this.state.name}
           showDetails={this.showDetails}
-          updateObject={(id, values) => {
-            dispatch(updateLeague({ id: id, values: values }));
-          }}
+          updateObject={this.updateObject}
           deleteObject={(id) => {
             dispatch(deleteLeague(id));
           }}

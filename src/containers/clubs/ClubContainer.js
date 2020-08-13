@@ -126,7 +126,6 @@ class ClubContainer extends Component {
       abbreviation: values.abbreviation,
       league_id: this.props.leagues[values.league_index].attributes.id,
     };
-    console.log(new_object);
     this.props.dispatch(updateClub({ id: id, values: new_object }));
   };
 

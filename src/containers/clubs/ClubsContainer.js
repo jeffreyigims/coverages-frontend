@@ -47,7 +47,7 @@ class ClubsContainer extends Component {
   postObject = (values) => {
     const new_object = {
       name: values.name,
-      abbreviation: values.level,
+      abbreviation: values.abbreviation,
       league_id: this.props.leagues[values.league_index].attributes.id,
     };
     this.props.dispatch(postClub(new_object));

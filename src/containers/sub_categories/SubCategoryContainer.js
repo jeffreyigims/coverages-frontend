@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import DetailStructure from "../../components/DetailStructure";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
-import GeneralTable from "../../components/GeneralTable";
+import PaginatedTable from "../../components/PaginatedTable";
 import Moment from "react-moment";
 import { EyeFill } from "react-bootstrap-icons";
 import {
@@ -74,7 +74,7 @@ class SubCategoryContainer extends Component {
                 href={"/users/" + object.attributes.user.id}
                 style={{ color: "black" }}
               >
-                {object.attributes.user.first_name}
+                {object.attributes.user.first_name}{" "}
                 {object.attributes.user.last_name}
               </Button>
             </td>
@@ -106,7 +106,7 @@ class SubCategoryContainer extends Component {
     };
 
     return (
-      <GeneralTable
+      <PaginatedTable
         objects={this.props.coverages}
         showObjects={showObjects}
         tableHeaders={[
@@ -122,6 +122,16 @@ class SubCategoryContainer extends Component {
           "View",
         ]}
         status={this.props.coveragesStatus}
+        onPageChange={(e, { activePage }) =>
+          this.props.dispatch(
+            fetchCoverages({
+              for_sub_category: this.state.id,
+              page: activePage,
+            })
+          )
+        }
+        defaultActivePage={this.props.defaultActivePage}
+        totalPages={this.props.totalPages}
       />
     );
   };

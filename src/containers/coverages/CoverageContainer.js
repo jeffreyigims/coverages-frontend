@@ -32,6 +32,8 @@ class CoverageContainer extends React.Component {
     // Get array of current associated brokers
     let curr = this.props.selected.attributes.coverage_brokers;
     // Find brokers that need added or detroyed from list differences
+    console.log(curr);
+    console.log(objects);
     let needAdded = objects.filter(
       (object) => !this.includes(curr, object, "broker_id")
     );
