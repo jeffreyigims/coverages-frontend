@@ -167,7 +167,7 @@ function createPaginatedTableReducer(name = "") {
             action.payload.data.attributes.coverage_carriers.map((c) => c.data)
           ),
           brokers: state.brokers.concat(
-            action.payload.data.attributes.coverage_brokers.map((c) => c.data)
+            action.payload.data.attributes.coverage_brokers.map((b) => b.data)
           ),
           status: "succeeded",
         });
