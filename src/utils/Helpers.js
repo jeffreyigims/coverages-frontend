@@ -109,6 +109,14 @@ export function formatDate(date) {
     : moment(date).format("YYYY-MM-DD");
 }
 
+// For displaying dates in tables of coverages
 export function displayDate(date, format) {
   return date === null ? "N/A" : <Moment format={format}>{date}</Moment>;
+}
+
+// For unique identification with pending coverages
+export function getRandom() {
+  return Math.floor((1 + Math.random()) * 0x10000)
+    .toString(16)
+    .substring(1);
 }

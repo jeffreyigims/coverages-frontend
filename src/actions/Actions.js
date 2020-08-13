@@ -35,6 +35,24 @@ function createPost(name = "", object = "") {
   );
 }
 
+function createPostID(name = "", object = "") {
+  return createAsyncThunk(
+    `${name}/post_${name}`,
+    async (values, { rejectWithValue }) => {
+      const response = await runAjax(
+        `/${name}.json`,
+        "POST",
+        {
+          [object]: values.coverage,
+        },
+        rejectWithValue,
+        values.id
+      );
+      return response;
+    }
+  );
+}
+
 function createGet(name = "") {
   return createAsyncThunk(
     `${name}/get_${name}`,
@@ -142,7 +160,7 @@ export const updateSubCategory = createUpdate("sub_categories", "sub_category");
 export const deleteSubCategory = createDelete("sub_categories");
 
 export const fetchCoverages = createFetch("coverages");
-export const postCoverage = createPost("coverages", "coverage");
+export const postCoverage = createPostID("coverages", "coverage");
 export const fetchCoverage = createGet("coverages");
 export const updateCoverage = createUpdate("coverages", "coverage");
 export const deleteCoverage = createDelete("coverages");
@@ -163,12 +181,14 @@ export const postCoverageBroker = createPost(
 );
 export const deleteCoverageBroker = createDelete("coverage_brokers");
 
-export function postCoverageAssociations(coverage, carriers, brokers) {
+export function postCoverageAssociations(coverage, carriers, brokers, id) {
   return async (dispatch) => {
     var coverage_id;
-    await dispatch(postCoverage(coverage)).then((response) => {
-      coverage_id = response.payload.data?.id;
-    });
+    await dispatch(postCoverage({ coverage: coverage, id: id })).then(
+      (response) => {
+        coverage_id = response.payload.data?.id;
+      }
+    );
     if (coverage_id === null) {
       return;
     }
@@ -235,3 +255,9 @@ export const login = createAsyncThunk(
 );
 
 export const logout = createAction("authentication/logout");
+export const postCoveragePending = createAction(
+  "coverages/postCoveragePending"
+);
+export const deleteCoveragePending = createAction(
+  "coverages/deleteCoveragePending"
+);

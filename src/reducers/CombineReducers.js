@@ -117,7 +117,7 @@ function createTableReducer(name = "") {
 function createPaginatedTableReducer(name = "") {
   let initialState = {
     [name]: [],
-    rejected: [],
+    pending: [],
     status: "idle",
     errors: null,
     selected: null,
@@ -145,11 +145,13 @@ function createPaginatedTableReducer(name = "") {
         return Object.assign({}, state, {
           [name]: state[name],
           error: action.payload,
-          rejected: state.rejected.concat(action.payload),
         });
       case `${name}/post_${name}/fulfilled`:
         return Object.assign({}, state, {
           [name]: [action.payload.data].concat(state[name]),
+          pending: state.pending.filter(
+            (coverage) => coverage.id !== action.payload.id
+          ),
           status: "succeeded",
         });
       case `${name}/get_${name}/rejected`:
@@ -178,6 +180,16 @@ function createPaginatedTableReducer(name = "") {
       case `${name}/delete_${name}/fulfilled`:
         return Object.assign({}, state, {
           status: "succeeded",
+        });
+      case "coverages/postCoveragePending":
+        return Object.assign({}, state, {
+          pending: state.pending.concat(action.payload),
+        });
+      case "coverages/deleteCoveragePending":
+        return Object.assign({}, state, {
+          pending: state.pending.filter(
+            (coverage) => coverage.id !== action.payload
+          ),
         });
       default:
         return state;
