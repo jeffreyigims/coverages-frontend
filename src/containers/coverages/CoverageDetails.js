@@ -10,7 +10,7 @@ import { Redirect } from "react-router-dom";
 import { formatDate, statusDisplay } from "../../utils/Helpers";
 
 export default class CoverageDetails extends React.Component {
-  initialValues = (coverage) => {
+  initialValues = (coverage, coverage_carriers, coverage_brokers) => {
     return coverage == null
       ? null
       : {
@@ -19,11 +19,11 @@ export default class CoverageDetails extends React.Component {
           end_date: formatDate(coverage.end_date),
           has_coverage_line: coverage.has_coverage_line,
           verified: coverage.verified,
-          carriers: coverage.coverage_carriers.map(
-            (coverage_carrier) => coverage_carrier.data.attributes.carrier_id
+          carriers: coverage_carriers.map(
+            (coverage_carrier) => coverage_carrier.attributes.carrier_id
           ),
-          brokers: coverage.coverage_brokers.map(
-            (coverage_brokers) => coverage_brokers.data.attributes.broker_id
+          brokers: coverage_brokers.map(
+            (coverage_broker) => coverage_broker.attributes.broker_id
           ),
         };
   };
@@ -37,6 +37,8 @@ export default class CoverageDetails extends React.Component {
       carriers,
       submit,
       deleteObject,
+      coverage_carriers,
+      coverage_brokers,
     } = this.props;
     const { schema } = schemaFor("coverage");
     return (
@@ -53,7 +55,11 @@ export default class CoverageDetails extends React.Component {
               <Formik
                 validationSchema={schema}
                 onSubmit={submit}
-                initialValues={this.initialValues(selected?.attributes)}
+                initialValues={this.initialValues(
+                  selected?.attributes,
+                  coverage_carriers,
+                  coverage_brokers
+                )}
                 enableReinitialize={true}
               >
                 {({

@@ -118,6 +118,8 @@ function createPaginatedTableReducer(name = "") {
   let initialState = {
     [name]: [],
     pending: [],
+    carriers: [],
+    brokers: [],
     status: "idle",
     errors: null,
     selected: null,
@@ -161,6 +163,12 @@ function createPaginatedTableReducer(name = "") {
       case `${name}/get_${name}/fulfilled`:
         return Object.assign({}, state, {
           selected: action.payload.data,
+          carriers: state.carriers.concat(
+            action.payload.data.attributes.coverage_carriers.map((c) => c.data)
+          ),
+          brokers: state.brokers.concat(
+            action.payload.data.attributes.coverage_brokers.map((c) => c.data)
+          ),
           status: "succeeded",
         });
       case `${name}/update_${name}/rejected`:
@@ -171,6 +179,8 @@ function createPaginatedTableReducer(name = "") {
       case `${name}/update_${name}/fulfilled`:
         return Object.assign({}, state, {
           selected: action.payload.data,
+          carriers: state.carriers,
+          brokers: state.brokers,
           status: "succeeded",
         });
       case `${name}/delete_${name}/rejected`:
@@ -189,6 +199,32 @@ function createPaginatedTableReducer(name = "") {
         return Object.assign({}, state, {
           pending: state.pending.filter(
             (coverage) => coverage.id !== action.payload
+          ),
+        });
+      case "coverage_brokers/post_coverage_brokers/fulfilled":
+        return Object.assign({}, state, {
+          selected: state.selected,
+          brokers: state.brokers.concat(action.payload.data),
+        });
+      case "coverage_carriers/post_coverage_carriers/fulfilled":
+        return Object.assign({}, state, {
+          selected: state.selected,
+          carriers: state.carriers.concat(action.payload.data),
+        });
+      case "coverage_brokers/delete_coverage_brokers/fulfilled":
+        return Object.assign({}, state, {
+          selected: state.selected,
+          brokers: state.brokers.filter(
+            (broker) =>
+              broker.attributes.id !== action.payload.data.attributes.id
+          ),
+        });
+      case "coverage_carriers/delete_coverage_carriers/fulfilled":
+        return Object.assign({}, state, {
+          selected: state.selected,
+          carriers: state.carriers.filter(
+            (carrier) =>
+              carrier.attributes.id !== action.payload.data.attributes.id
           ),
         });
       default:

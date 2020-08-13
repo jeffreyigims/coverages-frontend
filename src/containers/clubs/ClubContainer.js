@@ -107,7 +107,7 @@ class ClubContainer extends Component {
             "Verified",
             "View",
           ]}
-          status={this.props.status}
+          status={this.props.coveragesStatus}
           onPageChange={(e, { activePage }) =>
             this.props.dispatch(
               fetchCoverages({ for_carrier: this.state.id, page: activePage })

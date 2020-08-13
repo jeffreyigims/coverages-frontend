@@ -21,7 +21,7 @@ class CoverageContainer extends React.Component {
   // Custom includes function to get correct attribute
   includes = (arr, object, target) => {
     for (let i = 0; i < arr.length; i++) {
-      if (arr[i].data.attributes[target] === object) {
+      if (arr[i].attributes[target] === object) {
         return true;
       }
     }
@@ -30,7 +30,7 @@ class CoverageContainer extends React.Component {
 
   handleBrokers = (objects) => {
     // Get array of current associated brokers
-    let curr = this.props.selected.attributes.coverage_brokers;
+    let curr = this.props.coverage_brokers;
     // Find brokers that need added or detroyed from list differences
     console.log(curr);
     console.log(objects);
@@ -38,21 +38,21 @@ class CoverageContainer extends React.Component {
       (object) => !this.includes(curr, object, "broker_id")
     );
     let needDestroyed = curr
-      .filter((object) => !objects.includes(object.data.attributes.broker_id))
-      .map((object) => object.data.attributes.id);
+      .filter((object) => !objects.includes(object.attributes.broker_id))
+      .map((object) => object.attributes.id);
     return { needAdded: needAdded, needDestroyed: needDestroyed };
   };
 
   handleCarriers = (objects) => {
     // Get array of current associated carriers
-    let curr = this.props.selected.attributes.coverage_carriers;
+    let curr = this.props.coverage_carriers;
     // Find carriers that need added or detroyed from list differences
     let needAdded = objects.filter(
       (object) => !this.includes(curr, object, "carrier_id")
     );
     let needDestroyed = curr
-      .filter((object) => !objects.includes(object.data.attributes.carrier_id))
-      .map((object) => object.data.attributes.id);
+      .filter((object) => !objects.includes(object.attributes.carrier_id))
+      .map((object) => object.attributes.id);
     return { needAdded: needAdded, needDestroyed: needDestroyed };
   };
 
@@ -102,10 +102,20 @@ CoverageContainer.propTypes = {
 
 function mapStateToProps(state) {
   const { selected, status } = state.coverages;
+  const coverage_carriers = state.coverages.carriers;
+  const coverage_brokers = state.coverages.brokers;
   const { carriers } = state.carriers;
   const { brokers } = state.brokers;
   const redirections = state.redirections;
-  return { selected, status, carriers, brokers, redirections };
+  return {
+    selected,
+    status,
+    coverage_carriers,
+    coverage_brokers,
+    carriers,
+    brokers,
+    redirections,
+  };
 }
 
 export default connect(mapStateToProps)(CoverageContainer);
