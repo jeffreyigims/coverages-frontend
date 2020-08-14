@@ -880,6 +880,15 @@ function loginForm(values, handleChange, setFieldValue, errors, additional) {
   );
 }
 
+function filterForm(values, handleChange, setFieldValue, errors, additional) {
+  return (
+    <>
+      <Row></Row>
+      <Row></Row>
+    </>
+  );
+}
+
 export function formFor(name, ...values) {
   switch (name) {
     case "sport":
@@ -910,6 +919,8 @@ export function formFor(name, ...values) {
       return userForm(...values);
     case "login":
       return loginForm(...values);
+    case "filter":
+      return filterForm(...values);
     default:
       return;
   }
