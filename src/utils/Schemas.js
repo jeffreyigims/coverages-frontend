@@ -96,7 +96,7 @@ const sub_categories = {
   },
 };
 
-export const coverages = {
+const coverages = {
   schema: yup.object({
     club_index: yup.string(),
     group_index: yup.string(),
@@ -105,7 +105,7 @@ export const coverages = {
     notes: yup.string(),
     start_date: yup.string().nullable(),
     end_date: yup.string().nullable(),
-    has_coverage_line: yup.boolean().required(),
+    has_coverage_line: yup.string().required(),
     verified: yup.boolean().required(),
   }),
   initialValues: {
@@ -118,7 +118,7 @@ export const coverages = {
     notes: "",
     start_date: formatDate(new Date()),
     end_date: formatDate(null),
-    has_coverage_line: false,
+    has_coverage_line: "yes",
     verified: false,
   },
 };
@@ -132,7 +132,7 @@ const coverage_wizard = {
     notes: yup.string(),
     start_date: yup.string().nullable(),
     end_date: yup.string().nullable(),
-    has_coverage_line: yup.boolean().required(),
+    has_coverage_line: yup.string().required(),
     verified: yup.boolean().required(),
   }),
   initialValues: {
@@ -147,7 +147,7 @@ const coverage_wizard = {
     notes: "",
     start_date: formatDate(new Date()),
     end_date: formatDate(null),
-    has_coverage_line: false,
+    has_coverage_line: "yes",
     verified: false,
   },
 };

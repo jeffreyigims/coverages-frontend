@@ -4,7 +4,7 @@ import { Form, Col, Row, Card, Button } from "react-bootstrap";
 import { Formik } from "formik";
 import { DatePickerInput } from "rc-datepicker";
 import "rc-datepicker/lib/style.css";
-import { objectOptionsID } from "../../utils/Forms";
+import { objectOptionsID, handleCoverageLineChange } from "../../utils/Forms";
 import { schemaFor } from "../../utils/Schemas";
 import { Redirect } from "react-router-dom";
 import { formatDate, statusDisplay } from "../../utils/Helpers";
@@ -129,6 +129,9 @@ export default class CoverageDetails extends React.Component {
                               )
                             )
                           }
+                          disabled={
+                            values.has_coverage_line === "yes" ? false : true
+                          }
                         >
                           {objectOptionsID(carriers)}
                         </Form.Control>
@@ -150,8 +153,29 @@ export default class CoverageDetails extends React.Component {
                               )
                             )
                           }
+                          disabled={
+                            values.has_coverage_line === "yes" ? false : true
+                          }
                         >
                           {objectOptionsID(brokers)}
+                        </Form.Control>
+                      </Form.Group>
+                    </Row>
+                    <Row>
+                      <Form.Group as={Col}>
+                        <Form.Label>{"Has Coverage Line:"}</Form.Label>
+                        <Form.Control
+                          as="select"
+                          name="has_coverage_line"
+                          value={values.has_coverage_line}
+                          onChange={(event) => {
+                            handleChange(event);
+                            handleCoverageLineChange(event, setFieldValue);
+                          }}
+                        >
+                          <option>yes</option>
+                          <option>no</option>
+                          <option>unknown</option>
                         </Form.Control>
                       </Form.Group>
                     </Row>
@@ -164,6 +188,7 @@ export default class CoverageDetails extends React.Component {
                         onChange={handleChange}
                       />
                     </Form.Group>
+
                     <Row>
                       <Form.Group as={Col}>
                         <Form.Label>{"Start Date:"}</Form.Label>
@@ -172,6 +197,9 @@ export default class CoverageDetails extends React.Component {
                           value={values.start_date}
                           onChange={(val) =>
                             setFieldValue("start_date", formatDate(val))
+                          }
+                          disabled={
+                            values.has_coverage_line === "yes" ? false : true
                           }
                         />
                       </Form.Group>
@@ -184,20 +212,14 @@ export default class CoverageDetails extends React.Component {
                           onChange={(val) =>
                             setFieldValue("end_date", formatDate(val))
                           }
+                          disabled={
+                            values.has_coverage_line === "yes" ? false : true
+                          }
                         />
                       </Form.Group>
                     </Row>
                     <Row>
-                      <Form.Group as={Col}>
-                        <Form.Check
-                          type="checkbox"
-                          name="has_coverage_line"
-                          label={"Has Coverage Line"}
-                          checked={values.has_coverage_line}
-                          value={values.has_coverage_line}
-                          onChange={handleChange}
-                        />
-                      </Form.Group>
+                      <Form.Group as={Col}></Form.Group>
 
                       <Form.Group as={Col}>
                         <Form.Check

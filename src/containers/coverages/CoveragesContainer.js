@@ -25,6 +25,7 @@ class CoveragesContainer extends Component {
       "Entered By",
       "Date Created",
       "Last Updated",
+      "Coverage Line",
       "Verified",
       "View",
     ],
@@ -99,7 +100,10 @@ class CoveragesContainer extends Component {
           <td width="200" align="left">
             {displayDate(object.attributes.updated_at, "MM/DD/YYYY")}
           </td>
-          <td width="200" align="left">
+          <td width="100" align="left">
+            {object.attributes.has_coverage_line}
+          </td>
+          <td width="100" align="left">
             {object.attributes.verified ? "true" : "false"}
           </td>
           <td width="100" align="center">

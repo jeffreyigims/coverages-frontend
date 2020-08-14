@@ -389,6 +389,17 @@ function userForm(values, handleChange, setFieldValue, errors, additional) {
   );
 }
 
+export function handleCoverageLineChange(event, setFieldValue) {
+  if (event.target.value === "yes") {
+    setFieldValue("start_date", formatDate(new Date()));
+  } else {
+    setFieldValue("carriers", []);
+    setFieldValue("brokers", []);
+    setFieldValue("start_date", formatDate(null));
+    setFieldValue("end_date", formatDate(null));
+  }
+}
+
 function coverageForm(values, handleChange, setFieldValue, errors, additional) {
   return (
     <>
@@ -472,6 +483,7 @@ function coverageForm(values, handleChange, setFieldValue, errors, additional) {
                 )
               )
             }
+            disabled={values.has_coverage_line === "yes" ? false : true}
           >
             {objectOptions(additional.carriers)}
           </Form.Control>
@@ -493,8 +505,28 @@ function coverageForm(values, handleChange, setFieldValue, errors, additional) {
                 )
               )
             }
+            disabled={values.has_coverage_line === "yes" ? false : true}
           >
             {brokerOptions(additional.brokers)}
+          </Form.Control>
+        </Form.Group>
+      </Row>
+
+      <Row>
+        <Form.Group as={Col}>
+          <Form.Label>{"Has Coverage Line:"}</Form.Label>
+          <Form.Control
+            as="select"
+            name="has_coverage_line"
+            value={values.has_coverage_line}
+            onChange={(event) => {
+              handleChange(event);
+              handleCoverageLineChange(event, setFieldValue);
+            }}
+          >
+            <option>yes</option>
+            <option>no</option>
+            <option>unknown</option>
           </Form.Control>
         </Form.Group>
       </Row>
@@ -516,6 +548,7 @@ function coverageForm(values, handleChange, setFieldValue, errors, additional) {
             name="start_date"
             value={values.start_date}
             onChange={(val) => setFieldValue("start_date", formatDate(val))}
+            disabled={values.has_coverage_line === "yes" ? false : true}
           />
         </Form.Group>
 
@@ -525,20 +558,13 @@ function coverageForm(values, handleChange, setFieldValue, errors, additional) {
             name="end_date"
             value={values.end_date}
             onChange={(val) => setFieldValue("end_date", formatDate(val))}
+            disabled={values.has_coverage_line === "yes" ? false : true}
           />
         </Form.Group>
       </Row>
 
       <Row>
-        <Form.Group as={Col}>
-          <Form.Check
-            type="checkbox"
-            name="has_coverage_line"
-            label={"Has Coverage Line"}
-            value={values.has_coverage_line}
-            onChange={handleChange}
-          />
-        </Form.Group>
+        <Form.Group as={Col}></Form.Group>
 
         <Form.Group as={Col}>
           <Form.Check
@@ -676,6 +702,7 @@ function coverageWizardForm(
                 )
               )
             }
+            disabled={values.has_coverage_line === "yes" ? false : true}
           >
             {objectOptions(additional.carriers)}
           </Form.Control>
@@ -696,8 +723,27 @@ function coverageWizardForm(
                 )
               )
             }
+            disabled={values.has_coverage_line === "yes" ? false : true}
           >
             {brokerOptions(additional.brokers)}
+          </Form.Control>
+        </Form.Group>
+      </Row>
+      <Row>
+        <Form.Group as={Col}>
+          <Form.Label>{"Has Coverage Line:"}</Form.Label>
+          <Form.Control
+            as="select"
+            name="has_coverage_line"
+            value={values.has_coverage_line}
+            onChange={(event) => {
+              handleChange(event);
+              handleCoverageLineChange(event, setFieldValue);
+            }}
+          >
+            <option>yes</option>
+            <option>no</option>
+            <option>unknown</option>
           </Form.Control>
         </Form.Group>
       </Row>
@@ -717,6 +763,7 @@ function coverageWizardForm(
             name="start_date"
             value={values.start_date}
             onChange={(val) => setFieldValue("start_date", formatDate(val))}
+            disabled={values.has_coverage_line === "yes" ? false : true}
           />
         </Form.Group>
 
@@ -726,20 +773,12 @@ function coverageWizardForm(
             name="end_date"
             value={values.end_date}
             onChange={(val) => setFieldValue("end_date", formatDate(val))}
+            disabled={values.has_coverage_line === "yes" ? false : true}
           />
         </Form.Group>
       </Row>
       <Row>
-        <Form.Group as={Col}>
-          <Form.Check
-            type="checkbox"
-            name="has_coverage_line"
-            label={"Has Coverage Line"}
-            checked={values.has_coverage_line}
-            value={values.has_coverage_line}
-            onChange={handleChange}
-          />
-        </Form.Group>
+        <Form.Group as={Col}></Form.Group>
 
         <Form.Group as={Col}>
           <Form.Check
@@ -751,7 +790,7 @@ function coverageWizardForm(
             onChange={handleChange}
           />
         </Form.Group>
-      </Row>{" "}
+      </Row>
     </>
   );
 }
