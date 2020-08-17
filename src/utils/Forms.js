@@ -62,6 +62,34 @@ function clubOptions(all_clubs, league) {
   return objectOptions(clubs);
 }
 
+const orderOptions = (objects) => {
+  return objects.map((object, index) => {
+    return (
+      <option key={index} value={index}>
+        {object.Name}
+      </option>
+    );
+  });
+};
+
+export const subOptions = (objects, index) => {
+  var new_objects;
+  if (index === "-1") {
+    new_objects = objects
+      .map((object) => object.attributes.sub_categories)
+      .flat();
+  } else {
+    new_objects = objects[index]?.attributes.sub_categories;
+  }
+  return new_objects?.map((object, index) => {
+    return (
+      <option key={index} value={index}>
+        {object.data.attributes.name}
+      </option>
+    );
+  });
+};
+
 function sportForm(values, handleChange, setFieldValue, errors, additional) {
   return (
     <Row>
@@ -883,8 +911,92 @@ function loginForm(values, handleChange, setFieldValue, errors, additional) {
 function filterForm(values, handleChange, setFieldValue, errors, additional) {
   return (
     <>
-      <Row></Row>
-      <Row></Row>
+      <Form.Group>
+        <Row>
+          <Form.Label column lg={2}>
+            Group:
+          </Form.Label>
+          <Col>
+            <Form.Control
+              as="select"
+              name="group_index"
+              value={values.group_index}
+              onChange={handleChange}
+            >
+              <option key={-1} value={"-1"}>
+                {"All"}
+              </option>
+              {objectOptions(additional.groups)}
+            </Form.Control>
+          </Col>
+        </Row>
+      </Form.Group>
+
+      <Form.Group>
+        <Row>
+          <Form.Label column lg={2}>
+            Category:
+          </Form.Label>
+          <Col>
+            <Form.Control
+              as="select"
+              name="category_index"
+              value={values.category_index}
+              onChange={(e) => {
+                handleChange(e);
+                setFieldValue("sub_category_index", "-1");
+              }}
+            >
+              <option key={-1} value={"-1"}>
+                {"All"}
+              </option>
+              {objectOptions(additional.categories)}
+            </Form.Control>
+          </Col>
+        </Row>
+      </Form.Group>
+
+      <Form.Group>
+        <Row>
+          <Form.Label column lg={2}>
+            Sub:
+          </Form.Label>
+          <Col>
+            <Form.Control
+              as="select"
+              name="sub_category_index"
+              value={values.sub_category_index}
+              onChange={handleChange}
+            >
+              <option key={-1} value={"-1"}>
+                {"All"}
+              </option>
+              {subOptions(additional.categories, values.category_index)}
+            </Form.Control>
+          </Col>
+        </Row>
+      </Form.Group>
+
+      <Form.Group>
+        <Row>
+          <Form.Label column lg={2}>
+            Order:
+          </Form.Label>
+          <Col>
+            <Form.Control
+              as="select"
+              name="order_index"
+              value={values.order_index}
+              onChange={handleChange}
+            >
+              <option key={-1} value={"-1"}>
+                {"None"}
+              </option>
+              {orderOptions(additional.orders)}
+            </Form.Control>
+          </Col>
+        </Row>
+      </Form.Group>
     </>
   );
 }

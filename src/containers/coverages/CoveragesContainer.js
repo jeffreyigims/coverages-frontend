@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import ListStructure from "../../components/ListStructure";
+import CoveragesTable from "./CoveragesTable";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import { EyeFill } from "react-bootstrap-icons";
@@ -11,6 +11,7 @@ import {
   fetchCategories,
   fetchCarriers,
   fetchBrokers,
+  fetchGroups,
   postCoverageAssociations,
 } from "../../actions/Actions";
 
@@ -31,6 +32,12 @@ class CoveragesContainer extends Component {
     ],
     name: "coverage",
     plural: "coverages",
+    orders: [
+      { Name: "Most Recent", Scope: "most_recent" },
+      { Name: "Recently Updated", Scope: "most_recently_updated" },
+      { Name: "End Date", Scope: "end_date" },
+      { Name: "Start Date", Scope: "start_date" },
+    ],
   };
 
   componentDidMount() {
@@ -39,6 +46,7 @@ class CoveragesContainer extends Component {
     this.props.dispatch(fetchCategories());
     this.props.dispatch(fetchCarriers());
     this.props.dispatch(fetchBrokers());
+    this.props.dispatch(fetchGroups());
   }
 
   showObjects = (objects) => {
@@ -144,10 +152,38 @@ class CoveragesContainer extends Component {
     );
   };
 
+  filterCoverages = (values) => {
+    var subs = [];
+    var filters = {};
+    const { groups, categories } = this.props;
+    if (values.group_index !== "-1") {
+      filters["for_group"] = groups[values.group_index].attributes.id;
+    }
+    if (values.category_index === "-1") {
+      subs = categories
+        .map((object) => object.attributes.sub_categories)
+        .flat();
+    } else {
+      let category = categories[values.category_index];
+      filters["for_category"] = category.attributes.id;
+      subs = category.attributes.sub_categories;
+    }
+    if (values.sub_category_index !== "-1") {
+      filters["for_sub_category"] =
+        subs[values.sub_category_index].data.attributes.id;
+    }
+    if (values.order_index !== "-1") {
+      filters[this.state.orders[values.order_index].Scope] = true;
+    }
+    console.log(filters);
+    this.props.dispatch(fetchCoverages(filters));
+  };
+
   render() {
     const {
       coverages,
       clubs,
+      groups,
       categories,
       carriers,
       brokers,
@@ -156,7 +192,7 @@ class CoveragesContainer extends Component {
     } = this.props;
     return (
       <>
-        <ListStructure
+        <CoveragesTable
           {...otherProps}
           objects={this.props.coverages}
           showObjects={this.showObjects}
@@ -169,10 +205,13 @@ class CoveragesContainer extends Component {
           }
           additional={{
             clubs: clubs,
+            groups: groups,
             categories: categories,
             carriers: carriers,
             brokers: brokers,
+            orders: this.state.orders,
           }}
+          filter={this.filterCoverages}
         />
       </>
     );
@@ -184,6 +223,7 @@ CoveragesContainer.propTypes = {
   status: PropTypes.string.isRequired,
   defaultActivePage: PropTypes.number.isRequired,
   totalPages: PropTypes.number,
+  groups: PropTypes.arrayOf(PropTypes.object).isRequired,
   clubs: PropTypes.arrayOf(PropTypes.object).isRequired,
   categories: PropTypes.arrayOf(PropTypes.object).isRequired,
   carriers: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -193,12 +233,14 @@ CoveragesContainer.propTypes = {
 function mapStateToProps(state) {
   const { coverages, defaultActivePage, totalPages, status } = state.coverages;
   const { clubs } = state.clubs;
+  const { groups } = state.groups;
   const { categories } = state.categories;
   const { carriers } = state.carriers;
   const { brokers } = state.brokers;
   return {
     coverages,
     clubs,
+    groups,
     categories,
     carriers,
     brokers,

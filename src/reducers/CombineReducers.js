@@ -1,46 +1,10 @@
 import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
-import { search, fetchMetrics } from "../actions/Actions";
-import { createSlice } from "@reduxjs/toolkit";
 import { redirectionSlice } from "./Redirections";
 import { authenticationSlice } from "./Authentication";
+import { searchSlice } from "./Search";
+import { metricsSlice } from "./Metrics";
 import { alerts } from "./Alerts";
-
-const searchSlice = createSlice({
-  name: "search",
-  initialState: { results: [], status: "idle" },
-  reducers: {},
-  extraReducers: {
-    [search.pending]: (state, action) => {
-      state.status = "loading";
-    },
-    [search.failed]: (state, action) => {
-      state.status = "failed";
-    },
-    [search.fulfilled]: (state, action) => {
-      state.results = action.payload.data;
-      state.status = "succeeded";
-    },
-  },
-});
-
-const metricsSlice = createSlice({
-  name: "metrics",
-  initialState: { coverages: [], status: "idle", error: null },
-  reducers: {},
-  extraReducers: {
-    [fetchMetrics.pending]: (state, action) => {
-      state.status = "loading";
-    },
-    [fetchMetrics.rejected]: (state, action) => {
-      state.status = "failed";
-    },
-    [fetchMetrics.fulfilled]: (state, action) => {
-      state.coverages = action.payload.data;
-      state.status = "succeeded";
-    },
-  },
-});
 
 // General reducer used for most tables and operations
 function createTableReducer(name = "") {

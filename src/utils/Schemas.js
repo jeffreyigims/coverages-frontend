@@ -178,6 +178,21 @@ const login = {
   },
 };
 
+const filter = {
+  schema: yup.object({
+    group_index: yup.string().required(),
+    category_index: yup.string().required(),
+    sub_category_index: yup.string().required(),
+    order_index: yup.string().required(),
+  }),
+  initialValues: {
+    group_index: "-1",
+    category_index: "-1",
+    sub_category_index: "-1",
+    order_index: "-1",
+  },
+};
+
 export function schemaFor(name) {
   switch (name) {
     case "sport":
@@ -208,6 +223,8 @@ export function schemaFor(name) {
       return users;
     case "login":
       return login;
+    case "filter":
+      return filter;
     default:
       return;
   }
