@@ -190,6 +190,8 @@ const filter = {
     category_index: "-1",
     sub_category_index: "-1",
     order_index: "-1",
+    has_coverage_line: "-1",
+    verified: "-1",
   },
 };
 

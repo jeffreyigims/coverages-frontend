@@ -4,9 +4,11 @@ import CoveragesTable from "./CoveragesTable";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import { EyeFill } from "react-bootstrap-icons";
+import { ExclamationCircleFill } from "react-bootstrap-icons";
 import { displayDate } from "../../utils/Helpers";
 import {
   fetchCoverages,
+  updateCoverage,
   fetchClubs,
   fetchCategories,
   fetchCarriers,
@@ -17,19 +19,6 @@ import {
 
 class CoveragesContainer extends Component {
   state = {
-    tableHeaders: [
-      "League",
-      "Club",
-      "Group",
-      "Category",
-      "Sub",
-      "Entered By",
-      "Date Created",
-      "Last Updated",
-      "Coverage Line",
-      "Verified",
-      "View",
-    ],
     name: "coverage",
     plural: "coverages",
     orders: [
@@ -38,6 +27,7 @@ class CoveragesContainer extends Component {
       { Name: "End Date", Scope: "end_date" },
       { Name: "Start Date", Scope: "start_date" },
     ],
+    verified: "All",
   };
 
   componentDidMount() {
@@ -111,9 +101,7 @@ class CoveragesContainer extends Component {
           <td width="100" align="left">
             {object.attributes.has_coverage_line}
           </td>
-          <td width="100" align="left">
-            {object.attributes.verified ? "true" : "false"}
-          </td>
+          {this.verifiedColumn(object, this.state.verified)}
           <td width="100" align="center">
             <Button
               variant="link"
@@ -126,6 +114,55 @@ class CoveragesContainer extends Component {
         </tr>
       );
     });
+  };
+
+  verifiedColumn = (object, verified) => {
+    switch (verified) {
+      case "verified":
+        return (
+          <td width="100" align="center">
+            <Button
+              variant="link"
+              onClick={(event) =>
+                this.props.dispatch(
+                  updateCoverage({
+                    id: object.attributes.id,
+                    values: { verified: false },
+                  })
+                )
+              }
+              style={{ color: "black" }}
+            >
+              <ExclamationCircleFill />
+            </Button>
+          </td>
+        );
+      case "unverified":
+        return (
+          <td width="100" align="center">
+            <Button
+              variant="link"
+              onClick={(event) =>
+                this.props.dispatch(
+                  updateCoverage({
+                    id: object.attributes.id,
+                    values: { verified: true },
+                  })
+                )
+              }
+              style={{ color: "black" }}
+            >
+              <ExclamationCircleFill />
+            </Button>
+          </td>
+        );
+      default:
+        return (
+          <td width="100" align="left">
+            {object.attributes.verified ? "true" : "false"}
+          </td>
+        );
+    }
   };
 
   postObject = (values) => {
@@ -175,8 +212,44 @@ class CoveragesContainer extends Component {
     if (values.order_index !== "-1") {
       filters[this.state.orders[values.order_index].Scope] = true;
     }
-    console.log(filters);
+    if (values.has_coverage_line !== "-1") {
+      filters["has_coverage_line"] = values.has_coverage_line;
+    }
+    if (values.verified !== "-1") {
+      filters[values.verified] = true;
+      this.setState({ verified: values.verified });
+    } else {
+      this.setState({ verified: "All" });
+    }
     this.props.dispatch(fetchCoverages(filters));
+  };
+
+  tableHeaders = (verified) => {
+    var header;
+    switch (verified) {
+      case "verified":
+        header = "Unverify";
+        break;
+      case "unverified":
+        header = "Verify";
+        break;
+      default:
+        header = "Verified";
+        break;
+    }
+    return [
+      "League",
+      "Club",
+      "Group",
+      "Category",
+      "Sub",
+      "Entered By",
+      "Date Created",
+      "Last Updated",
+      "Coverage Line",
+      header,
+      "View",
+    ];
   };
 
   render() {
@@ -196,7 +269,7 @@ class CoveragesContainer extends Component {
           {...otherProps}
           objects={this.props.coverages}
           showObjects={this.showObjects}
-          tableHeaders={this.state.tableHeaders}
+          tableHeaders={this.tableHeaders(this.state.verified)}
           name={this.state.name}
           plural={this.state.plural}
           postObject={this.postObject}

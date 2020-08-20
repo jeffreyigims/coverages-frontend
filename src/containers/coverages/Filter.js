@@ -15,7 +15,6 @@ export default class Filter extends React.Component {
         <Modal.Header closeButton>
           <Modal.Title>Filter {capitalize(plural)}</Modal.Title>
         </Modal.Header>
-
         <Modal.Body>
           <Formik
             validationSchema={schema}

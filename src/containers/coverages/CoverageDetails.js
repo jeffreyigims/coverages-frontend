@@ -4,7 +4,11 @@ import { Form, Col, Row, Card, Button } from "react-bootstrap";
 import { Formik } from "formik";
 import { DatePickerInput } from "rc-datepicker";
 import "rc-datepicker/lib/style.css";
-import { objectOptionsID, handleCoverageLineChange } from "../../utils/Forms";
+import {
+  objectOptionsID,
+  handleCoverageLineChange,
+  brokerOptionsID,
+} from "../../utils/Forms";
 import { schemaFor } from "../../utils/Schemas";
 import { Redirect } from "react-router-dom";
 import { formatDate, statusDisplay } from "../../utils/Helpers";
@@ -157,7 +161,7 @@ export default class CoverageDetails extends React.Component {
                             values.has_coverage_line === "yes" ? false : true
                           }
                         >
-                          {objectOptionsID(brokers)}
+                          {brokerOptionsID(brokers)}
                         </Form.Control>
                       </Form.Group>
                     </Row>

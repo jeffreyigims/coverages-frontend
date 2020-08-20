@@ -54,6 +54,16 @@ export const brokerOptions = (objects) => {
   });
 };
 
+export const brokerOptionsID = (objects) => {
+  return objects.map((object, index) => {
+    return (
+      <option key={index} value={object.attributes.id}>
+        {object.attributes.name} - {object.attributes.company.name}
+      </option>
+    );
+  });
+};
+
 function clubOptions(all_clubs, league) {
   const league_id = league?.data.attributes.id;
   let clubs = all_clubs.filter(
@@ -972,6 +982,64 @@ function filterForm(values, handleChange, setFieldValue, errors, additional) {
                 {"All"}
               </option>
               {subOptions(additional.categories, values.category_index)}
+            </Form.Control>
+          </Col>
+        </Row>
+      </Form.Group>
+
+      <Form.Group>
+        <Row>
+          <Form.Label column lg={2}>
+            Line:
+          </Form.Label>
+          <Col>
+            <Form.Control
+              as="select"
+              name="has_coverage_line"
+              value={values.has_coverage_line}
+              onChange={(event) => {
+                handleChange(event);
+                handleCoverageLineChange(event, setFieldValue);
+              }}
+            >
+              <option key={-1} value={"-1"}>
+                {"All"}
+              </option>
+              <option key={0} value={"yes"}>
+                {"Yes"}
+              </option>
+              <option key={1} value={"no"}>
+                {"No"}
+              </option>
+              <option key={2} value={"unknown"}>
+                {"Unknown"}
+              </option>
+            </Form.Control>
+          </Col>
+        </Row>
+      </Form.Group>
+
+      <Form.Group>
+        <Row>
+          <Form.Label column lg={2}>
+            Verified:
+          </Form.Label>
+          <Col>
+            <Form.Control
+              as="select"
+              name="verified"
+              value={values.verified}
+              onChange={handleChange}
+            >
+              <option key={-1} value={"-1"}>
+                {"All"}
+              </option>
+              <option key={0} value={"verified"}>
+                {"Verified"}
+              </option>
+              <option key={1} value={"unverified"}>
+                {"Unverified"}
+              </option>
             </Form.Control>
           </Col>
         </Row>
