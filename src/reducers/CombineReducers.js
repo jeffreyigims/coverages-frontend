@@ -141,11 +141,15 @@ function createPaginatedTableReducer(name = "") {
           errors: action.payload,
         });
       case `${name}/update_${name}/fulfilled`:
+        let coverage = action.payload.data;
         return Object.assign({}, state, {
           selected: action.payload.data,
           carriers: state.carriers,
           brokers: state.brokers,
           status: "succeeded",
+          [name]: state[name].map((object) =>
+            object.attributes.id === coverage.attributes.id ? coverage : object
+          ),
         });
       case `${name}/delete_${name}/rejected`:
         return Object.assign({}, state, {

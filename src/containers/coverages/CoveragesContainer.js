@@ -28,6 +28,7 @@ class CoveragesContainer extends Component {
       { Name: "Start Date", Scope: "start_date" },
     ],
     verified: "All",
+    filters: {},
   };
 
   componentDidMount() {
@@ -40,80 +41,87 @@ class CoveragesContainer extends Component {
   }
 
   showObjects = (objects) => {
-    return objects.map((object, index) => {
-      return (
-        <tr key={index}>
-          <td width="200" align="left">
-            <Button
-              variant="link"
-              href={"/leagues/" + object.attributes.league.id}
-              style={{ color: "black" }}
-            >
-              {object.attributes.league.name}
-            </Button>
-          </td>
-          <td width="200" align="left">
-            <Button
-              variant="link"
-              href={"/clubs/" + object.attributes.club.id}
-              style={{ color: "black" }}
-            >
-              {object.attributes.club.name}
-            </Button>
-          </td>
-          <td width="200" align="left">
-            {object.attributes.group.name}
-          </td>
-          <td width="200" align="left">
-            <Button
-              variant="link"
-              href={"/categories/" + object.attributes.category.id}
-              style={{ color: "black" }}
-            >
-              {object.attributes.category.name}
-            </Button>
-          </td>
-          <td width="200" align="left">
-            <Button
-              variant="link"
-              href={"/sub_categories/" + object.attributes.sub_category.id}
-              style={{ color: "black" }}
-            >
-              {object.attributes.sub_category.name}
-            </Button>
-          </td>
-          <td width="200" align="left">
-            <Button
-              variant="link"
-              href={"/users/" + object.attributes.user.id}
-              style={{ color: "black" }}
-            >
-              {object.attributes.user.first_name}{" "}
-              {object.attributes.user.last_name}
-            </Button>
-          </td>
-          <td width="200" align="left">
-            {displayDate(object.attributes.created_at, "MM/DD/YYYY")}
-          </td>
-          <td width="200" align="left">
-            {displayDate(object.attributes.updated_at, "MM/DD/YYYY")}
-          </td>
-          <td width="100" align="left">
-            {object.attributes.has_coverage_line}
-          </td>
-          {this.verifiedColumn(object, this.state.verified)}
-          <td width="100" align="center">
-            <Button
-              variant="link"
-              href={"/coverages/" + object.attributes.id}
-              style={{ color: "black" }}
-            >
-              <EyeFill />
-            </Button>
-          </td>
-        </tr>
-      );
-    });
+    let verified = this.state.verified === "verified" ? true : false;
+    return objects
+      .filter(
+        (object) =>
+          this.state.verified === "All" ||
+          object.attributes.verified === verified
+      )
+      .map((object, index) => {
+        return (
+          <tr key={index}>
+            <td width="200" align="left">
+              <Button
+                variant="link"
+                href={"/leagues/" + object.attributes.league.id}
+                style={{ color: "black" }}
+              >
+                {object.attributes.league.name}
+              </Button>
+            </td>
+            <td width="200" align="left">
+              <Button
+                variant="link"
+                href={"/clubs/" + object.attributes.club.id}
+                style={{ color: "black" }}
+              >
+                {object.attributes.club.name}
+              </Button>
+            </td>
+            <td width="200" align="left">
+              {object.attributes.group.name}
+            </td>
+            <td width="200" align="left">
+              <Button
+                variant="link"
+                href={"/categories/" + object.attributes.category.id}
+                style={{ color: "black" }}
+              >
+                {object.attributes.category.name}
+              </Button>
+            </td>
+            <td width="200" align="left">
+              <Button
+                variant="link"
+                href={"/sub_categories/" + object.attributes.sub_category.id}
+                style={{ color: "black" }}
+              >
+                {object.attributes.sub_category.name}
+              </Button>
+            </td>
+            <td width="200" align="left">
+              <Button
+                variant="link"
+                href={"/users/" + object.attributes.user.id}
+                style={{ color: "black" }}
+              >
+                {object.attributes.user.first_name}{" "}
+                {object.attributes.user.last_name}
+              </Button>
+            </td>
+            <td width="200" align="left">
+              {displayDate(object.attributes.created_at, "MM/DD/YYYY")}
+            </td>
+            <td width="200" align="left">
+              {displayDate(object.attributes.updated_at, "MM/DD/YYYY")}
+            </td>
+            <td width="100" align="left">
+              {object.attributes.has_coverage_line}
+            </td>
+            {this.verifiedColumn(object, this.state.verified)}
+            <td width="100" align="center">
+              <Button
+                variant="link"
+                href={"/coverages/" + object.attributes.id}
+                style={{ color: "black" }}
+              >
+                <EyeFill />
+              </Button>
+            </td>
+          </tr>
+        );
+      });
   };
 
   verifiedColumn = (object, verified) => {
@@ -222,6 +230,7 @@ class CoveragesContainer extends Component {
       this.setState({ verified: "All" });
     }
     this.props.dispatch(fetchCoverages(filters));
+    this.setState({ filters: filters });
   };
 
   tableHeaders = (verified) => {
@@ -273,9 +282,12 @@ class CoveragesContainer extends Component {
           name={this.state.name}
           plural={this.state.plural}
           postObject={this.postObject}
-          onPageChange={(e, { activePage }) =>
-            dispatch(fetchCoverages({ page: activePage }))
-          }
+          onPageChange={(e, { activePage }) => {
+            let parameters = Object.assign({}, this.state.filters, {
+              page: activePage,
+            });
+            dispatch(fetchCoverages(parameters));
+          }}
           additional={{
             clubs: clubs,
             groups: groups,
